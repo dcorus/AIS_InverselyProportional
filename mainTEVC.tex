@@ -12,6 +12,10 @@
 \usepackage{cite}
 \hyphenation{op-tical net-works semi-conduc-tor IEEE-Xplore}
 % updated with editorial comments 8/9/2021
+
+\newcommand{\new}[1]{\textcolor{blue}{#1}}
+
+
 \input{preamble}
 \begin{document}
 
@@ -62,7 +66,7 @@ Artificial immune systems, heavy-tailed mutations, inversely proportional hyperm
 \end{IEEEkeywords}
 
 \section{Introduction}
-Three recent hot topics in the theory of randomised search heuristics for optimisation in general and in artificial intelligence in particular have been the benefits of mutation operators with higher mutation rates than traditionally employed and recommended \cite{FQWGECCO18,FGQWPPSN18,CorusOlivetoYazdani2021TEVC,DoerrGECCO2017FastGA,CorusOlivetoTEVCsteadyGA2017,JumpTEVC2017,CorusOlivetoGecco2019,OlivetoSudholtWitt2020}, the automatic adaptation of the mutation rate \cite{DoerrDoerrBookChapter,DLOW2018,DoerrEtAl2016B,LissovoiEtAl2020ECJ,LOWAAAI2020} and the analysis of when non-elitist search heuristics are beneficial compared to elitist ones \cite{OlivetoPaizJorgeSudholt2017Algorithmica,LissovoiOlivetoWarwicker2019AAAI,Lehr2021AAAI,DoerrComma2020,CaseLehreTEVC,DangJansenLehreGECCO2015,DangLehreFOGA2015}. 
+Three recent hot topics in the theory of randomised search heuristics for optimisation in general and in artificial intelligence in particular have been the benefits of mutation operators with higher mutation rates than traditionally employed and recommended \cite{FQWGECCO18,FGQWPPSN18,CorusOlivetoYazdani2021TEVC,DoerrGECCO2017FastGA,CorusOlivetoTEVCsteadyGA2017,JumpTEVC2017,CorusOlivetoGecco2019,OlivetoSudholtWitt2020,DoerrDoerrEbel2015}, the automatic adaptation of the mutation rate \cite{DoerrDoerrBookChapter,DLOW2018,DoerrEtAl2016B,LissovoiEtAl2020ECJ,LOWAAAI2020} and the analysis of when non-elitist search heuristics are beneficial compared to elitist ones \cite{OlivetoPaizJorgeSudholt2017Algorithmica,LissovoiOlivetoWarwicker2019AAAI,Lehr2021AAAI,DoerrComma2020,CaseLehreTEVC,DangJansenLehreGECCO2015,DangLehreFOGA2015,LenglerSchillerSieberling2024,HeviaSudholtAlgo24}. 
 
 Artificial Immune Systems (AIS) are a class of bio-inspired algorithms which naturally use both high mutation rates via so-called hypermutation operators, often automatically adapt the mutation rate,  and use non-elitism implicitly through the use of ageing operators, characteristics that are typical in the immune system of vertebrates from which AIS draw inspiration. In this paper we analyse the performance of an adaptive mutation operator called Inversely Proportional Hypermutation (IPH) that aims to increase the mutation rate with (an estimate of) the distance from the optimum, and propose a considerably improved one for efficient unimodal and multimodal optimisation.
 
@@ -70,19 +74,19 @@ AIS for optimisation \cite{DeCastroTimmisBook,MO2020AAAI} are generally inspired
 For this reason they are also often referred  to as {\it clonal selection} algorithms \cite{DeCastroTimmisBook}. 
 In the literature two key features of clonal selection algorithms have been identified \cite{Brownlee2007}: 
 \begin{enumerate}
-	\item  The proliferation rate of each immune cell is proportional to its affinity with the selective antigen: the higher the affinity, 
+	\item  The proliferation rate of each immune cell is proportional to its affinity \new{(similarity)} with the selective antigen \new{(pathogen)}: the higher the affinity, 
 	the higher the number of offspring generated (clonal selection and expansion). %{\color{red} do we want to mention this when we are analysing/proposing a (1+1) algorithm with 1 copy?}
 	\item The mutation suffered by each immune cell during reproduction is inversely proportional to the affinity of the cell receptor with the antigen: the higher the affinity, 
 	the smaller the mutation (affinity maturation).
 \end{enumerate}
-Indeed well-known clonal selection algorithms employ mutation operators applied to immune cells (i.e., candidate solutions) with a rate that decreases with their similarity to the 
+Indeed, well-known clonal selection algorithms employ mutation operators applied to immune cells (i.e., candidate solutions) with a rate that decreases with their similarity to the 
 antigen (i.e., global optima) during affinity maturation. Often such operators are referred to as {\it inversely proportional hypermutations} (IPH). 
-Popular examples of such clonal selection algorithms are Clonalg \cite{DecastroVonzuben2002}   and Opt-IA \cite{CutelloNicosiaPavoneTimmis2007}. % with their ``Hypermutations with fitness inversely proportional mutation potential''. 
+Popular examples of such clonal selection algorithms are Clonalg \cite{DecastroVonzuben2002}   and \new{the} Opt-IA \new{immune algorithm.} \cite{CutelloNicosiaPavoneTimmis2007}. % with their ``Hypermutations with fitness inversely proportional mutation potential''. 
 
 %
 The ideal behaviour of the IPH operator is that the mutation rate is minimal in proximity of the global optimum and increases as the difference between the fitness of the global optimum
 and that of the candidate solution increases. However, achieving such behaviour in practice may be problematic because the fitness of the global optimum is usually unknown.
-As a result, in practical applications information about the problem is used to identify bounds on (or estimates of)  the value of the global optimum\footnote{Alternatively, the fitness of the best candidate solution is sometimes used and 
+As a result, in practical applications information about the problem is used to \new{find} bounds on (or estimates of)  the value of the global optimum\footnote{Alternatively, the fitness of the best candidate solution is sometimes used and 
 	the mutation rate of the rest of the population is inversely proportional to the best.}.
 Thus, the closer is the estimate to the actual value of the global optimum, the closer should the behaviour of the IPH operator be to the desired one.
 On the other hand,  if the bound is much higher (e.g., for a maximisation problem)  than the true value, then there is a risk that the mutation rate is too high in proximity of the global optimum 
@@ -90,12 +94,12 @@ i.e., the algorithm will struggle to identify the optimum.
 
 Previous theoretical analyses, though, have highlighted various problems with %inversely proportional hypermutation 
 IPH operators from the literature even when the fitness value of the global optimum is known.
-Zarges analysed the effects of mutating candidate solutions with a rate that is inversely proportional to their fitness for the \textsc{OneMax} problem  \cite{Zarges2008}.
-She considered two different rates for the decrease of the mutation rate as the fitness increases: a linear decay (i.e., each bit flips with probability $\frac{\textsc{OneMax(x)}}{\text{Opt}}$ where Opt is the optimum value) 
+Zarges~ \cite{Zarges2008} analysed the effects of mutating candidate solutions with a rate that is inversely proportional to their fitness for the \textsc{OneMax} problem.
+She considered two different rates for the decrease of the mutation rate as the fitness increases: a linear decay (i.e., each bit \new{is flipped} with probability $\frac{\textsc{OneMax(x)}}{\text{Opt}}$, where Opt is the optimum value) 
 and an exponential decay (i.e., each bit flips with probability $e^{- \rho \frac{\textsc{OneMax(x)}}{\text{Opt}}}$ where $\rho$ is called the {\it decay} parameter).
 The motivation behind these choices are that the former operator flips in expectation exactly the number of bits that maximises the probability of reaching the optimum in the next step while the latter is the
 operator used in the Clonalg algorithm.  
-She showed that if the optimum of \textsc{OneMax} is known, then an algorithm employing such a mutation operator will require exponential time to optimise \textsc{OneMax} with overwhelming probability (w.o.p.)
+She showed that if the optimum of \textsc{OneMax} is known, then an algorithm employing such mutation operator\new{s} will require exponential time to optimise \textsc{OneMax} with overwhelming probability (w.o.p.)
 in both cases of linear or exponential decays of the mutation rate.
 The reason is that the initial random solutions that have roughly half the fitness (i.e., $n/2$) of the global optimum (i.e., $n$) have very high mutation rates. Such rates do not allow the algorithm to make any progress with any reasonable probability even if the decay parameter $\rho$ is chosen very carefully (i.e., $\rho = \ln n$ leads to reasonable mutation rates between $1/n$ and $1/2$ %for every
 %possible fitness value 
@@ -103,24 +107,23 @@ during the optimisation of \textsc{OneMax}).
 Hence, the behaviour of the mutation operator leads to very inefficient performance even for the simple OneMax function when the optimum is assumed to be known. 
 %achieved by assuming the optimum is known, leads to very inefficient algorithms even for the . % because too high mutation rates hinder progress.
 
-On the other hand, the Opt-IA clonal selection algorithm, that also uses very high mutation rates (called hypermutations with mutation potential), has been proven to be efficient by employing a selection strategy called {\it stop at first constructive mutation} (FCM). The strategy evaluates fitness after each bit is flipped and interrupts the hypermutation immediately if an improvement is detected.
+On the other hand, the Opt-IA clonal selection algorithm, that \new{uses a mutation operator called 'hypermutations with mutation potential'} which also has very high mutation rates \new{but} has been proven to be efficient by employing a selection strategy called {\it stop at first constructive mutation} (FCM). The strategy evaluates the fitness after each bit is flipped and interrupts the hypermutation immediately if an improvement is detected. \new {Otherwise it returns the bit-string obtained after it has flipped the maximum number of  bits it is allowed to flip i.e., the mutation potential.} 
 Indeed, the operator using a static mutation potential (i.e., a linear number of bits are flipped unless an improvement is found along the way) has been proven to be very effective at escaping local
 optima of standard multimodal benchmark functions \cite{CorusOlivetoYazdaniGECCO2017} and at finding arbitrarily good approximations for the Number Partitioning NP-Hard problem \cite{CorusOlivetoYazdaniPPSN2018Approx,CorusOlivetoYazdaniAIJ2019} at the expense
 of being slower at hillclimbing during the exploitation phases (it is up to a linear factor slower than the standard bit mutation (SBM) used by evolutionary algorithms for easy unimodal functions such as OneMax and LeadingOnes).
 Hence, differently from other clonal selection algorithms (such as Clonalg and Opt-IA without FCM), hypermutations with mutation potential coupled with FCM can cope with the desired behaviour of inversely proportional mutation rates by being capable of making progress efficiently with high mutation rates. % thanks to FCM.
 
 In this paper we first consider whether Opt-IA may become faster during the exploitation phases if inversely proportional mutation potentials are applied rather than static ones.
-The reason to believe this is that the hypermutations waste many fitness function evaluations during exploitation because,
-as the optimum is approached, the probability of flipping bits that lead to an improvement decreases. 
+\new{The reason to believe this is that the hypermutations waste many fitness function evaluations during exploitation, since the probability of flipping bits that lead to an improvement decreases when the optimum is approached.} 
 Hence, with high probability the operator flips wrong bits at the beginning of a hypermutation and ends up wasting a linear number
 of fitness function evaluations in each hypermutation. On the other hand, if the mutation potential decreases as the optimum is approached, 
 then the amount of wasted evaluations should decrease accordingly.
 
 %However, a 
-A previous runtime analysis for OneMax of the inversely proportional hypermutations with mutation potential used by Opt-IA has shown that the mutation rate is always in the range $[(c/2)n, cn]$ where $M=cn$ is the highest mutation potential~\cite{JansenZarges2011}. Hence it does not decrease proportionally with the decrease in distance to the optimum as desired and, as a result, no asymptotic speed-ups are achieved compared to static mutation potentials. 
+A previous runtime analysis for OneMax of the inversely proportional hypermutations with mutation potential used by Opt-IA~\cite{JansenZarges2011} has shown that the mutation rate is always in the range $[(c/2)n, cn]$ where $M=cn$ is the highest mutation potential. Hence it does not decrease proportionally with the decrease in distance to the optimum as desired and, as a result, no asymptotic speed-ups are achieved compared to static mutation potentials. 
 %{\color{red} Do we want to talk about Jansen and Zarges result on the algorithm they proposed which knows the fitness of every point in the search space? P: LET'S DO THIS IN THE CONCLUSION}
 
-In this paper we first show that considerable speed-ups in exploitation (hillclimbing) phases may be achieved compared to static hypermutations, 
+In this paper we first show that considerable speed-ups in \new{hillclimbing} phases may be achieved compared to static hypermutations, 
 if the mutation rates decrease appropriately with either the fitness or the distance to the optimum. 
 To show this we analyse the IPH operators for standard unimodal benchmark functions where the performance of static mutation potentials is well-understood~\cite{CorusOlivetoYazdaniGECCO2017}.
 We first identify what speed-ups may be hoped for by analysing the operators in the ideal situation where the location of the optimum is known.
@@ -137,10 +140,10 @@ In the literature it has been shown that ageing allows algorithms to escape from
 %Usually such best solution is some local optimum from which the algorithm has escaped
 %through the ageing operator either by restarting or 
 %via hypermutation. 
-The idea behind our proposed AIS is that the more of the search space that is explored, the better the ideal behaviour of the IPH is approximated through the discovery of  better and better local optima. 
+\new{The idea behind our proposed AIS is that the more is the search space explored, the better is the ideal behaviour of the IPH approximated through discovery of better and better local optima.}
 
-Our analysis reveals that such a strategy does not produce the desired effect, and a further improvement to the algorithm is required.
-Since the mutation rate decreases with the distance to the best found local optimum, the algorithm may encounter difficulties at identifying new promising optima. 
+Our analysis reveals that such a strategy does not produce the desired effect, and a further improvement \new{of} the algorithm is required.
+Since the mutation rate decreases with the distance to the best found local optimum, the algorithm may encounter difficulties at \new{finding} new promising optima. 
 In particular, if the algorithm identifies some slope that leads away from the previous local optimum, then the mutation rate will increase as the new optimum is approached.
 Firstly, this makes the new optimum hard to identify. Secondly, the high mutation rates in its proximity lead to high wastage of fitness function evaluations defeating our main motivation of reducing
 such wastage compared to static mutation potentials. We rigorously prove this effect for the well-studied \textsc{TwoMax} bimodal benchmark function where the expected runtime does not improve compared to that of the static hypermutations to optimise each slope of the function (i.e., $\Theta(n^2 \log{n})$). On the other hand we use the \textsc{Cliff} benchmark function to show that the IPH can escape local optima when coupled with ageing. We remark that static hypermutations cannot optimise the function efficiently because %, once the local optimum is escaped the high mutation rates force the algorithm to jump back to the local optima.
@@ -214,9 +217,11 @@ Compared to the original extended abstract~\cite{CorusOlivetoYazdaniIPH2019}, th
  
  
  \section{Inversely Proportional Mutation Potentials} % with FCM}
- Hypermutations with mutation potential using FCM flip at most a linear amount of bits (i.e., the mutation potential $M=cn$) chosen uniformly at random without replacement. After each of the $M$ bit flips, the fitness of the produced solution is evaluated and if a {\it constructive mutation} is identified, then the operator is stopped and the solution returned. Otherwise the algorithm continues flipping the bits without setting them back until the potential $M$ of bit flips is reached. If no constructive solution has been identified earlier, then the $M$th solution is returned.  
- The original inversely proportional hypermutation operator (\IPHfcm{}) proposed for Opt-IA uses mutation potential  $M=\lceil(1-f_{\text{OPT}}/v)\rceil cn$ for minimisation problems, where $f_{\text{OPT}}$ is the best known fitness and $v$ is the fitness of the individual~\cite{CutelloNicosiaPavoneTimmis2007,JansenZarges2011}. 
- In an analysis for \textsc {OneMax}, such a mutation potential was shown not to decrease below $cn/2$, with $cn$ being the highest possible mutation potential~\cite{JansenZarges2011}.
+ Hypermutations with mutation potential using FCM flip at most a linear amount of bits (i.e., the mutation potential $M=cn$) chosen uniformly at random without replacement \new{from the interval $[1..n]$}. After each of the $M$ bit flips, the fitness of the produced solution is evaluated and if a {\it constructive mutation} is identified, then the operator is stopped and the solution returned\new{, where a  constructive mutation is a solution that is at least as good as that of the original parent.}
+ Otherwise the algorithm continues flipping the bits without setting them back until the potential $M$ of bit flips is reached. If no constructive \new{mutation} has been identified earlier, then the $M$th solution is returned.  
+ The original inversely proportional hypermutation operator (\IPHfcm{}) proposed for Opt-IA uses mutation potential  $M=\lceil(1-f_{\text{OPT}}/v)\rceil cn$ for minimisation problems, where $f_{\text{OPT}}$ is the best known fitness, $v$ is the fitness of the individual, 
+ \new{and $0<c\leq 1$ is some constant}~\cite{CutelloNicosiaPavoneTimmis2007,JansenZarges2011}. 
+ In an analysis for \textsc {OneMax}~\cite{JansenZarges2011}, such a mutation potential was shown not to decrease below $cn/2$, with $cn$ being the highest possible mutation potential.
  	As a result no speed-ups at hillclimbing are achieved compared to static hypermutations as the mutation potential is always at least linear.
  In this section, we introduce three different IPH operators  that will be analysed in this paper and that provably speed-up the hillclimbing  performance for \textsc{OneMax}. Two have been already considered in the literature %{\color{red} (should we say proposed? or maybe mentioning how their analysis is different than us?)} 
  while the third one is newly proposed by us based on analysed drawbacks of the first two.
@@ -291,17 +296,17 @@ Compared to the original extended abstract~\cite{CorusOlivetoYazdaniIPH2019}, th
 
 In this section, we evaluate the performance of the three different \IPHfcm{} operators, %(1), (2) and (3),
 assuming the optimum is known (i.e., best $=$ opt). Under this assumption, the operators exhibit their ideal behaviour (i.e., the mutation potential decreases with the desired rate as the optimum is approached).
-Our aim is to evaluate what speed-ups can be achieved in ideal conditions compared to the well-studied static mutation potentials. To achieve such comparisons we perform runtime analyses of the (1+1)~IA  using the \IPHfcm{} on the standard \textsc{OneMax} and \textsc{LeadingOnes} unimodal benchmark functions for which the performance of the same algorithm using static mutation potentials is known~\cite{CorusOlivetoYazdaniGECCO2017}. The simple to define \textsc{OneMax} function counts the number of 1-bits in the bit string and is normally used to evaluate the hill climbing ability of algorithms~\cite{LehrTEVC2018,CorusOlivetoTEVCsteadyGA2017,CorusOlivetoAlgo2020,DoerrDoerrEbel2015}. On the other hand, \textsc{LeadingOnes} is a slightly harder unimodal problem which counts the consecutive number of 1-bits at the beginning of the bit string before the first 0-bit. 
+Our aim is to evaluate what speed-ups can be achieved in ideal conditions compared to the well-studied static mutation potentials. To achieve such comparisons we perform runtime analyses of the (1+1)~IA  using the \IPHfcm{} on the standard \textsc{OneMax} and \textsc{LeadingOnes} unimodal benchmark functions for which the performance of the same algorithm using static mutation potentials is known~\cite{CorusOlivetoYazdani2019TCS}. The simple to define \textsc{OneMax} function counts the number of 1-bits in \new{a} bit string and is normally used to evaluate the hill climbing ability of algorithms~\cite{LehrTEVC2018,CorusOlivetoTEVCsteadyGA2017,CorusOlivetoAlgo2020,DoerrDoerrEbel2015}. On the other hand, \textsc{LeadingOnes} is a slightly harder unimodal problem which counts the consecutive number of 1-bits at the beginning of the bit string before the first 0-bit. 
 Evolutionary algorithms using standard bit mutation (or k-bit flip local search mutation) optimise the functions respectively in $\Theta(n \log n)$ and $\Theta(n^2)$ expected fitness function evaluations \cite{DrosteJansenWegener2002,BoettcherEtAl2010,DoerrEtAl2016B,LissovoiOlivetoWarwicker2020,DLOW2018}, while static hypermutations are a linear factor slower\cite{CorusOlivetoYazdani2019TCS}.
 
 While in practice both evolutionary algorithms and artificial immune systems use a population of solutions, in this paper we consider single trajectory algorithms to better highlight the performance of all the considered hypermutation operators.
-The pseudo-code of a simple \oneoneIA{} is given in Algorithm~\ref{alg:simple}. It simply uses one candidate solution in each iteration to which inversely proportional hypermutations are applied. For the function Hypermutate$(x)$, \IPHfcm{} performs two steps: 
-1) it calculates the mutation potential $M$, and 2) it creates $y$ by flipping at most $M$ distinct bits of $x$ selected uniformly at random without replacement one after another until a constructive mutation happens.  Otherwise it returns the last constructed solution. A  constructive mutation is a mutation step where the evaluated bit string is at least as fit as its parent. 
+The pseudo-code of a simple \new{immune algorithm,} the \oneoneIA{}, is given in Algorithm~\ref{alg:simple}. It simply uses one candidate solution in each iteration to which inversely proportional hypermutations are applied. For the function Hypermutate$(x)$, \IPHfcm{} performs two steps: 
+1) it calculates the mutation potential $M$, and 2) it creates $y$ by flipping at most $M$ distinct bits of $x$ selected uniformly at random without replacement one after another until a constructive mutation happens. Otherwise it returns the last constructed solution. A  constructive mutation is a mutation step where the evaluated bit string is at least as fit as the parent \new{$x$}. 
 %
 The results proven in this section and comparisons with static hypermutations and the IPH operators from the literature are summarised in Table~\ref{table:afl}.
 
 
-Before stating the main results, we first introduce the following lemma (the Ballot theorem) which is used throughout this paper to derive lower bounds on the expected runtime of the algorithms~\cite{JansenZarges2011,CorusOlivetoYazdani2019TCS}.  This theorem is essentially used to show the probability of picking more 1-bits than 0-bits during one hypermutation operation given that there are more 1-bits in the initial bit-string (or vice-versa). 
+Before stating the main results, we first introduce the following lemma (the Ballot theorem) which is used throughout this paper to derive lower bounds on the expected runtime of the algorithms~\cite{feller1968,JansenZarges2011,CorusOlivetoYazdani2019TCS}.  This theorem is essentially used to show the probability of picking more 1-bits than 0-bits during one hypermutation operation given that there are more 1-bits in the initial bit-string (or vice-versa). 
 %
 \begin{lemma} [Ballot Theorem~\cite{feller1968}] \label{lem:ballot} 
 In a ballot, suppose that candidate P receives $p$ votes and candidate Q receives $q$ votes such that $p>q$. The probability that throughout the counting P is always ahead of Q is $(p-q)/(p+q)$. 
@@ -309,8 +314,7 @@ In a ballot, suppose that candidate P receives $p$ votes and candidate Q receive
 
 
 \begin{table}[t!]
-\caption{Comparison of the expected runtimes obtained by different hypermutation schemes for \textsc{OneMax} and \textsc{LeadingOnes}. The original IPH operator of Opt-IA \cite{CutelloNicosiaPavoneTimmis2007}  has the same expected runtimes as the $(1+1)~$IA using static hypermutations \cite{JansenZarges2011}.\\
-	$^*$: the result can be easily drawn from the analysis for \textsc{OneMax} \cite{Zarges2008}.}
+\caption{Comparison of the expected runtimes obtained by different hypermutation schemes for \textsc{OneMax} and \textsc{LeadingOnes}. The original IPH operator of Opt-IA \cite{CutelloNicosiaPavoneTimmis2007}  has the same expected runtimes as the $(1+1)~$IA using static hypermutations \cite{JansenZarges2011}. \new{`$^*$' indicates that the result can be easily drawn from the analysis for \textsc{OneMax} \cite{Zarges2008}.}}
 %The same result as $(1+1)~IA^{hype}$ using static hypermutation ($M=n$) has been shown for the original IPM of Opt-IA \cite{JansenZarges2011}.}
 \begin{center}
 \resizebox{\columnwidth}{!}{
@@ -433,13 +437,17 @@ The {\oneoneIA } using \IPHfcm{} with {\linHD } optimises \textsc{OneMax} in $\T
 \begin{proof}
 Considering $i$ as the number of 0-bits in the candidate solution, the probability of improvement in the first step is $i/n$. Knowing that at most $n$ improvements are needed to find the optimum and in case of failure, $H(x,\text{opt})=i$ fitness function evaluations would be wasted, the total expected time to optimise \textsc{OneMax} is at most $\sum_{i=1}^n \frac{n}{i} \cdot i =O(n^2)$.
 
-For the lower bound, we use the Ballot theorem (Lemma~\ref{lem:ballot}). By Chernoff bounds, the number of 0-bits in the initialised solution is at least $n/3$ w.o.p. Considering the number of 
+For the lower bound, we use the Ballot theorem (Lemma~\ref{lem:ballot}). 
+\new{We flip at most $M \le n$ bits, and the probability that an improvement happens is the probability that at some moment there will be at least as many flipped zeros as there are flipped ones. So pessimistically we can assume that  $M = n$ bits are always flipped, since it maximizes the chances of this unfortunate event.} 
+
+By Chernoff bounds, the number of 0-bits in the initialised solution is at least $n/3$ w.o.p. Considering the number of 
 0-bits as $i=q$ and the number of 1-bits as $n-i=p$, the probability of 
 an improvement is at most $1-(p-q)/(p+q)=1-(n-2i)/n=2i/n$ by the Ballot theorem, where $i=H(x, opt)$. This means that we need to wait at least $n/(2i)$ iterations to see an improvement and each time the mutation operator fails to improve the fitness, $i$ fitness function evaluations will be wasted. Considering that at least $n/3$ improvements are needed, the expected time to optimise \textsc{OneMax} is larger than $\sum_{i=1}^{n/3} \frac{n}{2i} \cdot i= \Omega(n^2)$.
 \end{proof}
 
 The following theorem shows that a greater speed up may be achieved if the potential decreases exponentially rather than linearly. Note that for \textsc{OneMax} the Hamming distance of a solution to the optimum and its difference in fitness are the same. %The proof is omitted due to lack of space.
 % Hence, the subsequent corollary is obvious.
+\new{Hence, there is no difference between the behaviours of the algorithm when using $M_{expoF(x)}$ and $M_{expoHD}$.} 
 Figure \ref{fig:onemax} highlights the reason why these operators waste fewer fitness evaluations.
 
 \begin{restatable}{theorem}{expofx} \label{cor:omexpohd}
@@ -451,7 +459,7 @@ any arbitrarily small constant $\epsilon>0$.
 
 \begin{proof}
 We prove the results for \expoF{} which applies to \expoHD{} as well. 
-To prove the upper bound, we use that by Chernoff bounds the initialised solution has at most $n/2+ n^{2/3}$ 0-bits w.o.p.. The probability of improvement in the first mutation step is at least $i/n$ with $i$ being the number of 0-bits. As we need at most $n/2+n^{2/3}$ improvements and each time the mutation fails to make an improvement at most $n^{1-\frac{n-i}{n}}$ fitness function evaluations are wasted, the total expected time to find the optimum will be $E(T) \leq \sum_{i=1}^{n/2+n^{2/3}} \frac{n}{i} \cdot n^{\frac{i}{n}}= O (n^{3/2} \log n)$ by pessimistically assuming $i=n/2+n^{2/3}$ in $n^{i/n}$.
+To prove the upper bound, we use that by Chernoff bounds the initialised solution has at most $n/2+ n^{2/3}$ 0-bits w.o.p. The probability of improvement in the first mutation step is at least $i/n$ with $i$ being the number of 0-bits. As we need at most $n/2+n^{2/3}$ improvements and each time the mutation fails to make an improvement at most $n^{1-\frac{n-i}{n}}$ fitness function evaluations are wasted, the total expected time to find the optimum will be $E(T) \leq \sum_{i=1}^{n/2+n^{2/3}} \frac{n}{i} \cdot n^{\frac{i}{n}}= O (n^{3/2} \log n)$ by pessimistically assuming $i=n/2+n^{2/3}$ in $n^{i/n}$.
 
 To prove the lower bound, we again consider $i$ as the number of 0-bits. By Chernoff 
 bounds, $i$ is at least $n/2-\epsilon n$  in the initialised bit string for some arbitrarily small constant $\epsilon>0$. 
@@ -526,7 +534,7 @@ Now we prove the upper bound. The probability of improvement in each step is at 
 
 
 Theorem \ref{expohdOnLO} shows that the exponential fitness-based mutation 
-potential priovides at least a logarithmic and at most a $\sqrt 
+potential provides at least a logarithmic and at most a $\sqrt 
 n$ factor speed-up compared to static mutation potentials. Before proving the main results, we introduce the following  lemma that will be used in the proof of the upcoming theorems.
 \begin{lemma}\label{lem:expo}
 For large enough $n$ and any arbitrarily small constant $\epsilon$, 
@@ -804,8 +812,8 @@ we will use it in the remainder of the paper.
  		\textsc{TwoMax}(x):=\max \left\{\sum_{i=1}^n x_i, \; n-\sum_{i=1}^n x_i \right\}.
  	\end{equation} 
  	
- 	\textsc{TwoMax} is often used to evaluate the global exploration capabilities of evolutionary algorithms, i.e., whether the population can identify both optima of the function. The standard $(\mu+1)$~EA fails to identify both optima of \textsc{TwoMax} efficiently, hence, the function has been often used to evaluate the effectiveness of diversity mechanisms for improving the global exploration capabilities of populations-based EAs~\cite{FriedrichOSWECJ09,SudholtBookChapter2019,OlivetoSudholtZarges2018,CovantesOsunaSudholt2017}. Recently it has been shown that diversity mechanisms are not necessary for the $(\mu+1)$~EA to efficiently identify both optima of the function. It suffices to decrease the selection pressure of the algorithm e.g., by employing  inverse tournament selection. In particular, the reason why the traditional $(\mu+1)$~EA fails is that the uniform parent selection usually employed leads to premature convergence of the population~\cite{CorusLissovoiOlivetoWittTELO2021}.
- 	With sufficiently low selective pressure, or with an appropriate diversity mechanism, and a linear population size the $(\mu+1)$~EA can optimise  \textsc{TwoMax} in approximately $\Theta(n^2 \log n)$ w.o.p. In the next section we will present an AIS using IPH that is considerably faster.
+ 	\textsc{TwoMax} is often used to evaluate the global exploration capabilities of evolutionary algorithms, i.e., whether the population can identify both optima of the function. The standard $(\mu+1)$~EA fails to identify both optima of \textsc{TwoMax} efficiently, hence, the function has been often used to evaluate the effectiveness of diversity mechanisms for improving the global exploration capabilities of populations-based EAs~\cite{FriedrichOSWECJ09,SudholtBookChapter2019,OlivetoSudholtZarges2018,CovantesOsunaSudholt2017}. \new{Recently Corus et al.~\cite{CorusLissovoiOlivetoWittTELO2021} have been shown that diversity mechanisms are not necessary for the $(\mu+1)$~EA to efficiently identify both optima of the function. It suffices to decrease the selection pressure of the algorithm e.g., by employing  inverse tournament selection. In particular, they show that the reason why the traditional $(\mu+1)$~EA fails is that the uniform parent selection usually employed leads to premature convergence of the population.
+ 	With sufficiently low selective pressure and a linear population size the $(\mu+1)$~EA can optimise  \textsc{TwoMax} in approximately $\Theta(n^2 \log n)$ w.o.p.~\cite{CorusLissovoiOlivetoWittTELO2021}.} In the next section we will present an AIS using IPH that is considerably faster.
  	
  	In this section, our analysis shows that once the $(1+1)$~Opt-IA using \IPHfcm{} with \expoHD{}  escapes from one local optimum, the mutation rate will increase as the algorithm climbs up the other branch.
  	As a result, the algorithm struggles to identify the other optimum and wastes more and more fitness function evaluations as it approaches it. Thus, the whole purpose behind IPH is defeated.
@@ -820,7 +828,7 @@ we will use it in the remainder of the paper.
  	\end{equation}
  	The class of \textsc{Cliff} functions, illustrated in Figure~\ref{fig:cliff}, is usually used to assess the performance of non-elitist algorithms. %is another widely used multimodal benchmark function which 
  	It was originally designed as a problem instance where non-elitist EAs outperform elitist EAs~\cite{JaegerskuepperStorch}. This function  has a \textsc{OneMax} slope with length $n-d$ which leads the algorithms towards the local optima. The local optima are followed by a second \textsc{OneMax} slope (of length $d$) of lower fitness which leads to the global optimum. While elitist algorithms need to make a jump of size $d$ to find the global optimum, non-elitist algorithms can easily find the second slope by accepting inferior solutions, %by a mutation size which is as small as 1, then 
- 	and then hillclimb up to the global optimum \cite{LissovoiOlivetoWarwicker2019AAAI,CorusOlivetoYazdani2019TCS,CorusOlivetoYazdani2021TEVC,HeviaSudholtFOGA21}. 
+ 	and then hillclimb up to the global optimum \cite{LissovoiOlivetoWarwicker2019AAAI,CorusOlivetoYazdani2019TCS,CorusOlivetoYazdani2021TEVC,HeviaSudholtAlgo24}. 
  	Due to the high mutation rates of static hypermutations, even if they were to escape the local optima of \textsc{Cliff} (which is unlikely due to FCM and linear mutation potentials), they would still jump back with high probability.  
  	%However,  elitist algorithms can only find the global optimum by making a jump of size $d$ (hence, they will have the same runtime as for \textsc{Jump}). 
  	
