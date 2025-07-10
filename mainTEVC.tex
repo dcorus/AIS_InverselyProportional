@@ -1374,8 +1374,35 @@ doing randomised local search.
 % At the same iteration, an offspring is created down the cliff with probability $k/n$. With probability $(k-1)/n$ this offspring will improve the towards the optimum and hence it will survive. While moving towards the optimum, the best seen stays as the local optimum. As the Hamming distance of the best and origin does not change while the Hamming distance of the current position and the origin is increasing, hence the mutation potential decreases more and more (not sure what is the maximum one). Hence, in $O(n^{3/2} \log n)$ the optimum will be found. The total expected time will be $O(n \log n)+ \tau+ \left( n^{3/2+\epsilon} \cdot n/k \cdot n/(k+1) \right)=O(\frac{n^{7/2}\log n}{k^2})$.
 \end{proof}
 
-
-
+\new{
+\section{A Function Class Where IPH is Essential} 
+In this section we introduce a function class where inversely proportional hypermutations are essential.
+The function class is inspired from one previously used to show the advantages and disadvantages of using high mutation rates in the context of rank-based mutation in population based algorithms~\cite{OlivetoLehreNeumann09}.
+In rank-based mutation algorithms each individual has a different mutation rate based on their rank in the population i.e., the best individual has a low mutation rate while the worst individual a very high one.
+The \textsc{LeadingTrapJump} function was introduced as an example where the use of high mutation rates is detrimental while low mutation rates are efficient. We have slightly modified the location of the trap compared to~\cite{OlivetoLehreNeumann09} for our objectives.
+\[
+\textsc{LeadingTrapJump}  =
+\]
+\[
+\begin{cases}
+0 & \text{if } x = 1^{(9/10)n}* \\
+\textsc{LO}(x_i | i>2k+1) + 2k+1 & \text{if } x = 0^{2k+1}1^{(9/10)n - 2k-1}*, \\
+n-1 & \text{if } x = 0^{\log n}  \text{(this was n/10)}\\
+\textsc{LO}(x) & \text{otherwise}.
+\end{cases}
+\]
+ Essentially the function consists of a  main \leadingones~ slope of increasing fitness until $(9/10)n -1$ leading ones are reached. From there it is necessary to add a constant number $2k$ of leading zeroes before the last $n/10$ leading ones can be inserted to reach the optimum. However, there is a trap consisting of many leading zeroes ($\log n$ ?) that has fitness value higher than any point other than the optimum. High mutation rates are likely to end up in the trap, while low mutation rates are likely to find the optimum. Naturally  if the values of the local and global optima are switched, then high mutation rates will be successful with high probability, while low mutation rates will fail. In the following we will show that the (1+1) Opt-IA with symmetric IPH efficiently optimises the function independent of the location of the optimum, while SBM will get trapped on the all-ones bit-string with high probability if the trap is globally optimal while static hypermutations with mutation potential get stuck in the trap with high probability when the all-ones bit string is optimal.
+ %
+ %
+ \begin{theorem}
+ (1+1) Opt-IA with symmetric IPH efficiently optimises \textsc{LeadingTrapJump}
+ \end{theorem}
+ \begin{proof}
+ Dogan
+ \end{proof}
+ %
+ DOGAN PLEASE CONTINUE?
+}
 
 \section{Conclusion}
 We have presented a thourough analysis of Inversely Proportional Hypermutations (IPH).
