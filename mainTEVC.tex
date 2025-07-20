@@ -95,7 +95,7 @@ i.e., the algorithm will struggle to identify the optimum.
 Previous theoretical analyses, though, have highlighted various problems with %inversely proportional hypermutation 
 IPH operators from the literature even when the fitness value of the global optimum is known.
 Zarges~ \cite{Zarges2008} analysed the effects of mutating candidate solutions with a rate that is inversely proportional to their fitness for the \textsc{OneMax} problem.
-She considered two different rates for the decrease of the mutation rate as the fitness increases: a linear decay (i.e., each bit \new{is flipped} with probability $\frac{\textsc{OneMax(x)}}{\text{Opt}}$, where Opt is the optimum value) 
+She considered two different rates for the decrease of the mutation rate as the fitness increases: a linear decay (i.e., each bit \new{is flipped} with probability $\frac{\textsc{{\color{blue}\text{Opt}-}OneMax(x)}}{\text{Opt}}$, where Opt is the optimum value) 
 and an exponential decay (i.e., each bit flips with probability $e^{- \rho \frac{\textsc{OneMax(x)}}{\text{Opt}}}$ where $\rho$ is called the {\it decay} parameter).
 The motivation behind these choices are that the former operator flips in expectation exactly the number of bits that maximises the probability of reaching the optimum in the next step while the latter is the
 operator used in the Clonalg algorithm.  
@@ -313,6 +313,7 @@ Before stating the main results, we first introduce the following lemma (the Bal
 In a ballot, suppose that candidate P receives $p$ votes and candidate Q receives $q$ votes such that $p>q$. The probability that throughout the counting P is always ahead of Q is $(p-q)/(p+q)$. 
 \end{lemma}
 
+{\color{blue}In the context of hypermutation operators, the vote counts are the initial number of $0$ and $1$-bits in the solutions, while counting the votes correspond to flipping them until the first constructive mutation. The probability that a constructive mutation is found is equivalent to the probability that the $q$ candidate having as many votes counted as the other during any time in the counting process.}
 
 \begin{table}[t!]
 \caption{Comparison of the expected runtimes obtained by different hypermutation schemes for \textsc{OneMax} and \textsc{LeadingOnes}. The original IPH operator of Opt-IA \cite{CutelloNicosiaPavoneTimmis2007}  has the same expected runtimes as the $(1+1)~$IA using static hypermutations \cite{JansenZarges2011}. \new{`$^*$' indicates that the result can be easily drawn from the analysis for \textsc{OneMax} \cite{Zarges2008}.}}
@@ -443,7 +444,7 @@ For the lower bound, we use the Ballot theorem (Lemma~\ref{lem:ballot}).
 
 By Chernoff bounds, the number of 0-bits in the initialised solution is at least $n/3$ w.o.p. Considering the number of 
 0-bits as $i=q$ and the number of 1-bits as $n-i=p$, the probability of 
-an improvement is at most $1-(p-q)/(p+q)=1-(n-2i)/n=2i/n$ by the Ballot theorem, where $i=H(x, opt)$. This means that we need to wait at least $n/(2i)$ iterations to see an improvement and each time the mutation operator fails to improve the fitness, $i$ fitness function evaluations will be wasted. Considering that at least $n/3$ improvements are needed, the expected time to optimise \textsc{OneMax} is larger than $\sum_{i=1}^{n/3} \frac{n}{2i} \cdot i= \Omega(n^2)$.
+an improvement is at most $1-(p-q)/(p+q)=1-(n-2i)/n=\frac{2i}{n}$ by the Ballot theorem, where $i=H(x, opt)$. This means that we need to wait at least $\frac{n}{2i}$ iterations to see an improvement and each time the mutation operator fails to improve the fitness {(\color{blue}$\frac{n}{2i} - 1$ times in expectation) }, $i$ fitness function evaluations will be wasted. Considering that at least $n/3$ improvements are needed, the expected time to optimise \textsc{OneMax} is larger than $\sum_{i=1}^{n/3} {\color{blue}\left(\frac{n}{2i}-1\right)} \cdot i= \Omega(n^2)$.
 \end{proof}
 
 The following theorem shows that a greater speed up may be achieved if the potential decreases exponentially rather than linearly. Note that for \textsc{OneMax} the Hamming distance of a solution to the optimum and its difference in fitness are the same. %The proof is omitted due to lack of space.
@@ -460,17 +461,20 @@ any arbitrarily small constant $\epsilon>0$.
 
 \begin{proof}
 We prove the results for \expoF{} which applies to \expoHD{} as well. 
-To prove the upper bound, we use that by Chernoff bounds the initialised solution has at most $n/2+ n^{2/3}$ 0-bits w.o.p. The probability of improvement in the first mutation step is at least $i/n$ with $i$ being the number of 0-bits. As we need at most $n/2+n^{2/3}$ improvements and each time the mutation fails to make an improvement at most $n^{1-\frac{n-i}{n}}$ fitness function evaluations are wasted, the total expected time to find the optimum will be $E(T) \leq \sum_{i=1}^{n/2+n^{2/3}} \frac{n}{i} \cdot n^{\frac{i}{n}}= O (n^{3/2} \log n)$ by pessimistically assuming $i=n/2+n^{2/3}$ in $n^{i/n}$.
+To prove the upper bound, we use that by Chernoff bounds the initialised solution has at most $n/2+ n^{2/3}$ 0-bits w.o.p. {\color{blue} If this event fails, we will assume that the mutation potential is always $M=n$ which still yields polynomial runtime following the same arguments below and contributes a $o(1)$ to the total expected time}. The probability of improvement in the first mutation step is at least $i/n$ with $i$ being the number of 0-bits. As we need at most $n/2+n^{2/3}$ improvements and each time the mutation fails to make an improvement at most $n^{1-\frac{n-i}{n}}$ fitness function evaluations are wasted, the total expected time to find the optimum is $E(T) \leq o(1) + \sum_{i=1}^{n/2+n^{2/3}} \frac{n}{i} \cdot n^{\frac{i}{n}}= O (n^{3/2} \log n)$ by pessimistically assuming $i=n/2+n^{2/3}$ in $n^{i/n}$ {\color{blue} which yields $n^{1/2+n^{-1/3}}=\sqrt{n} \cdot e^{\frac{\ln n}{n^{1/3}}}=\sqrt{n} \cdot e^{o(1)}=O(\sqrt{n})$}.
 
 To prove the lower bound, we again consider $i$ as the number of 0-bits. By Chernoff 
 bounds, $i$ is at least $n/2-\epsilon n$  in the initialised bit string for some arbitrarily small constant $\epsilon>0$. 
 The probability of improvement is at most $2i/n$ by the Ballot theorem, and the number of wasted fitness function evaluations at each failure is 
-$n^{\frac{i}{n}}$. If we consider the time spent between levels $n(1/2 + 
+$n^{\frac{i}{n}}$. {\color{blue} Since our operator cannot improve the \textsc{OneMax} function value more than one due to FCM,} when we consider the time spent between levels $n(1/2 + 
 \epsilon/2)$ and $n(1/2+\epsilon)$, we get the expected time of 
-$n^{\frac{n/2-\epsilon n}{n}} \cdot \sum_{i=n/2+n\epsilon/2 }^{n/2+\epsilon 
-n} \Omega(1)=n^{1/2-\epsilon} \cdot \epsilon n/2 \cdot \Omega(1)= 
-\Omega(n^{3/2-\epsilon})$.
+{\color{blue}$n^{\frac{n/2-\epsilon n}{n}} \cdot \sum_{k=n/2+n\epsilon/2 }^{n/2+\epsilon 
+n} \frac{n}{2(n-k)}-1 \geq \sum_{k=n/2+n\epsilon/2 }^{n/2+\epsilon 
+n} \frac{\epsilon}{1-\epsilon}=n^{1/2-\epsilon} \cdot \epsilon n/2 \cdot \frac{\epsilon}{1-\epsilon}= 
+\Omega(n^{3/2-\epsilon})$.}
 \end{proof}
+
+{\color{blue}Here, we note that even though we picked the $\epsilon$ to be a constant, the leading term in the lower bound depends on $\epsilon$ quadratically which might impact practical applications.}
 
 
 
@@ -519,17 +523,17 @@ The proof for the lower bound follows that  of Theorem 3.6 in \cite{CorusOliveto
 using static hypermutation with potential $M:=cn$ with the exception that the amount of wasted fitness function evaluations in case of failure at finding an improvement within a hypermutation is now $H(x,\text{opt})$ instead of $cn$.
 
 
-Considering $i$ as the number of leading 1-bits, we denote the expected number of fitness function evaluations until an improvement happens by $E(f_i)$. Any such candidate solution has $i$ leading 1-bits with a 0-bit following, and then $n-i-1$ \emph{trailing bits}. The trailing bits stay uniformly distributed throughout the run since the hypermutation operation can only terminate with an accepted solution by immediately flipping the leftmost $0$-bit, which does not alter the trailing bits, or by immediately flipping a random trailing bit, which does not affect the probability of the flipped position being 1 or 0 after it is flipped\cite{DrosteJansenWegener2002}.   We take into account three possible events $E_1$, $E_2$ and $E_3$ that can happen in the first bit flip: $E_1$ is the event of flipping a leading 1-bit which happens with probability $i/n$, $E_2$ is the event of flipping the first 0-bit which happens with probability $1/n$, and $E_3$ is the event of flipping any other bit which happens with probability $(n-i-1)/n$. So we get $E(f_i|E_1)=H(x,opt)+ E(f_i)$, $E(f_i|E_2)=1$, and $E(f_i|E_3)=1+ E(f_i)$. Hence, by the law of total expectation, the expected number of fitness function evaluations for every improvement is $ E(f_i) = \frac{i}{n} \left( H(x,opt)+ E(f_i)\right) + \frac{1}{n} \cdot 1 +\frac{n-i-1}{n} \left( 1+ E(f_i)\right)$. Solving the equation for $E(f_i)$ gives us $E(f_i)=
+Considering $i$ as the number of leading 1-bits, we denote the expected number of fitness function evaluations until an improvement happens by $E(f_i)$. Any such candidate solution has $i$ leading 1-bits with a 0-bit following, and then $n-i-1$ \emph{trailing bits}. The trailing bits stay uniformly distributed throughout the run since the hypermutation operation can only terminate with an accepted solution by immediately flipping the leftmost $0$-bit, which does not alter the trailing bits, or by immediately flipping a random trailing bit, which does not affect the probability of the flipped position being 1 or 0 after it is flipped\cite{DrosteJansenWegener2002}.   We take into account three possible events $E_1$, $E_2$ and $E_3$ that can happen in the first bit flip: $E_1$ is the event of flipping a leading 1-bit which happens with probability $i/n$ {\color{blue} and allows the hypermutation to keep flipping $M-1$ more bits }, $E_2$ is the event of flipping the first 0-bit which happens with probability $1/n$, and $E_3$ is the event of flipping any other bit which happens with probability $(n-i-1)/n$. {\color{blue}Since FCM stops the hypermutation operator as soon as an equally fit solution is sampled $E_2$ and $E_3$ each stops the hypermutation operation.} So we get $E(f_i|E_1)=H(x,opt)+ E(f_i)$, $E(f_i|E_2)=1$, and $E(f_i|E_3)=1+ E(f_i)$. Hence, by the law of total expectation, the expected number of fitness function evaluations for every improvement is $ E(f_i) = \frac{i}{n} \left( H(x,opt)+ E(f_i)\right) + \frac{1}{n} \cdot 1 +\frac{n-i-1}{n} \left( 1+ E(f_i)\right)$. Solving the equation for $E(f_i)$ gives us $E(f_i)=
 %\frac{in-i^2-i-i\epsilon n}{2}
-i\cdot H(x,opt)+n-i\geq i\cdot H(x,opt) $. Since the bits after the leftmost 0-bit are distributed uniformly at random \cite{DrosteJansenWegener2002}, the value of $H(x,opt)$ is not less than $1+ \frac{(n-i-1)}{2}- \frac{\epsilon }{2}n$ w.o.p. by Chernoff bounds. Thus, we conclude $E(f_i) \geq \frac{(1-\epsilon)in-i^2+i}{2}$. The right hand side of the inequality has a second derivative of $-2$ with respect to $i$, and therefore it is concave down. For the interval $i\in \{n/2-\epsilon^*n,\ldots, n/2+\epsilon^*n\}$ its value is in the order of $\Omega(n^2)$ for some   arbitrarily small $\epsilon^*>0$.
+i\cdot H(x,opt)+n-i\geq i\cdot H(x,opt) $. Since the bits after the leftmost 0-bit are distributed uniformly at random \cite{DrosteJansenWegener2002}, {\color{blue} while there are still a linear number of trailing bits} the value of $H(x,opt)$ is not less than $1+ \frac{(n-i-1)}{2}- \frac{\epsilon }{2}n$ w.o.p. by Chernoff bounds. Thus, we conclude $E(f_i) \geq \frac{(1-\epsilon)in-i^2+i}{2}\cdot {\color{blue}(1-o(1))}$. The right hand side of the inequality has a second derivative of $-2$ with respect to $i$, and therefore it is concave. For the interval $i\in [n/2-\epsilon^*n, n/2+\epsilon^*n]$ its value is of order $\Omega(n^2)$ for some   arbitrarily small $\epsilon^*>0$.
 
 
-As we are computing the lower bound, we have to take into account the probability of skipping any level $i$. To do this, we need to calculate the expected number of consecutive 1-bits that follow the leftmost 0-bit (called free riders \cite{DrosteJansenWegener2002}). The expected number of free riders is $\sum_{i=1}^{n-i-1} i \cdot 1/2^{i+1} < \frac{1}{2} \cdot \sum_{i=0}^{\infty} i \cdot (1/2)^i= \frac{1}{2} \cdot \frac{1/2}{(1-1/2)^2}=1$. This means that the probability of not skipping a level $i$ is $\Omega(1)$.
+As we are computing the lower bound, we have to take into account the probability of skipping any level $i$. To do this, we need to calculate the expected number of consecutive 1-bits that follow the leftmost 0-bit (called free riders \cite{DrosteJansenWegener2002}). The expected number of free riders is $\sum_{i=1}^{n-i-1} i \cdot 1/2^{i+1} < \frac{1}{2} \cdot \sum_{i=0}^{\infty} i \cdot (1/2)^i= \frac{1}{2} \cdot \frac{1/2}{(1-1/2)^2}=1$. This means that {\color{blue}$p^{*}_{i}$}, the probability of not skipping a level $i$ is $\Omega(1)$.
 %We know that the expected number of consecutive 1-bits that follow the leftmost 0-bit is less than two \cite{DrosteJansenWegener2002} which means the probability of not skipping a level $i$ is $\Omega(1)$.
 On the other hand, with probability at least $1- 2^{-n/3}$, the initial solution does not have more than $n/3$ leading 1-bits. Thus, we obtain a lower 
-bound of  $(1-2^{-n/3}) \sum_{i=n/2-\epsilon^*n}^{n/2+\epsilon^*n} \Omega(1)\cdot E(f_i)=\Omega(1) \sum_{i=n/2-\epsilon^*n}^{n/2+\epsilon^*n} \frac{in-i^2+i-i\epsilon n}{2}=\Omega(n^3)$ on the expected number of fitness function evaluations.
+bound of  $(1-2^{-n/3}) \sum_{i=n/2-\epsilon^*n}^{n/2+\epsilon^*n} p^{*}_{i}\cdot E(f_i)=\Omega(1) \sum_{i=n/2-\epsilon^*n}^{n/2+\epsilon^*n} \frac{in-i^2+i-i\epsilon n}{2}=\Omega(n^3)$ on the expected number of fitness function evaluations.
 
-Now we prove the upper bound. The probability of improvement in each step is at least $1/n$ which is the probability of flipping the leftmost 0-bit as first bit-flip. Since at most $n$ improvements are needed and each failure at improving yields $\frac{n-i-1}{2}+1+\epsilon n$ wasted fitness function evaluations in expectation (i.e., $E[H(x,\text{opt})]$) where $i$ is the number of the leading 1-bits, the expected time to find the optimum is at most $\sum_{i=1}^n n \cdot \left(\frac{n-i-1}{2}+1+\epsilon n\right)= O(n^3)$.
+Now we prove the upper bound. The probability of improvement in each step is at least $1/n$ which is the probability of flipping the leftmost 0-bit {\color{blue} in the first} bit-flip. Since at most $n$ improvements are needed and each failure at improving yields {\color{blue} at most $n$} wasted fitness function evaluations, the expected time to find the optimum is at most $\sum_{i=1}^n n \cdot {\color{blue}n}= O(n^3)$.
 
 \end{proof}
 
@@ -538,37 +542,37 @@ Theorem \ref{expohdOnLO} shows that the exponential fitness-based mutation
 potential provides at least a logarithmic and at most a $\sqrt 
 n$ factor speed-up compared to static mutation potentials. Before proving the main results, we introduce the following  lemma that will be used in the proof of the upcoming theorems.
 \begin{lemma}\label{lem:expo}
-For large enough $n$ and any arbitrarily small constant $\epsilon$, 
+For large enough $n$ and {\color{blue}any arbitrary constant} $\epsilon$, 
 $n^{1/n^{\epsilon}}= (1+\frac{\ln{n}}{n^{\epsilon}})(1 \pm o(1))$.
 \end{lemma}
 \begin{proof}
-By raising $\left(1+\frac{\ln{n}}{n^{\epsilon}}\right)$ to the power 
-of $\frac{n^{\epsilon}}{\ln{n}} \cdot \frac{\ln{n}}{n^{\epsilon}}$ we have,
-\[\left(1+\frac{\ln{n}}{n^{\epsilon}}\right) ^{\frac{n^{\epsilon}}{\ln{n}} 
-\cdot \frac{\ln{n}}{n^{\epsilon}}} = \left(1 \pm 
-o(1)\right)e^{\frac{\ln{n}}{n^{\epsilon}}}=(1 \pm 
-o(1))n^{1/n^\epsilon}. \]\end{proof}
+	$n^{\frac{1}{n^\epsilon}} = e^{\frac{\ln(n)}{n^\epsilon}} = 1 + \frac{\ln(n)}{n^\epsilon} + o(\frac{\ln(n)}{n^\epsilon})$ by the Taylor's series of the exponent.
+	
+\end{proof}
 
 
 \begin{theorem} \label{expohdOnLO}
-The {\oneoneIA } using \IPHfcm{} with {\expoF } optimises \textsc{LeadingOnes} in\\$O(n^3/\log n)$ and 
+The {\oneoneIA } using \IPHfcm{} with {\expoF } optimises \textsc{LeadingOnes} in $O(n^3/\log n)$ and 
 $\Omega(n^{(5/2)+\epsilon})$  expected fitness function evaluations for any 
 arbitrarily small constant $\epsilon>0$. 
 \end{theorem}
 
 \begin{proof}
-As already shown in the proof of Theorem \ref{th:linHD-LO}, the expected number of leading 1-bits is smaller than 1 in the initialised bit 
-string. The probability of improvement in the first step is $1/n$. In the case of 
+{\color{blue} The expected number of leading 1-bits is smaller than 1 in the initialised bit 
+	string since each bit 0 or 1 with $1/2$ probability and $\sum^{n}_{i=1}2^{-i}<1$ for finite $n$.} The expected number of leading 1-bits is smaller than 1 in the initialised bit 
+string. The probability of improvement in the first step {\color{blue} of the hypermutation} is $1/n$. In the case of 
 failure at improving in the first step, at most $n^{\frac{n-i}{n}}$ fitness 
 function evaluations are wasted where $i$ is the number of leading 
-1-bits. Therefore, the total expected time to find the optimum is  $E(T) \leq 
-\sum_{i=1}^{n-1} n \cdot n^{(n-i)/n}=O( n^3/\log n)$ considering that $ 
-\sum_{i=1}^{n-1} n^{i/n}= \sum_{i=2}^n (n^{1/n})^{i-1}<\sum_{i=1}^n (n^{1/n})^{i-1}=\frac{1-n}{1-n^{1/n}}$ (using the general partial power series sum: $\sum_{i=0}^{m}a^{i}=\frac{1-a^{m+1}}{1-a}$ for $a\neq 1$)  that gets in turn bounded from above by $n^2/(\log n)$ using Lemma~\ref{lem:expo}.
+1-bits. {\color{blue}$\sum_{i = 0}^{n - 1} n \cdot n^{(n - i) / n} < n^2 \sum_{i = 0}^{+\infty}(n^{-1/n})^i = n^2 \cdot \frac{1}{1 - n^{-1/n}} = n^2 \cdot \frac{n^{1/n}}{n^{1/n} - 1} = n^2 \cdot \frac{1 + o(1)}{\frac{\ln{n}}{n} + o(\frac{\ln{n}}{n})} = O(\frac{n^3}{\log{n}})$. }
+
+Therefore, the total expected time to find the optimum is  $E(T) \leq 
+\sum_{{\color{blue}i=0}}^{n-1} n \cdot n^{(n-i)/n}=O( n^3/\log n)$ considering that $ 
+\sum_{{\color{blue}i=0}}^{n-1} n^{i/n}= \sum_{{\color{blue}i=1}}^n (n^{1/n})^{i-1}=\frac{1-n}{1-n^{1/n}}$ (using the general partial power series sum: $\sum_{i=0}^{m}a^{i}=\frac{1-a^{m+1}}{1-a}$ for $a\neq 1$)  that gets in turn bounded from above by $n^2/(\log n)$ using Lemma~\ref{lem:expo}.
 
 
 The proof of the lower bound is similar to the proof of Theorem \ref{th:linHD-LO}, except for the calculation of $E(f_i)$ when we want to consider the amount of wasted fitness function evaluations in case of $E_1$ happening. Here we have $ E(f_i) = \frac{i}{n} \left( n^{(n-i)/n}+ E(f_i)\right) + \frac{1}{n} \cdot 1 +\frac{n-i-1}{n} \left( 1+ E(f_i)\right)$. Solving it for $E(f_i)$ gives us $E(f_i)=i\cdot n^{(n-i)/n}+n-i$. 
-Hence, the expected time to optimise \textsc{LeadingOnes} is 
-$(1-2^{-n/2})\sum_{i=n/2}^{n} E(f_i)=\Omega(1) \sum_{i=n/2}^{n} 
+{\color{blue}Following the proof of Theorem~\ref{th:linHD-LO}}, the expected time to optimise \textsc{LeadingOnes} is 
+$(1-2^{-n/2})\sum_{i=n/2}^{n} {\color{blue}p_{i}^{*}} E(f_i)=\Omega(1) \sum_{i=n/2}^{n} 
 \left(i\cdot n^{(n-i)/n}+n-i \right)=\Omega(1)\left( \sum_{i=n/2}^{n} (n-i)+ 
 \sum_{i=n/2}^{n} \left(i\cdot n^{(n-i)/n}\right)\right)$. Evaluating the second 
 sum in the interval $i\in [n/2+\frac{\epsilon n}{2}, n/2+\epsilon n]$, we get $\epsilon 
@@ -594,18 +598,19 @@ fitness function evaluations for any arbitrarily small constant $\epsilon>0$.
 The proof for the upper bound is similar to the proof of Theorem~\ref{th:linHD-LO}, however, each 
 failure in improvement yields $n^{H(x, \text{opt})/n}$ wasted fitness function evaluations. 
 Since the bits after the leading ones are uniformly distributed, by Chernoff bounds the number 
-of 0-bits (Hamming distance to the optimum) is smaller than  $1+((n-i-1)/2)+\epsilon n$ 
+of 0-bits (Hamming distance to the optimum) is smaller than  $1+(n-i-1)/2+\epsilon n$ 
 w.o.p. Hence, the expected time to optimise \textsc{LeadingOnes} is $\sum_{i=1}^{n} n \cdot 
-n^{\frac{1+((n-i-1)/2)+\epsilon n}{n}}= n \sum_{i=1}^{n} 
-n^{\frac{1}{2}-\frac{i}{2n}+\epsilon+\frac{1}{2n}}=n \cdot n^{1/2+\epsilon+\frac{1}{2n}} \sum_{i=1}^{n} 
+n^{\frac{1+(n-i-1)/2+\epsilon n}{n}}= n \sum_{i=1}^{n} 
+n^{\frac{1}{2}-\frac{i}{2n}+\epsilon+\frac{1}{2n}}=n \cdot n^{\frac{1}{2}+\epsilon+\frac{1}{2n}} \sum_{i=1}^{n} 
 n^{-\frac{i}{2n}}$. Knowing that 
-$\sum_{i=0}^{\infty}n^{-\frac{i}{2n}}=\frac{1}{1-n^{(-1/(2n))}}$ and $n^{-1/(2n)} \leq \left(1-\frac{\ln n}{2n}\right)(1-o(1))$  for all $n>1$ by Lemma~\ref{lem:expo}, we get 
-$1-n^{(-1/(2n))} < \frac{\ln n}{2n}(1+o(1))$.  Hence, the expected time is $E(T) 
-< n^{(3/2)+\epsilon} \cdot n^{1/(2n)} \cdot O\left(\frac{n}{\ln n}\right)=O\left(\frac{n^{(5/2)+\epsilon}}{\ln n}\right)$.
+$\sum_{i=0}^{\infty}n^{-\frac{i}{2n}}=\frac{1}{1-n^{\frac{-1}{2n}}}=${$\color{blue} \frac{n^{\frac{1}{2n}}}{n^{\frac{1}{2n}} - 1} = \frac{1 + o(1)}{\frac{\ln{n}}{2n} + o\left(\frac{\ln{n}}{2n}\right)} = O\left(\frac{n}{\log{n}}\right)$ where in the third equality we used Taylor expansion of the exponential function.}  Hence, the expected time is $E(T) 
+< n^{\frac{3}{2}+\epsilon} \cdot n^{\frac{1}{2n}} \cdot O\left(\frac{n}{\log n}\right)=O\left(\frac{n^{\frac{5}{2}+\epsilon}}{\log n}\right)$.
+
+
 
 The proof of the lower bound is also similar to the proof of Theorem~\ref{th:linHD-LO}. 
 By taking the same steps and solving the equation for $E(f_i)$,we get
-$E(f_i)=i \cdot n^{1/n+\frac{n-i-1}{2n}-\epsilon}+n-i$. Then, by taking into account the probabilities of starting with fewer than $n/2$ leading 1-bits and skipping a level $i$, we get the expected runtime of 
+$E(f_i)=i \cdot n^{\frac{1}{n}+\frac{n-i-1}{2n}-\epsilon}+n-i$. Then, by taking into account the probabilities of starting with fewer than $n/2$ leading 1-bits and skipping a level $i$, we get the expected runtime of 
 \begin{align*}
 &(1-2^{-n/2})\sum_{i=n/2}^{n} E(f_i)\\
 &\geq \Omega(1) \sum_{i=n/2+\epsilon 
@@ -796,7 +801,7 @@ we will use it in the remainder of the paper.
 
  	
  	\section{Inefficient Behaviour of IPH in Practice}In this section we consider the usage of  {\expoHD } in realistic applications where the optimum is unknown.
- 	To this end, the best seen solution will be used by the operator, rather than the unknown optimum.
+ 	To this end, the best seen solution will be used by the operator, rather than the unknown optimum. {\color{blue} As a design choice, when the algorithm finds a new solution that is as good as the previous best we update the best seen solution.}
  	We combine \IPHfcm{} using {\expoHD } with hybrid ageing, as in the Opt-IA AIS \cite{CutelloNicosiaPavoneTimmis2007}, and embed it in a $(1+1)$~Opt-IA shown in Algorithm \ref{alg:alg1+ageing}. \new{To use the ageing operator an age, $\alpha(x)$, is assigned to the individual $x$ and is initially set to zero.} After the Hypermutate$(x)$ operator, %, our algorithm  
  	%1) calculates $M:=$ \expoHD, and 2) creates $y$ by flipping at most $M$ distinct bits of $x$ selected uniformly at random one after another until constructive mutation happens.
  	the ageing operator is applied.
@@ -910,13 +915,13 @@ we will use it in the remainder of the paper.
 \begin{minipage}{.5\textwidth}
 \centering
 \includegraphics[width=1\textwidth]{4}
-\caption{\textsc{TwoMax} test function.}
+\caption{The \textsc{TwoMax} test function for $n=50$}
 \label{fig:twomax}
 \end{minipage}
 \begin{minipage}{.5\textwidth}
 \centering
 \includegraphics[width=1\textwidth]{2}
-\caption{\textsc{Cliff} test function.}
+\caption{The \textsc{Cliff} test function for $n=50$ and $d=10$}
 \label{fig:cliff}
 \end{minipage}%
 \end{figure}
@@ -941,8 +946,7 @@ We start by showing that without knowing the location of the optimum in advance 
 
 \begin{theorem} \label{thm:onemaxexpo}
 The expected runtime of the \oneoneOPTIA~using \IPHfcm{}  with {\expoHD } for optimising
-\textsc{OneMax} is $\Theta(n\log n)$ with $\tau=\Omega(n^{1+\epsilon})$ for some 
-constant $\epsilon>0$.
+\textsc{OneMax} is $\Theta(n\log n)$ with $\tau=\Omega(n^{1+\epsilon})$ {\color{blue}for any arbitrary} constant $\epsilon>0$.
 \end{theorem}
 \begin{proof}
 Let $x_t$ be the current solution at the beginning of the iteration $t$. Immediately after the initialisation, the best seen solution is the current individual $x_1$ itself and the mutation potential is $M=$ {\expoHD }$=n^{H(x_1,x_1)/n}=n^0=1$. Note that  $x_t \neq x_{t+1}$ if and only if either $f(x_{t+1})\geq f(x_t)$ or $x_{t+1}$ is reinitialised after $x_t$ is removed from the population due to ageing. Thus, the mutation operator flips a single bit at every iteration until ageing is triggered for the first time.
@@ -950,120 +954,64 @@ The improvement probability will be at least $ 1/n $ until either $1^n$ or $0^n$
 Given that the ageing threshold $\tau$  is at least $n^{1+\epsilon}$ for some constant $\epsilon >0 $, 
 the probability that the current solution will not improve $\tau$ times consecutively is at most 
 $(1-\frac{1}{n})^{n^{1+\epsilon}}=e^{-\Omega(n^\epsilon)}$. 
-Hence, the first optimum will be found before ageing is triggered w.o.p. Given that the ageing operator is not triggered, the expected time to find the first optimum can be shown with a fitness level argument. Let $k$ be the number of $0$-bits in $x_t$. The probability that a mutation improves $x_t$ is thus $k/n$ and the expected time for such an improvement is $n/k$. If we sum over all possible $k$, we obtain the expected runtime $\sum\limits_{k=0}^{n}n/k \leq n \ln n$, which is conditional on ageing not being triggered. If ageing triggers the mutation potential can be at most $n$ and due to FCM the runtime would be at most $O(n^2 \log n)$ following the same line of argument while considering $n$ wasted fitness function evaluations for each mutation. Since the ageing does not trigger with overwhelming probability, the expected runtime is $O(n \log n)$.
-To prove the lower bound we make a case distinction with respect to whether the ageing is triggered before the optimum is found. If the ageing mechanism is triggered, then by our assumption $\tau=\Omega(n^{1+\epsilon})$ the runtime is $\Omega(n \log n)$. For the second case, the operator flips a single bit per mutation. Since the algorithm is initialised with a uniformly random solution, the number of $0$-bits in the initial solution is at least $n/3$ with overwhelming probability due to Chernoff bound on the binomial distribution. Similar to our argument for the upper bound, the expected time until the number of $0$-bits in the solution decreases from $k$ to $k-1$ is $k/n$. Therefore, the expected runtime is  at least $(1-2^{-\Omega(n)}) \cdot \sum_{k=1}^{n/3} k/n = \Omega(n \log n)$. 
+Hence, the first optimum will be found before ageing is triggered w.o.p. Given that the ageing operator is not triggered, the expected time to find the first optimum can be shown with a fitness level argument. Let $k$ be the number of $0$-bits in $x_t$. The probability that a mutation improves $x_t$ is thus $k/n$ and the expected time for such an improvement is $n/k$. If we sum over all possible $k$, we obtain the expected runtime $\sum\limits_{k=1}^{n}n/k \leq n \ln n + {\color{blue}O(n) } $, which is conditional on ageing not being triggered. If ageing triggers, the mutation potential can be at most $n$ and due to FCM the runtime would be at most $O(n^2 \log n)$ following the same line of argument while considering $n$ wasted fitness function evaluations for each mutation. As the reinitializations are uniformly at random if we pessimistically assume that the first instance of ageing triggering happened at level $n-1$ which yields the maximum mutation potential,  Since the ageing does not trigger with overwhelming probability, the expected runtime is $O(n \log{n})$.
+
+To prove the lower bound we make a case distinction with respect to whether the ageing is triggered before the optimum is found. If the ageing mechanism is triggered, then by our assumption $\tau=\Omega(n^{1+\epsilon})$ the runtime is $\Omega(n \log n)$. For the second case, the operator flips a single bit per mutation. Since the algorithm is initialised with a uniformly random solution, the number of $0$-bits in the initial solution is at least $n/3$ w.o.p. due to Chernoff bound on the binomial distribution. Similar to our argument for the upper bound, the expected time until the number of $0$-bits in the solution decreases from $k$ to $k-1$ is $k/n$. Therefore, the expected runtime is  at least $(1-2^{-\Omega(n)}) \cdot \sum_{k=1}^{n/3} k/n = \Omega(n \log n)$. 
 \end{proof}
 
 \begin{theorem} \label{thm:leadingonesexpo}
 The expected runtime of the \oneoneOPTIA~using \IPHfcm{}  with {\expoHD } for optimising
-\textsc{LeadingOnes} is $\Theta(n^2)$ with $\tau=\Omega(n^{1+\epsilon})$ for some 
+\textsc{LeadingOnes} is $\Theta(n^2)$ with $\tau=\Omega(n^{1+\epsilon})$ {\color{blue}for any arbitrary} 
 constant $\epsilon>0$.
 \end{theorem}
 \begin{proof}
-For any suboptimal $x\in\{0,1\}^n$ it is sufficient to flip the leftmost $0$-bit of $x$ to improve its \textsc{LeadingOnes} value. Thus, the same argument in Theorem~\ref{thm:onemaxexpo} which establishes that the ageing will not trigger with overwhelming probability also holds. We can similarly continue with a fitness level argument, however the improvement probability for \textsc{LeadingOnes} is always $1/n$ regardless of the current function value and thus the sum yields $\sum\limits_{i=0}^{n}n = n^2$.
-For the lower bound, it is sufficient to prove that the conditional expectation given that ageing does not trigger is $\Omega(n^2)$ since ageing will not trigger with overwhelming probability. In that case we have to consider how much the objective function value will increase in expectation when the leftmost $0$-bit is flipped by the operator. The bits on the right of the leftmost $0$-bit does not contribute to the fitness value and thus each can be a $0$-bit or $1$-bit with equal probability. Therefore, the expected number of "free-riders", i.e., the sequence of consecutive $1$-bits that follow the leftmost $0$-bit is at most $\sum_{i=0}^{n}2^{-i}\leq 2$. Since the expected increase in after every mutation is at most $2$, the expected number of necessary successful mutations where the leftmost $0$-bit is flipped is at least $n/2$ to find the optimal solution. The expected time for each such successful mutation is $(1/n)^{-1}=n$ iterarions and consequently the expected time until the optimum is found given that the ageing operator does not trigger is $\Omega(n^2)$.  
+For any suboptimal $x\in\{0,1\}^n$ it is sufficient to flip the leftmost $0$-bit of $x$ to improve its \textsc{LeadingOnes} value. Thus, the same argument in Theorem~\ref{thm:onemaxexpo} which establishes that the ageing will not trigger with overwhelming probability also holds. We can similarly continue with a fitness level argument, {\color{blue} with the only difference in that} the improvement probability for \textsc{LeadingOnes} is always $1/n$ regardless of the current function value and thus the sum yields $\sum\limits_{i=1}^{n}n = n^2$.
+
+For the lower bound, it is sufficient to prove that the {\color{blue}expectation conditional on ageing not triggering} is $\Omega(n^2)$, since ageing will not trigger with overwhelming probability. In that case we have to consider how much the objective function value will increase in expectation when the leftmost $0$-bit is flipped by the operator. The bits on the right of the leftmost $0$-bit does not contribute to the fitness value and thus each can be a $0$-bit or $1$-bit with equal probability. Therefore, the expected number of "free-riders", i.e., the sequence of consecutive $1$-bits that follow the leftmost $0$-bit is at most $\sum_{i=0}^{n}2^{-i}\leq 2$. Since the expected increase after every mutation is at most $2$, the expected number of necessary successful mutations where the leftmost $0$-bit is flipped is at least $n/2$ to find the optimal solution. The expected time for each such successful mutation is $(1/n)^{-1}=n$ iterations and consequently the expected time until the optimum is found given that the ageing operator does not trigger is $\Omega(n^2)$.  
 \end{proof}
 We now move on to \textsc{TwoMax}. The following theorem shows that after the algorithm escapes from the local optimum, the mutation rate increases as the algorithm climbs up the opposite branch.
 This behaviour causes a large waste of fitness evaluations defying the objectives of IPH.
 \begin{theorem}\label{thm:twomaxexpo}
 	The expected runtime of the \oneoneOPTIA{} using \IPHfcm{} with
 	the {\expoHD} mutation potential for optimising
-	\textsc{TwoMax} is $\Theta(n^{2}\log n)$, provided the ageing
-	threshold satisfies $\tau=\Omega(n^{1+\epsilon})$ for some fixed
+	\textsc{TwoMax} is $\Theta(n^{2}\log n + {\color{blue}\tau})$, provided the ageing
+	threshold satisfies $\tau=\Omega(n^{1+\epsilon})$  {\color{blue}for any arbitrary} constant
 	$\epsilon>0$.
 \end{theorem}
 
 \begin{proof}
-	\textbf{Phase~1 – finding \emph{one} global optimum.}
-	Exactly as in Theorem~\ref{thm:onemaxexpo},
-	an initially uniform search point reaches one of the two optima
-	in expected $O(n\log n)$ iterations:
-	each accepted mutation flips a single bit,
-	the acceptance probability is at least $1/n$,
-	and coupon–collector arguments give the bound.
-	Because $\tau=\Omega(n^{1+\epsilon})$,
-	the probability that ageing intervenes before the optimum is found is
-	$e^{-\Omega(n^{\epsilon})}$,
-	so this $O(n\log n)$ estimate holds \emph{with overwhelming
-		probability}.  Call the first optimum $x^{\star}$ and set
-	\emph{best seen} \(:=x^{\star}\).
+	We follow the same argument in Theorem~\ref{thm:onemaxexpo} to conclude that in expected $O(n\log n)$ time, the algorithm will find one of the optima. {\color{blue} Without losing generality, let $1^n$ be the first optimum that the algorithm samples}. 
 	
-	\smallskip
-	\textbf{Phase~2 – restart and branch classification.}
-	After reaching $x^{\star}$ no single-bit flip is accepted,
-	hence the individual ages to $\tau$ and is reinitialised.
-	Within at most $\tau+n$ further iterations a fresh random string
-	appears, while $x^{\star}$ remains the \emph{best seen} solution.
+	After finding the first optimum, no single-bit flip can yield an equally fit solution. The individual then reaches age $\tau $ and the ageing reinitialises the current solution. Thus, with 
+	$\left(1-2^{-n}\right) \cdot \left(1-e^{-\Omega(n^\epsilon)} \right)$ probability a new solution will be initialised within $\tau + n$ steps. Now, the current \emph{best seen} is the first discovered optimum. 
 	
-	Write $k=\onemax(x)$ for that new string.
-	Its mutation potential is
-	\(M(k)=n^{1-k/n}\).
-	The deterministic inequality
-	\[
-	M(k)\;<\;n-2k
-	\quad\Longleftrightarrow\quad
-	k\;\le\;\frac n2-\sqrt n
-	\tag{B1}\label{eq:det-block}
-	\]
-	(proved just before this theorem)
-	shows that if the fresh string has at most
-	$n/2-\sqrt n$ one–bits
-	it can \emph{never} flip enough zeros to cross to the opposite
-	branch in a single \textsc{fcm} phase.
-	We call such a restart \emph{blocked}.
-	By Berry–Esseen, 
-	\[
-	\Pr\!\bigl\{k\le n/2-\sqrt n\bigr\}
-	= \Phi(-2)\pm O(n^{-1/2}) \ge 0.01
-	\qquad(n\ge 1\,380),
-	\]
-	so each restart is blocked with constant probability $p\ge 0.01$.
+	Let the first and second branch denote the subsets of the solution space which consist of solutions with less than and more than Hamming distance $n/2$ to the first discovered optimum respectively. We first consider the case when the new solution is initialised on the first branch. Given that the current solution has fitness $i$, the distance to the best seen is $n-i$ and the mutation potential is $M=n^{\frac{n-i}{n}}$. Since the first constructive mutation ensures that the probability of improvement is always at least $1/n$, w.o.p.,  ageing will not be triggered until either optimum is discovered. Thus, given that the current solution is always on the first branch, the proof of Theorem~\ref{cor:omexpohd} carries over and the expected time to find the first discovered optimum once again is at most $O(n^{3/2}\log{n})$ in expectation. When the first discovered optimum is sampled again, w.o.p. the current solution is reinitialised with the first discovered optimum as the best seen solution in at most $\tau + n$ iterations.
 	
-	\smallskip
-	\textbf{Phase 2a – a blocked cycle.}
-	Condition on the blocked event $k\le n/2-\sqrt n$.
-	While $x$ stays on its own branch it
-	monotonically climbs to $x^{\star}$ in
-	$O(n\log n)$ iterations, then survives exactly $\tau$ further
-	generations before ageing triggers the next restart.
-	Thus one blocked cycle costs
-	$\Theta(n\log n+\tau)=\Theta(n^{1+\epsilon})$ evaluations.
+	Now, we consider the case where the current solution is on the second branch. A lower 
+	bound on the probability that the current solution will reach the optimum of the second branch before 
+	sampling an improving solution on the first branch will conclude the proof since the expected time to do so is $O(n^{3/2}\log{n})$ given that the current solution does not switch branches before. 
+	% 
 	
-	\smallskip
-	\textbf{Phase 2b – an unblocked cycle.}
-	With the complementary probability $1-p$ the restart begins at some
-	level
-	\(k\in[n/2-\sqrt n,\;n/2+\sqrt n]\).
-	Here \(M(k)=\Omega(n/e)\), so a single
-	\textsc{fcm} phase can flip $\Theta(n)$ bits.
-	Standard arguments for hypermutations
-	(as used in Theorem~\ref{cor:omexpohd})
-	give an $O(n^{3/2}\log n)$ upper bound on the number of further
-	generations until $0^{n}$ (the second optimum) is accepted
-	\emph{with high probability}.
-	Even if ageing fires first, the phase still costs at most
-	$\tau+O(n)$ steps, which is $O(n^{1+\epsilon})$ and thus dominated by
-	$O(n^{3/2}\log n)$.
+	{\color{blue}Let $n/2 + k$ be the number of $0$-bits in a second branch solution. In order to sample a solution with at least $n/2 +k$ $1$-bits, i.e., a solution with at least equal fitness on the other branch, at least $2k$ bits must be flipped. We will first show that for $k \in [ \sqrt{n},n/2-1]$ the mutation potential $M(k)=n^\frac{n/2 -k}{n}$ is always smaller than $2k$. We will analyse the sign of the function 
 	
-	\smallskip
-	\textbf{Putting everything together.}
-	The number of blocked cycles before the first unblocked one is
-	geometric with expectation $1/p=O(1)$.
-	Hence the expected time until a blocked–cycle sequence ends is
-	\[
-	O(1)\cdot\Theta(n^{1+\epsilon})
-	=\Theta(n^{1+\epsilon}),
-	\]
-	and the first successful unblocked phase afterwards adds
-	$O(n^{3/2}\log n)$ more evaluations.
-	Summing with the initial $O(n\log n)$ cost of Phase 1 yields the total
-	expected runtime
-	\[
-	\Theta(n^{1+\epsilon}) + O(n^{3/2}\log n) =
-	\Theta(n^{2}\log n),
-	\]
-	because $\epsilon>0$ and $n^{3/2}\log n$ dominates $n^{1+\epsilon}$ for
-	all sufficiently large~$n$.
+	\begin{align*}
+		 n^{\frac{n/2 -k}{n}} < 2k \iff f(k):= \ln{2k} - (1/2 - k/n)\ln{n}  > 0
+	\end{align*}
+	
+	We will first consider the endpoints of the interval.
+	For large enough $n$, $f(\sqrt{n})=\ln{2}-\frac{\ln{n}}{\sqrt{n}}$ and  $f(n/2 -1 )=\frac{\ln{n}}{n} - \ln{(n-2)}$ are both positive. The first derivative of $f(k)$ is $f'(k)=\frac{1}{k} - \frac{\ln{n}}{n}$ whose critical point $k=\frac{n}{\ln{n}}$ lies in the interval $[\sqrt{n},n/2-1]$. In particular, $f$ increases on $[\sqrt{n}, n/ \ln{n}]$ and decreases on $[n/\ln{n},n/2 -1 ]$, concluding that it stays positive for the entire interval. Consequently, we have established that once the individual on the second branch has at least $n/2 + \sqrt{n}$ $0$-bits, the hypermutation operator can not yield an equally good solution on the first branch. 
+	
+	Next, we will argue that a reinitialised solution has a $\Omega(1)$ probability of having at least $n/2 + \sqrt{n}$ $0$-bits. Since the number of $0$-bits is $Bin(n, 1/2)$ distributed, the desired event is that the outcome deviates at least by two standard deviations from the mean and has probability $1-\phi(2) = \Omega(1)$. 
+	
+}
+
+	 Given that no switch occurs, the expected time to find the second optimum is $\sum_{i=1}^{n/2+\epsilon n} \frac{n}{i} \cdot 
+	n^{\frac{n-i}{n}}=O(n^{2}\log{n})$. Since, we will have to restart a constant number of times in expectation until we guarantee that the solution will not switch until the second optimum is found, the expected time to find both optima is $O(n^{2}\log{n})$.
+	
+	For the lower bound, assume that the first discovered solution is $1^n$ and consider the last $\frac{n}{\log{n}}$ fitness-levels before the second optimum $0^n$ is discovered. Due to FCM, the current solution has to visit each of these levels and the minimum mutation potential in these fitness levels is $n^{\frac{n-n/\log{n}}{n}}=\frac{n}{e}$. Thus, the expected time is at least $\sum_{i=1}^{n/\log{n}} \frac{n}{i}\cdot \frac{n}{e} = \Omega(n^2 \log{n})$. 
+	
+	
+	
 \end{proof}
 
 
@@ -1134,30 +1082,28 @@ We believe that this assumption is realistic for practical applications.
 The {\oneoneOPTIA } using \IPHfcm{} with {\expoHD } and $\tau=\Omega(n^{1+\epsilon})$ 
 for 
 an arbitrarily small constant $\epsilon$,  optimises \cliff{} with 
-$d<n(\frac{1}{4}-\epsilon)$ in $O(n^{3/2}\log{n}+ \tau 
-n^{1/2} + \frac{n^{7/2}\log{n}}{d^2})$ 
-expected fitness function evaluations. 
+$d<n(\frac{1}{4}-\epsilon)$ in expected {\color{blue} $O\left( \left(n^{3/2}\log{\frac{n}{d}}+\tau \right)\cdot \frac{n^2}{d^2}\right)$ }
+ fitness function evaluations. 
 \end{theorem}
 
 \begin{proof}
 The analysis will follow a similar idea to the proof of 
 Theorem~\ref{thm:twomaxexpo}. After initialisation, the initial mutation 
 potential is $M=1$ since the current solution is the best seen solution. With 
-single bit-flips it takes in expectation at most $O(n \log{n})$ to find 
+single bit-flips it takes in expectation at most {\color{blue}$O(n \log{\frac{n}{d}})$} to find 
 a local optimum of the cliff (i.e., a search point with $n-d$ 1-bits). Since the 
-local optima cannot be improved with single bit flips, in $\tau$ generations 
-after it was first discovered the ageing will be triggered and in the following 
+local optima {\color{blue} have better fitness value than any other suboptimal solution, as long as the current solution is a local optimum, $M=1$ regardless of how many restarts happened before. Moreover,} a local optimum cannot be improved with single bit flips and in $\tau$ generations after it was first discovered the ageing will be triggered and in the following 
 $n$ steps the current solution will be removed from the population due to 
-ageing with probability at least $1-2^{-n}$. The Hamming distance of the  
+ageing with probability at least {\color{blue} $1-\frac{4}{3}^{-n}$}. The Hamming distance of the  
 reinitialised solution will be distributed binomially with parameters $n$ and 
 $1/2$ and w.o.p. will be smaller than $n/2 + 
-n^{2/3}$, yielding an initial mutation potential of $M=O(n^{1/2})$. We 
+n^{2/3}$, yielding an initial mutation potential of $M{\color{blue}\leq n^{\frac{n/2+n^{2/3}}{n}}=n^{1/2}\cdot n^{n^{-1/3}}=} O(n^{1/2})$. {\color{blue}Since we only consider improvements after the first bit-flip,} we 
 pessimistically assume that the mutation potential will not decrease until a  
-local optima is found again, which implies that the expected time will be at 
-most $O(n^{3/2}\log{n}+\tau n^{1/2})$ since each iteration will waste an extra 
-$O(n^{1/2})$ fitness function evaluations. After finding a local optima 
+local optima is found again, which implies that the expected time {\color{blue} between the consecutive discoveries of the local optima} will be at 
+most {\color{blue}$O(n^{3/2}\log{\frac{n}{d}}+\tau)$ } since each iteration will waste an extra 
+$O(n^{1/2})$ fitness function evaluations {\color{blue} until finding a local optimum}. After finding a local optimum 
 again, the mutation potential will be $M=1$ since it will replace the 
-previously observed local optima as the best seen. The process of 
+previously observed local optimum as the best seen. The process of 
 reinitialisation and reaching the local optima will repeat until a solution at the bottom of the Cliff is created and accepted.
 
 If the local optima produces an offspring with $n-d+1$ bits, which happens  with probability 
@@ -1170,36 +1116,17 @@ will be $M=1$.  Moreover, if the surviving offspring improves again (with
 probability $(d-1)/n$) in the next iteration, it will reset its age to zero and 
 will 
 have Hamming distance of at least two to any local optima.  In expected 
-$O(n/\log{n})$ generations, this solution will reach 
+$O(n\log d)$ generations, this solution will reach 
 the global optimum unless a solution with less or equal $n-d$ 1-bits is sampled 
-before. Initially, this is impossible since for at least $\omega(1)$ 
-steps we have $M=1$, and later $M<3$ holds as long  as the distance to the last seen local 
-optima is at most $n/\ln{n}$ since $n^{\frac{n/\ln{n}}{n}}=e$. 
-Note that the number of 1-bits does not always reflect the actual Hamming 
-distance since more than one bit can be flipped in an accepted offspring. 
-We will pessimistically assume that all improvements have increased the Hamming 
-distance by three until the total Hamming distance reaches $n/\ln{n}$, which 
-implies that there have been $n/(3\ln{n})$ accepted solutions. 
-%As shown in the proof of Theorem \ref{th:linHD-OM}, 
-The Ballot theorem implies that sampling a solution that is at least as good as the parent (which are the 
-only solutions that are accepted) has probability at most $2 i /n$ where $i$ is 
-the number of 0-bits in the solution. Since the probability of improving in the 
-first step is at least $i/n$, we can conclude that the conditional probability 
-that an accepted offspring is a strict improvement is at least $1/2$. Thus, when the 
-Hamming distance to the local optima reaches $n/\ln{n}$, in expectation, the 
-current solution will have at least $n/(6\ln{n})$ extra 1-bits compared to 
-the local optima and at least $n^{3/5}$ extra 1-bits w.o.p. by Chernoff bounds. The Hamming distance to the local optima can be at most $2d$ 
-since both the local optima and the current solution have less than $d$ 
-0-bits. Since $d<n/4$, the mutation potential is at most $n^{\frac{2d}{n}}\leq\sqrt{n}$. Thus, 
-no hypermutation can yield a solution with less than $n-d+2$ 1-bits. Therefore, 
+before. {\color{blue}While $M=1$, the distance to the local optima can only increase by improvements. In particular until we have improved for $\ln{2}\cdot n / \ln(n)$ times, which gives us the minimum distance to the local optima which yields $M\geq 2$. The distance of any individual on the second slope to any local optimum is bounded by $2d<n/2$ which implies that $M\leq \sqrt{n}$ and also that we will never be able to sample a solution with at most $n-d$ 1-bits since all bitstrings with $M>1$ have more than $\sqrt{n}$ distance to the local optima. }  Therefore, 
 once a solution with $n-d+2$ bits is added to the population, the algorithm 
 finds 
-the optimum w.o.p. in $O(n\log{n})$ iterations and in at 
-most $O(n^{3/2}\log{n})$ fitness function evaluations since the mutation 
+the optimum in {\color{blue}$O(n\log{d})$} iterations and in at 
+most {\color{blue} $O(n^{3/2}\log{d})$} fitness function evaluations since the mutation 
 potential is at most $\sqrt{n}$. The probability of obtaining a solution with 
 $n-d+2$ 1-bits at the end of each cycle of reinitialisation and removal of the 
 local optima due to ageing  is $(1-p_{\text{die}})^2 \cdot (d/n)\cdot ((d-1)/n)$. Since each such cycle 
-takes $O(n^{3/2}\log{n})$ fitness evaluations, our claim follows.
+takes {\color{blue}$O(n^{3/2}\log{\frac{n}{d}}+\tau )$} fitness evaluations, our claim follows after absorbing smaller order term into $O\left(\left(n^{3/2}\log{\frac{n}{d}}+\tau\right)\cdot \frac{n^2}{d^2} \right)$.
 % use the Ballot Theorem to bound the Hamming 
 % distance given the number of 1-bits. Ballot theorem implies that sampling an 
 % solution at least as good as the parent (which are the only solutions that are 
@@ -1313,7 +1240,7 @@ The following theorem shows that once one optimum of \textsc{TwoMax} has been id
 \begin{theorem} \label{th:MexpoTwoMax}
 The {\oneoneOPTIA } using \IPHfcm{} with Symmetric {\expoHD } with $\tau=\Omega(n^{1+\epsilon})$ for any 
 arbitrarily small constant $\epsilon>0$, needs
-$O(n^{3/2}\log{n})$ fitness function evaluations in expectation to optimise \textsc{TwoMax}.
+$O(n^{3/2}\log{n} + {\color{blue}\tau})$ fitness function evaluations in expectation to optimise \textsc{TwoMax}.
 \end{theorem}
 \begin{proof}
 The expected time until the first branch is optimised is $O(n\log{n})$ 
@@ -1329,7 +1256,7 @@ optima by at most $n/2 + n^{2/3}$ w.o.p. This
 Hamming distance implies an initial mutation potential of $M< 
 n^{\frac{\frac{n}{2}+n^{2/3}}{n}}=n^{\frac{1}{2}+\frac{1}{n^{1/3}}}$ which 
 decreases as the individual increases its distance to the origin and can never 
-go above its initial value where the distance is zero. 
+go above its initial value where the distance is zero. {\color{blue} Following a similar argument as in Theorem~\ref{thm:twomaxexpo} with a larger deviation, with constant probability the newly sampled solution will have at least $n/2 + 3\sqrt{n}/2$ $0$-bits since $1-\phi{3} = O(1)$. This implies that the mutation potential will never be large enough to sample a solution in the opposite branch.}
 Pessimistically assuming that the mutation potential will be 
 $n^{\frac{1}{2}+\frac{1}{n^{1/3}}}=O(n^{1/2})$ throughout the run, we can obtain 
 the above upper bound by summing over all levels and using coupon collector's 
@@ -1352,8 +1279,8 @@ over static mutation potentials and over the known upper bounds for population b
 The following theorem shows that Symmetric {\expoHD } is also efficient for \cliff.
 \begin{theorem} \label{th:expoHD-cliff}
 The {\oneoneOPTIA } using \IPHfcm{} with Symmetric {\expoHD } and $\tau=\Omega(n^{1+\epsilon})$ optimises \cliff{} with 
-$d<n(\frac{1}{4}-\epsilon)$ and $d=\Theta(n)$ in 
-$O(n^{3/2}\log{n}+ \tau n^{1/2} + \frac{n^{7/2}}{d^2})$ expected fitness function evaluations.
+$d<n(\frac{1}{4}-\epsilon)$ in 
+ {\color{blue} $O\left( \left(n^{3/2}\log{\frac{n}{d}}+\tau \right)\cdot \frac{n^2}{d^2}\right)$ } expected fitness function evaluations.
 \end{theorem} 
 
 \begin{proof}
