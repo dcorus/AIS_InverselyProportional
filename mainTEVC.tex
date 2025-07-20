@@ -553,7 +553,7 @@ $n^{1/n^{\epsilon}}= (1+\frac{\ln{n}}{n^{\epsilon}})(1 \pm o(1))$.
 
 \begin{theorem} \label{expohdOnLO}
 The {\oneoneIA } using \IPHfcm{} with {\expoF } optimises \textsc{LeadingOnes} in $O(n^3/\log n)$ and 
-$\Omega(n^{(5/2)+\epsilon})$  expected fitness function evaluations for any 
+$\Omega(n^{(5/2)-\epsilon})$  expected fitness function evaluations for any 
 arbitrarily small constant $\epsilon>0$. 
 \end{theorem}
 
@@ -595,24 +595,27 @@ fitness function evaluations for any arbitrarily small constant $\epsilon>0$.
 \end{restatable}
 
 \begin{proof}
+	
+	$$ n^{-1/(2n)} ;\ge; \bigl(1-\tfrac{\ln n}{2n}\bigr)\bigl(1-o(1)\bigr), $$ 
+	
 The proof for the upper bound is similar to the proof of Theorem~\ref{th:linHD-LO}, however, each 
 failure in improvement yields $n^{H(x, \text{opt})/n}$ wasted fitness function evaluations. 
 Since the bits after the leading ones are uniformly distributed, by Chernoff bounds the number 
 of 0-bits (Hamming distance to the optimum) is smaller than  $1+(n-i-1)/2+\epsilon n$ 
-w.o.p. Hence, the expected time to optimise \textsc{LeadingOnes} is $\sum_{i=1}^{n} n \cdot 
-n^{\frac{1+(n-i-1)/2+\epsilon n}{n}}= n \sum_{i=1}^{n} 
-n^{\frac{1}{2}-\frac{i}{2n}+\epsilon+\frac{1}{2n}}=n \cdot n^{\frac{1}{2}+\epsilon+\frac{1}{2n}} \sum_{i=1}^{n} 
+w.o.p. {\color{blue}Considering that the runtime will be polynomial even when the number of $0$-bits is larger than $1+(n-i-1)/2+\epsilon n$}, the expected time to optimise \textsc{LeadingOnes} is ${\color{blue}o(1)}+\sum_{i=1}^{n} n \cdot 
+n^{\frac{1+(n-i-1)/2+\epsilon n}{n}}= {\color{blue}o(1)}+n \sum_{i=1}^{n} 
+n^{\frac{1}{2}-\frac{i}{2n}+\epsilon+\frac{1}{2n}}={\color{blue}o(1)}+n \cdot n^{\frac{1}{2}+\epsilon+\frac{1}{2n}} \sum_{i=1}^{n} 
 n^{-\frac{i}{2n}}$. Knowing that 
 $\sum_{i=0}^{\infty}n^{-\frac{i}{2n}}=\frac{1}{1-n^{\frac{-1}{2n}}}=${$\color{blue} \frac{n^{\frac{1}{2n}}}{n^{\frac{1}{2n}} - 1} = \frac{1 + o(1)}{\frac{\ln{n}}{2n} + o\left(\frac{\ln{n}}{2n}\right)} = O\left(\frac{n}{\log{n}}\right)$ where in the third equality we used Taylor expansion of the exponential function.}  Hence, the expected time is $E(T) 
-< n^{\frac{3}{2}+\epsilon} \cdot n^{\frac{1}{2n}} \cdot O\left(\frac{n}{\log n}\right)=O\left(\frac{n^{\frac{5}{2}+\epsilon}}{\log n}\right)$.
+< {\color{blue}o(1)}+n^{\frac{3}{2}+\epsilon} \cdot n^{\frac{1}{2n}} \cdot O\left(\frac{n}{\log n}\right)=O\left(\frac{n^{\frac{5}{2}+\epsilon}}{\log n}\right)$.
 
 
 
 The proof of the lower bound is also similar to the proof of Theorem~\ref{th:linHD-LO}. 
 By taking the same steps and solving the equation for $E(f_i)$,we get
-$E(f_i)=i \cdot n^{\frac{1}{n}+\frac{n-i-1}{2n}-\epsilon}+n-i$. Then, by taking into account the probabilities of starting with fewer than $n/2$ leading 1-bits and skipping a level $i$, we get the expected runtime of 
+$E(f_i){\color{blue}\ge} i \cdot n^{\frac{1}{n}+\frac{n-i-1}{2n}-\epsilon}+n-i$. Then, by taking into account the probabilities of starting with fewer than $n/2$ leading 1-bits and skipping a level $i$, we get the expected runtime of 
 \begin{align*}
-&(1-2^{-n/2})\sum_{i=n/2}^{n} E(f_i)\\
+&(1-2^{-n/2})\sum_{i=n/2}^{n} {\color{blue}p_{i}^{*}} \cdot E(f_i)\\
 &\geq \Omega(1) \sum_{i=n/2+\epsilon 
 	n/2}^{n/2+\epsilon n} 
 \left( i n^{1/n+((n-i-1)/2n)-\epsilon}+n-i )\right)\\
@@ -982,8 +985,8 @@ This behaviour causes a large waste of fitness evaluations defying the objective
 \begin{proof}
 	We follow the same argument in Theorem~\ref{thm:onemaxexpo} to conclude that in expected $O(n\log n)$ time, the algorithm will find one of the optima. {\color{blue} Without losing generality, let $1^n$ be the first optimum that the algorithm samples}. 
 	
-	After finding the first optimum, no single-bit flip can yield an equally fit solution. The individual then reaches age $\tau $ and the ageing reinitialises the current solution. Thus, with 
-	$\left(1-2^{-n}\right) \cdot \left(1-e^{-\Omega(n^\epsilon)} \right)$ probability a new solution will be initialised within $\tau + n$ steps. Now, the current \emph{best seen} is the first discovered optimum. 
+	After finding the first optimum, no single-bit flip can yield an equally fit solution. {\color{blue}Thus, after $\tau$ steps ageing will trigger since the current solution cannot improve. After $n$ steps the probability that the old solution has not died is $\left(1-2^{-n}\right)$ }  Thus, with 
+	$\left(1-2^{-n}\right) \cdot \left(1-e^{-\Omega(n^\epsilon)} \right)$ probability a new solution will be initialised within $\tau + n$ steps. Now, the current \emph{best seen} is the first discovered optimum until a new optimum is sampled again. 
 	
 	Let the first and second branch denote the subsets of the solution space which consist of solutions with less than and more than Hamming distance $n/2$ to the first discovered optimum respectively. We first consider the case when the new solution is initialised on the first branch. Given that the current solution has fitness $i$, the distance to the best seen is $n-i$ and the mutation potential is $M=n^{\frac{n-i}{n}}$. Since the first constructive mutation ensures that the probability of improvement is always at least $1/n$, w.o.p.,  ageing will not be triggered until either optimum is discovered. Thus, given that the current solution is always on the first branch, the proof of Theorem~\ref{cor:omexpohd} carries over and the expected time to find the first discovered optimum once again is at most $O(n^{3/2}\log{n})$ in expectation. When the first discovered optimum is sampled again, w.o.p. the current solution is reinitialised with the first discovered optimum as the best seen solution in at most $\tau + n$ iterations.
 	
@@ -1075,7 +1078,7 @@ This behaviour causes a large waste of fitness evaluations defying the objective
 Now we show that differently from static hypermutations, {\expoHD }
 combined with ageing can escape from the local optima of \cliff, 
 hence optimises the function efficiently. The condition that $d$ is not prohibitively large is necessary to avoid
-that the reinitialised solutions due to ageing have larger fitness than a solution with $n-d+1$ $1$-bits.
+that the reinitialised solutions due to ageing have larger fitness than a solution with $n-d+1$ $1$-bits, {\color{blue} which would cause the latter to be removed from the population}.
 We believe that this assumption is realistic for practical applications.
 
 \begin{theorem}\label{thm:cliffexpo}
@@ -1256,7 +1259,7 @@ optima by at most $n/2 + n^{2/3}$ w.o.p. This
 Hamming distance implies an initial mutation potential of $M< 
 n^{\frac{\frac{n}{2}+n^{2/3}}{n}}=n^{\frac{1}{2}+\frac{1}{n^{1/3}}}$ which 
 decreases as the individual increases its distance to the origin and can never 
-go above its initial value where the distance is zero. {\color{blue} Following a similar argument as in Theorem~\ref{thm:twomaxexpo} with a larger deviation, with constant probability the newly sampled solution will have at least $n/2 + 3\sqrt{n}/2$ $0$-bits since $1-\phi{3} = O(1)$. This implies that the mutation potential will never be large enough to sample a solution in the opposite branch.}
+go above its initial value where the distance is zero. {\color{blue} Following a similar argument as in Theorem~\ref{thm:twomaxexpo} with a larger deviation, with constant probability the newly sampled solution will have at least $n/2 + 3\sqrt{n}/2$ $0$-bits since $1-\phi(3) = O(1)$. This implies that the mutation potential will never be large enough to sample a solution in the opposite branch.}
 Pessimistically assuming that the mutation potential will be 
 $n^{\frac{1}{2}+\frac{1}{n^{1/3}}}=O(n^{1/2})$ throughout the run, we can obtain 
 the above upper bound by summing over all levels and using coupon collector's 
