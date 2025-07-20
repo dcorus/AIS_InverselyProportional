@@ -400,13 +400,16 @@ In a ballot, suppose that candidate P receives $p$ votes and candidate Q receive
 %    \end{algorithmic} \label{alg:simple}
 %\end{algorithm}
 
+
 \begin{algorithm}[t] 
 \caption{\oneoneIA}
 \begin{algorithmic}[1] % The number tells where the line numbering should start
 \STATE{Initialise $x \in\{0,1\}^n$ uniformly at random;}
-\STATE evaluate $f(x)$;      
+\STATE Evaluate $f(x)$;      
 \WHILE{termination condition is not satisfied} %\Comment{}  
-\STATE{ $y:=$ Hypermutate$(x)$};
+{\color{blue}
+\STATE Update mutation potential $M$;  
+\STATE{ $y:=$ Hypermutate$(x, M)$};}
 %\STATE{$y \leftarrow invHyp(x)$}
 %\STATE{create $y$ by flipping at most $M$ distinct bits of $x$ selected uniformly at random one after another until a \textit{constructive mutation} happens};
 \IF {$f(y) \geq f(x) $}
@@ -415,6 +418,26 @@ In a ballot, suppose that candidate P receives $p$ votes and candidate Q receive
 \ENDWHILE
 \end{algorithmic} \label{alg:simple}
 \end{algorithm} 
+
+\begin{algorithm}[t]
+
+	\caption{\textsc{Hypermutate}$(x,M)$}
+	\begin{algorithmic}[1]
+{\color{blue}
+		\STATE $y \gets x$;
+		\FOR{$i = 1$ \textbf{to} $M$}
+		\STATE Flip one previously unflipped bit of $y$ chosen uniformly at random;
+		\STATE Evaluate $f(y)$;
+		\IF{$f(y) \geq f(x)$}        
+		\STATE \textbf{return} $y$;
+		\ENDIF
+		\ENDFOR
+		\STATE \textbf{return} $y$;     
+	}
+	\end{algorithmic}
+	\label{alg:hypermutate}
+\end{algorithm}
+
 
 \subsection{Performance for \textsc{OneMax} in Ideal Conditions}
 \begin{figure}[t!]
