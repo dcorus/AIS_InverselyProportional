@@ -542,7 +542,7 @@ The {\oneoneIA } using \IPHfcm{} with {\linHD } optimises \textsc{LeadingOnes} i
 \begin{proof}
 %The probability of improvement in each step is at least $1/n$ which is the probability of flipping the leftmost 0-bit. As at most $n$ improvements are needed and each failure in improvement yields $\frac{n-i-1}{2}+1+\epsilon n$ wasted fitness function evaluations in expectation (i.e., the expected $H(x,opt)$ value), the expected time to find the optimum is at most $\sum_{i=1}^n n \cdot \left(\frac{n-i-1}{2}+1+\epsilon n\right)= O(n^3)$.
 
-The proof for the lower bound follows that  of Theorem 3.6 in \cite{CorusOlivetoYazdaniGECCO2017} for the expected runtime of the $(1+1)$~IA %$_{\geq}$\footnote{$(1+1)$~IA$_{\geq}$ is a \oneoneIA{} whose  selection mechanism accepts equally fit solutions.}
+The proof for the lower bound follows that of Theorem 3.6 in \cite{CorusOlivetoYazdaniGECCO2017} for the expected runtime of the $(1+1)$~IA %$_{\geq}$\footnote{$(1+1)$~IA$_{\geq}$ is a \oneoneIA{} whose  selection mechanism accepts equally fit solutions.}
 using static hypermutation with potential $M:=cn$ with the exception that the amount of wasted fitness function evaluations in case of failure at finding an improvement within a hypermutation is now $H(x,\text{opt})$ instead of $cn$.
 
 
@@ -1327,7 +1327,8 @@ doing randomised local search.
 % At the same iteration, an offspring is created down the cliff with probability $k/n$. With probability $(k-1)/n$ this offspring will improve the towards the optimum and hence it will survive. While moving towards the optimum, the best seen stays as the local optimum. As the Hamming distance of the best and origin does not change while the Hamming distance of the current position and the origin is increasing, hence the mutation potential decreases more and more (not sure what is the maximum one). Hence, in $O(n^{3/2} \log n)$ the optimum will be found. The total expected time will be $O(n \log n)+ \tau+ \left( n^{3/2+\epsilon} \cdot n/k \cdot n/(k+1) \right)=O(\frac{n^{7/2}\log n}{k^2})$.
 \end{proof}
 
-\new{
+{\color{blue}
+
 \section{A Function Class Where IPH is Essential} 
 In this section we introduce a function class where inversely proportional hypermutations are essential.
 The function class is inspired from one previously used to show the advantages and disadvantages of using high mutation rates in the context of rank-based mutation in population based algorithms~\cite{OlivetoLehreNeumann09}.
@@ -1344,18 +1345,52 @@ n-1 & \text{if } x = 0^{\log n}  \text{(this was n/10)}\\
 \textsc{LO}(x) & \text{otherwise}.
 \end{cases}
 \]
+\[
+\textsc{LeadingTrapJump2}  =
+\]
+\[
+\begin{cases}
+	0 & \text{if } x = 1^{(9/10)n}* \\
+	\textsc{LO}(x_i | i>2k+1) + 2k+1 & \text{if } x = 0^{2k+1}1^{(9/10)n - 2k-1}*, \\
+	n-1 & \text{if } x = 0^{\log n}y \text{ and } |y|_1>\frac{3n}{4} \\
+	\textsc{LO}(x) & \text{otherwise}.
+\end{cases}
+\]
+
+
+
  Essentially the function consists of a  main \leadingones~ slope of increasing fitness until $(9/10)n -1$ leading ones are reached. From there it is necessary to add a constant number $2k$ of leading zeroes before the last $n/10$ leading ones can be inserted to reach the optimum. However, there is a trap consisting of many leading zeroes ($\log n$ ?) that has fitness value higher than any point other than the optimum. High mutation rates are likely to end up in the trap, while low mutation rates are likely to find the optimum. Naturally  if the values of the local and global optima are switched, then high mutation rates will be successful with high probability, while low mutation rates will fail. In the following we will show that the (1+1) Opt-IA with symmetric IPH efficiently optimises the function independent of the location of the optimum, while SBM will get trapped on the all-ones bit-string with high probability if the trap is globally optimal while static hypermutations with mutation potential get stuck in the trap with high probability when the all-ones bit string is optimal.
  %
  %
- \begin{theorem}
- (1+1) Opt-IA with symmetric IPH efficiently optimises \textsc{LeadingTrapJump}
+ \begin{theorem}\label{th:linHD-LeadingTrapJump}
+ The {\oneoneIA } using \IPHfcm{} with {\linHD } optimises \textsc{LeadingTrapJump} 
  \end{theorem}
  \begin{proof}
- Dogan
- \end{proof}
- %
- DOGAN PLEASE CONTINUE?
+ 
+ 
+ The probability of improvement until $1^{9n/10}*$ is at least $1/n$, i.e., the probability of flipping the leftmost $0$-bit in the first bit-flip. Thus, pessimistically assuming that we flip $n$ bits in every iteration in expected $O(n^3)$ fitness function evaluations we reach the local optimum with $(9n/10)-1$ leading ones. Now, as we won't be able to change the reference on this level we will increase our distance to the initial individual on the level whenever one of the $n/10$ bits in the tail is flipped as the first bit since an equally fit solution is created. in $O(n)$ time to $n/20$ (half of the tail). This will then give us a $n/20$ mutation potential. To be mutated into a $0^{2k+1}1^{(9/10)n-2k-1}*$ solution the parent needs to have its first $2k+1$ bits flipped consecutively which happens with probability $\Omega(n^{2k+1})$ since $k<<n$. On the other hand the probability to mutate a bitstring of the form $0^{\log n}y$ with $|y|_1>3n/4$ solution requires all $\log n$ leading $0$-bits to be flipped and since the mutation potential is $n/20$ the resulting string will satisfy the requirements on the number of $1$-bits as the parent initially have $9n/10$ leading ones. Since $\log n<< n$ the probability of each leading $0$-bit to be picked is $1/20$ and with probability $(1/20)^{\log n} = n ^{1/\log[20]2}> n^{-4.5}$
+	 	
+	 If the algorithm fails to do either of these mutations in $\tau + n$ iteration then the current solution dies w.o.p. and a new solution is reinitialised. Following the leading ones gradient it will reach another local optima with expected distance at least $n/20$ to the previously seen local optimum whether that local optimum is  (more in the iterations after the $0^{\log n}$ optimum is found first), which allows another $\tau$ iterations to do the jumps. Thus in every $n^3+\tau$ steps we will have at least $\tau$ chances to do the jump. In expectation we will require at most $O(n^{4.5} + n^{2k+1})$ such trial to do both. So in $O\left(\left(n^{5.5} + n^{2k+2}\right) \frac{n^3+\tau}{\tau}\right)$ expected fitness function evaluations both types of optimum will be discovered.
+	 
+
+ 	
+
+\end{proof} 
+
+	 	-Updating when we restart due to ageing would not be as intuitive when we have a population. We can word it like, "when the best individual in the population dies due to ageing it becomes the new reference."
+	 	
+	 	The mutation potential will increase as we spend time in a fitness level during the first climb because at every generation there is a constant probability of flipping one of the non-contributing bits and get an equally good solution with hamming distance possibly increased. Possibly we say because over multiple generation a non-contributing bit flip might happen in the same position bringing the hamming distance down by 1. 
+	 	The first run will take $\Omega(n^3)$ as well. 
+
+
+		-Do we regularly fall into the trap: After we sample the first trap point, The argument we need:
+		1)A trap local optimum has at least 3n/4 bits
+		2)hypermutation cannot convert a string with less than 2n/3 1-bits to one with more than 3n/4 bits 
+		3)any bitstring with more than 2n/3 bits can have an hamming distance of at most X to the previously seen local optima which yields a maximum of M(x) potential
+		4)With M(x) potential the probability of flipping all log n 0s is at most n^{f(M(x))} which does not happen with constant probability until the leadingones bits are gathered 
+
 }
+
 
 \section{Conclusion}
 We have presented a thourough analysis of Inversely Proportional Hypermutations (IPH).
