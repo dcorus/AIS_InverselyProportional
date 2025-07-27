@@ -1391,6 +1391,33 @@ n-1 & \text{if } x = 0^{\log n}  \text{(this was n/10)}\\
 
 }
 
+We will introduce a new parameter $c\leq 1$ for determining our mutation potential when it grows linearly with the Hamming distance since we might prefer to avoid the jump back to previously seen local optimum which will hinder exploration that is the main goal of the high mutation rates.
+
+\linHD $=\min\left(\lfloor c \cdot H(x,\text{best}) \rfloor, 1 \right)$ 
+
+\begin{theorem} \label{th:expoHD-cliff}
+	The {\oneoneOPTIA } using \IPHfcm{} with \linHD,  $\tau=\Omega(n^{1+\epsilon})$ and $c<1-\epsilon$ optimises \cliff{} with 
+	$d<n(\frac{1}{4}-\epsilon)$ in 
+	{\color{blue}  expected fitness function evaluations.}
+\end{theorem} 
+\begin{proof}
+For a solution initialised uniformly at random, the expected number of iterations until the current solution has exactly $n - d$ one-bits is at most $\sum_{i=d}^{n}\frac{n}{i} = O(\log \frac{n}{d})$. The only solution with better fitness is the $1^n$ bit-string. Thus, ageing will trigger unless the global optimum is found within $\tau$ iterations. We now bound the probability that the current individual with $n - d$ one-bits dies in the same iteration in which hypermutation creates either an equally fit individual or an individual with more one-bits.
+
+If the mutation potential is $M = 1$, the probability of creating a solution with more one-bits is at least $d/n$. This is because it is sufficient to flip one of the zero-bits. If $M > 2$, we consider the probability of creating an equally fit solution. This is possible by first flipping a one-bit into a zero-bit and then flipping a zero-bit into a one-bit. Such an event occurs with probability at least $\frac{d}{n}\cdot \frac{n - d}{n - 1}$.
+
+With probability $1/4$, the parent dies and the offspring survives for another iteration. Since the solution with the best fitness has just died due to ageing, the reference point for the mutation potential is this individual. The surviving individual differs from its parent in at most two bits, and since $c < 1$, the mutation potential is $M = 1$.
+
+We pessimistically assume that the current individual still has $n - d$ one-bits. We bound the probability that in the next iteration it flips a zero-bit into a one-bit (with probability $d/n$), dies, and has its offspring survive (again with probability $1/4$). Thus, given that the current solution has age $\tau$ and $n - d$ one-bits, in at most two iterations we obtain an individual with $n - d + 1$ one-bits. This occurs with probability at least
+\[
+\frac{d^2\cdot(n - d)}{8n^2(n - 1)} = \Omega\left(\frac{d^2}{n^2}\right).
+\]
+
+Again, we focus on the iteration immediately following the one in which such a solution is obtained. We bound the probability that hypermutation increases the number of one-bits by $d/n$. This is because flipping a zero-bit on the first attempt now improves fitness, terminates hypermutation due to FCM, and resets the offspring's age.
+
+From this point onwards we have an individual with Hamming distance at most 3 to the reference
+
+\end{proof}
+
 \textcolor{purple}{Paper is cool because static hypermutations do not work with Ageing (i,e,, they cannot escape Cliff). Inversely proportional hypermutations can still escape from local optima by performing big mutations (LeadingOnesTrap) but also work harmoniously with Ageing.}
 
 \section{Conclusion}
