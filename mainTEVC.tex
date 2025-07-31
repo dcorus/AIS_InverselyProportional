@@ -14,7 +14,8 @@
 % updated with editorial comments 8/9/2021
 
 \newcommand{\new}[1]{\textcolor{blue}{#1}}
-
+\newcommand{\EE}{\text{E}}
+\newcommand{\HD}{\text{HD}}
 
 \input{preamble}
 \begin{document}
@@ -1400,6 +1401,9 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 	$d<n(\frac{1}{4}-\epsilon)$ in 
 	{\color{blue}  expected fitness function evaluations.}
 \end{theorem} 
+\begin{theorem}\label{th:expoHD-cliff}
+	The {\oneoneOPTIA} using \IPHfcm{} with \linHD\ (factor $c<\tfrac{2}{3}$), ageing parameter $\tau=\Omega(n^{1+\epsilon})$, optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected polynomially many fitness evaluations.
+\end{theorem}
 \begin{proof}
 For a solution initialised uniformly at random, the expected number of iterations until the current solution has exactly $n - d$ one-bits is at most $\sum_{i=d}^{n}\frac{n}{i} = O(\log \frac{n}{d})$. The only solution with better fitness is the $1^n$ bit-string. Thus, ageing will trigger unless the global optimum is found within $\tau$ iterations. We now bound the probability that the current individual with $n - d$ one-bits dies in the same iteration in which hypermutation creates either an equally fit individual or an individual with more one-bits.
 
@@ -1417,6 +1421,591 @@ Again, we focus on the iteration immediately following the one in which such a s
 From this point onwards we have an individual with Hamming distance at most 3 to the reference
 
 \end{proof}
+
+\begin{lemma}[Exponential tail for catch-up length]\label{lem:xi-tail}
+	Fix a state on the second slope with $z$ zero-bits (so $z\le d<(\tfrac14-\varepsilon)n$) and let $p:=z/n$.
+	During one hypermutation, let $\xi_z$ be the number of $1\!\to 0$ flips that occur \emph{before} the process first returns to fitness $\ge$ parent (i.e., before the first ``catch-up'' to deficit $0$). Then for every $k\ge 1$,
+	\[
+	\Pr(\xi_z\ge k)\ \le\ \Big(\tfrac{2z}{n}\Big)^k.
+	\]
+	In particular, the event that the Hamming distance increases by at least $2k$ before stopping (equivalently, the first catch-up occurs at time $\ge 2k$) has probability at most $(2z/n)^k$.
+\end{lemma}
+
+\begin{proof}
+	If the first flip is a $0\!\to 1$ move, the offspring is strictly better and the hypermutation stops immediately, yielding $\xi_z=0$. Hence the event $\{\xi_z\ge 1\}$ implies the first flip was a $1\!\to 0$ move. From that point on the process carries a \emph{deficit} $D_t:=\#(1\!\to 0)-\#(0\!\to 1)$ that starts at $D_1=1$ and decreases by $1$ on each $0\!\to 1$ flip and increases by $1$ on each $1\!\to 0$ flip. The hypermutation stops at the \emph{first} time $t$ with $D_t=0$ (a catch-up). Thus the event $\{\xi_z\ge k\}$ is exactly the event that the first return to $0$ happens no earlier than time $2k$.
+	
+	We upper bound this probability by a simple ``coarse blocking’’ argument that uses only that $z$ is small and flips are without replacement.
+	
+	\smallskip
+	\emph{Step 1 (Each required zero is never more likely than $2p$).}
+	Condition on any history of length $t\le 2k-1$ that keeps $D_t\ge 1$ (so no catch-up yet) and in which at most $t$ distinct positions have been flipped. Among the $n-t$ remaining positions there are at most $z$ zeros. Hence the conditional probability that the \emph{next} flip is a $0\!\to 1$ move is at most
+	\[
+	\frac{z}{\,n-t\,}\ \le\ \frac{z}{\,n-(2k-1)\,}\ \le\ \frac{z}{(1/2+2\varepsilon)n}\ \le\ 2p,
+	\]
+	because $2k\le 2d<(\tfrac12-2\varepsilon)n$. In words: throughout any run that lasts up to $2k$ flips, a zero-flip is never more likely than $2p$.
+	
+	\smallskip
+	\emph{Step 2 (Decompose a catch-up of length $\ge 2k$ into $k$ gated zero-flips).}
+	If the first catch-up occurs at some time $\ge 2k$, then along the way the trajectory must realize \emph{at least $k$} distinct $0\!\to 1$ flips while $D>0$ (each such flip reduces the deficit by $1$ but, by assumption, does not yet hit $0$ before the $k$-th such zero). Expose these $k$ zero-flips in order and ignore everything else (the interspersed $1\!\to 0$ flips only make catch-up \emph{harder} and so can be dropped for an upper bound). By Step~1, each of these $k$ zeros occurs with conditional probability at most $2p$, uniformly over the entire run while $D>0$. Therefore, by the chain rule,
+	\[
+	\Pr(\text{first catch-up occurs at time }\ge 2k)\ \le\ (2p)^k.
+	\]
+	
+		
+	Since the left-hand side is exactly $\Pr(\xi_z\ge k)$, the claim follows.
+\end{proof}
+
+\begin{lemma}[Per-attempt MGF]\label{lem:attempt-mgf}
+	Fix a state on the second slope with $z$ zero-bits and write $p:=z/n$.
+	Within a single hypermutation attempt at zero-count $z$, let $\Delta_z$ denote the Hamming-distance gain accumulated \emph{until the attempt stops} (by $\mathrm{FCM}(\ge)$ or by potential exhaustion).
+	Then for every $0<\lambda<\tfrac12\ln\!\frac{1}{2p}$,
+	\[
+	\EE\!\big[e^{\lambda(\Delta_z-1)}\big]\ \le\ \frac{1}{\,1-2p\,e^{2\lambda}\,}.
+	\]
+	In particular, since $z\le d$ and $\rho:=\tfrac{2d}{n}$, for $0<\lambda<\tfrac12\ln\!\tfrac{1}{\rho}$,
+	\[
+	\EE\!\big[e^{\lambda(\Delta_z-1)}\big]\ \le\ \frac{1}{\,1-\rho\,e^{2\lambda}\,}.
+	\]
+\end{lemma}
+
+\begin{proof}
+	Let $\xi_z$ be the number of $1\!\to 0$ flips that occur before the first catch-up to fitness $\ge$ parent (as in Lemma~\ref{lem:xi-tail}).
+	Within any attempt we have the crude envelope
+	\[
+	\Delta_z\ \le\ 1+2\,\xi_z,
+	\]
+	because each additional $1\!\to 0$ incurred while below the parent must eventually be neutralised by a $0\!\to 1$ to reach equality (or else the attempt stops earlier, which only decreases $\Delta_z$).
+	Hence
+	\[
+	e^{\lambda(\Delta_z-1)}\ \le\ e^{2\lambda\,\xi_z}.
+	\]
+	For $s:=e^{2\lambda}>1$ we therefore get
+	\[
+	\EE\!\big[e^{\lambda(\Delta_z-1)}\big]\ \le\ \EE[s^{\xi_z}].
+	\]
+	By Lemma~\ref{lem:xi-tail}, $\Pr(\xi_z\ge k)\le (2p)^k$ for all $k\ge 1$.
+	Using the tail-sum inequality for nonnegative integer random variables,
+	\begin{align*}
+	\EE[s^{\xi_z}]
+	\ &=\ 1+\sum_{k\ge 1}\big(s^{k}-s^{k-1}\big)\Pr(\xi_z\ge k)
+	\ \\&\le\ 1+\sum_{k\ge 1}s^{k}\Pr(\xi_z\ge k)
+	\ \le\ 1+\sum_{k\ge 1}\big(2p\,s\big)^{k}
+	\ \\ &=\ \frac{1}{\,1-2p\,s\,},
+	\end{align*}
+	provided $2ps<1$, i.e., $0<\lambda<\tfrac12\ln\!\tfrac{1}{2p}$. This proves the first claim.
+	If $z\le d$ then $2p\le\rho$, and since the RHS increases with $p$, we obtain
+	\(
+	\EE[e^{\lambda(\Delta_z-1)}]\le (1-\rho e^{2\lambda})^{-1}
+	\)
+	for any $0<\lambda<\tfrac12\ln(1/\rho)$.
+\end{proof}
+
+\begin{lemma}[Phase MGF, refined]\label{lem:phase-mgf}
+	Let a phase be the time spent at zero-count $z$ on the second slope until the next strict improvement to $z-1$.
+	Write $p:=z/n$ and $\rho:=2d/n$ (so $2p\le \rho \le \tfrac12-2\varepsilon$).
+	Let $S_z$ be the total HD added by all \emph{failed} attempts in the phase.
+	Since the improving attempt must flip a zero at the first flip, we have $\Delta^{\mathrm{succ}}_z=1$, hence
+	\[
+	Y_z\ :=\ S_z+(\Delta^{\mathrm{succ}}_z-1)\ =\ S_z\ \ge 0.
+	\]
+	Then, for every $0<\lambda<\tfrac12\ln\frac{1}{2\rho}$,
+	\[
+	\EE\!\big[e^{\lambda Y_z}\big]\ \le\ K(\lambda)\ :=\ \frac{1-\rho}{\,1-\rho\,e^{2\lambda}\,}.
+	\]
+\end{lemma}
+
+\begin{proof}
+	For a single \emph{failed} attempt at zero-count $z$, let $\xi$ count the number of $1\!\to 0$ flips while below the parent before the first catch-up.
+	By Lemma~\ref{lem:xi-tail} and the envelope $\Delta_{\mathrm{fail}}\le 2\xi$ with $\xi\ge 1$,
+	\begin{align*}
+		\EE\!\left[e^{\lambda \Delta_{\mathrm{fail}}}\right]
+		&\le \sum_{k\ge 1} e^{2\lambda k}\,\Pr(\xi=k)
+		\\ &\le\ \sum_{k\ge 1} \big(2p\,e^{2\lambda}\big)^{k}
+		\\ &=\ \frac{2p\,e^{2\lambda}}{\,1-2p\,e^{2\lambda}\,}:=:\ t.
+	\end{align*}
+	Let $F$ be the number of failed attempts before the first success in the phase, with the convention
+	$\Pr(F=f)=(1-p_z)^f p_z$ for $f\in\{0,1,\ldots\}$ and $p_z\ge p=z/n$.
+	Since $Y_z$ is the sum over failed attempts only (the success contributes $0$), conditioning stepwise on the phase history gives
+	\begin{align*}
+		\EE\!\big[e^{\lambda Y_z}\big]
+		&=\EE\!\Big[\ \prod_{i=1}^{F} e^{\lambda \Delta_{\mathrm{fail}}^{(i)}}\ \Big]
+		\ \le\ \EE\!\big[t^{F}\big].
+	\end{align*}
+	Using $p_z\ge p$ and the geometric MGF for $t\in[0,1)$,
+	\begin{align*}
+		\EE\!\big[t^{F}\big]
+		&= \sum_{f\ge 0} (1-p_z)^f p_z\, t^f
+		\ \le\ \sum_{f\ge 0} (1-p)^f p\, t^f
+		\ =\ \frac{p}{\,1-(1-p)t\,}.
+	\end{align*}
+	Substituting $t=\dfrac{2p\,e^{2\lambda}}{1-2p\,e^{2\lambda}}$ and simplifying,
+	\begin{align*}
+		\EE\!\big[e^{\lambda Y_z}\big]
+		&\le \frac{p}{\,1-(1-p)\,\dfrac{2p\,e^{2\lambda}}{1-2p\,e^{2\lambda}}\,}
+		\\ &=\ \frac{p\,(1-2p\,e^{2\lambda})}{\,1-2p\,e^{2\lambda}(2-p)\,}
+		\ :=:\ K_z(\lambda).
+	\end{align*}
+	Since $p\le \rho/2$ and the map $p\mapsto K_z(\lambda)$ is increasing on $(0,\tfrac12)$ for fixed $\lambda\in(0,\tfrac12\ln(1/\rho))$, we obtain the uniform bound
+	\begin{align*}
+		\EE\!\big[e^{\lambda Y_z}\big]
+		\ \le\ K_z(\lambda)\Big|_{p=\rho/2}=\frac{\tfrac{\rho}{2}(1-\rho\,e^{2\lambda})}{1-\rho e^{2\lambda}\,(2-\tfrac{\rho}{2})}
+	\end{align*}
+	Now, our claimed upper bound reduces to showing that a concave quadratic function of $u:=\rho e^{2\lambda} \in \left[0,\frac{1}{2}\right]$ is non-negative.
+	\begin{align*}
+		&\frac{\tfrac{\rho}{2}(1-\rho\,e^{2\lambda})}{1-\rho e^{2\lambda}\,(2-\tfrac{\rho}{2})}
+		\  \le\ \frac{1-\rho}{\,1-\rho\,e^{2\lambda}\,}
+		\ =:\ K(\lambda),
+		\\&\Longleftrightarrow\quad
+		\frac{\rho}{2}(1-u)^2 \le (1-\rho)\Bigl(1-\bigl(2-\tfrac{\rho}{2}\bigr)u\Bigr),\ \ u:=\rho\,e^{2\lambda},
+		\\
+		D(u)
+		&:=(1-\rho)\Bigl(1-\bigl(2-\tfrac{\rho}{2}\bigr)u\Bigr)-\frac{\rho}{2}(1-u)^2
+		\\&= \Bigl(1-\tfrac{3}{2}\rho\Bigr)+\Bigl(-2+\tfrac{7}{2}\rho-\tfrac{1}{2}\rho^2\Bigr)u-\tfrac{\rho}{2}u^2,
+		\\
+		D(0)&=1-\tfrac{3}{2}\rho\ \ge\ \tfrac14,\qquad
+		D\!\Big(\tfrac12\Big)=\tfrac{\rho}{8}\bigl(1-2\rho\bigr)\ \ge\ 0
+		\quad\Rightarrow\quad \\
+		D(u)&\ge 0\ \text{ for }u\in[0,\tfrac12],
+	\end{align*}
+	
+	
+\end{proof}
+
+\begin{lemma}[Buffer process and safety invariant]\label{lem:buffer}
+	Let successful phases be indexed by $r=r_0,r_0+1,\dots$, where $r_0=2$ is the post-ageing start
+	and each increment $r\!\to\! r\!+\!1$ denotes one strict improvement on the second slope (i.e., a decrease of the zero-count by $1$).
+	Let $z_r$ be the zero-count at the start of phase $r$ and let $Y_{z_r}\ge 0$ be the phase-level extra HD from Lemma~\ref{lem:phase-mgf}.
+	Measure Hamming distance w.r.t.\ the fixed reference $x^\top$ (the cliff-top).
+	Define
+	$
+	s_0:=\HD(r_0)-r_0=1,\qquad
+	\theta:=\frac{1}{c}-1,\qquad
+	E_r:=\sum_{j=r_0+1}^{r} Y_{z_j}\quad(\text{with }E_{r_0}=0),
+	$
+	and the buffer
+	\[
+	B_r\ :=\ \theta r\ -\ s_0\ -\ E_r\ =\ \theta r\ -\ 1\ -\ E_r.
+	\]
+	Then for all $r\ge r_0$:
+	\begin{align*}
+		\text{(i)}\quad & c\cdot \HD(r)\ \le\ r\ \Longleftrightarrow\ B_r\ \ge\ 0
+		\qquad\text{(safety invariant);}\\
+		\text{(ii)}\quad & B_{r+1}-B_r\ =\ \theta\ -\ Y_{z_{r+1}}
+		\qquad\text{(one-phase update);}\\
+		\text{(iii)}\quad & B_{r_0}\ =\ 2\theta-1,\quad\text{and with }c\le\tfrac{2}{3}\text{ one has }B_{r_0}\ge 0.
+	\end{align*}
+\end{lemma}
+
+\begin{proof}
+	For any $r\ge r_0$, the total Hamming distance obeys
+$
+		\HD(r)\le r+s_0+E_r
+		\qquad\text{(each success adds $1$, failures in phases add $E_r$).}
+$
+	Multiplying by $c$ and using $\theta=\frac{1}{c}-1$ gives
+	\begin{align*}
+		c\,\HD(r)\ \le\ c(r+s_0+E_r)
+		\ &=\ r - \theta\,r\ +\ c\,s_0\ +\ c\,E_r.
+	\end{align*}
+	Thus
+	\begin{align*}
+		c\,\HD(r)\ \le\ r
+		\ &\Longleftrightarrow\ 
+		-\theta r + c\,s_0 + c\,E_r\ \le\ 0
+		\\&\Longleftrightarrow\ 
+		\theta r - s_0 - E_r\ \ge\ 0
+		\\&\Longleftrightarrow\ 
+		B_r\ \ge\ 0,
+	\end{align*}
+	proving (i).
+	
+	For (ii), by definition of $E_r$ and $B_r$,
+	\begin{align*}
+		B_{r+1}-B_r
+		&=\ \theta(r+1)-1-\big(E_r+Y_{z_{r+1}}\big)\ -\ \big(\theta r-1-E_r\big)
+		\\&=\ \theta - Y_{z_{r+1}}.
+	\end{align*}
+	
+	For (iii), at the start $r_0=2$ and $s_0=\HD(r_0)-r_0=1$, so $E_{r_0}=0$ and
+	\[
+	B_{r_0}=\theta r_0 - s_0 = 2\theta - 1.
+	\]
+	Feasibility at the start requires $c\cdot \HD(r_0)\le r_0$, i.e., $3c\le 2$, hence $c\le \tfrac{2}{3}$ and therefore $\theta=\tfrac{1}{c}-1\ge \tfrac12$, which yields $B_{r_0}\ge 0$.
+\end{proof}
+% -------------------------------
+% Step 1: Exponential drift envelope
+% -------------------------------
+\begin{lemma}[Global exponential drift envelope]\label{lem:drift-envelope-global}
+	Let $\rho:=2d/n$ and let $B_t$ be the buffer from Lemma~\ref{lem:buffer}, so that
+	$B_{t+1}-B_t=\theta-Y_{z_{t+1}}$ with $\theta=\tfrac{1}{c}-1$ and $Y_{z_{t+1}}\ge 0$ the phase extra HD.
+	For any $0<\lambda<\tfrac12\ln\!\tfrac{1}{2\rho}$ define
+	\[
+	K(\lambda):=\frac{1-\rho}{1-\rho e^{2\lambda}}
+	\qquad\text{and}\qquad
+	\alpha:=e^{-\lambda\theta}\,K(\lambda).
+	\]
+	Then, uniformly for all $t\ge 0$,
+	\[
+	\EE\!\big[e^{-\lambda(B_{t+1}-B_t)}\mid \mathcal F_t\big]\ \le\ \alpha.
+	\]
+\end{lemma}
+
+\begin{proof}
+	By Lemma~\ref{lem:buffer}, $B_{t+1}-B_t=\theta-Y_{z_{t+1}}$, hence
+	\[
+	e^{-\lambda(B_{t+1}-B_t)}\ =\ e^{-\lambda\theta}\,e^{\lambda Y_{z_{t+1}}}.
+	\]
+	By Lemma~\ref{lem:phase-mgf} (refined phase MGF), for $0<\lambda<\tfrac12\ln\!\tfrac{1}{2\rho}$ we have the uniform envelope
+	$\EE[e^{\lambda Y_{z_{t+1}}}\mid\mathcal F_t]\le K(\lambda)$ for all phases (all $z_{t+1}\le d$). Therefore
+	\begin{align*}
+	\EE\!\big[e^{-\lambda(B_{t+1}-B_t)}\mid \mathcal F_t\big]
+	\ &=\ e^{-\lambda\theta}\,\EE\!\big[e^{\lambda Y_{z_{t+1}}}\mid\mathcal F_t\big]
+	\ \\ &\le\ e^{-\lambda\theta}\,K(\lambda)
+	\ =\ \alpha	
+	\end{align*}
+\end{proof}
+\begin{theorem}[Ville’s inequality for nonnegative supermartingales]\label{thm:ville}
+	Let $(M_t)_{t\ge 0}$ be a nonnegative supermartingale adapted to $(\mathcal F_t)_{t\ge 0}$. 
+	Then for every $a>0$,
+	\[
+	\Pr\!\big(\sup_{t\ge 0} M_t \ge a\big)\ \le\ \frac{\EE[M_0]}{a}.
+	\]
+	\emph{(Ville, 1939; see also Doob, 1953, Ch.~VII.)}
+\end{theorem}
+
+\begin{corollary}[Ville barrier bound for a process with an exponential mgf drift]\label{cor:ville-exponential}
+	Let $(B_t)_{t\ge 0}$ be adapted to $(\mathcal F_t)_{t\ge 0}$ with $B_0=b>0$.
+	Assume there exist $\lambda>0$ and $\alpha\in(0,1)$ such that, for all $t\ge 0$,
+	\[
+	\EE\!\big[e^{-\lambda(B_{t+1}-B_t)}\mid \mathcal F_t\big]\ \le\ \alpha.
+	\]
+	Then
+	\[
+	\Pr\!\big(\inf_{t\ge 0} B_t \le 0\big)\ \le\ e^{-\lambda b}.
+	\]
+\end{corollary}
+
+\begin{proof}
+	Define $M_t:=\alpha^{-t}e^{-\lambda B_t}$. The assumption implies
+	$\EE[M_{t+1}\mid\mathcal F_t]\le M_t$, so $(M_t)$ is a nonnegative supermartingale.
+	Applying Ville’s inequality (Theorem~\ref{thm:ville}) with $a=1$ gives
+	$\Pr(\sup_{t\ge 0} M_t\ge 1)\le \EE[M_0]=e^{-\lambda b}$.
+	Since $B_t\le 0$ for some $t$ implies $M_t\ge 1$, we obtain the claim.
+	
+	\emph{Specialization to our buffer.}
+	For the buffer $B_{t+1}-B_t=\theta-Y_{z_{t+1}}$, Lemma~\ref{lem:drift-envelope-global} supplies the required
+	mgf bound with $\alpha=e^{-\lambda\theta}K(\lambda)$, where
+	$K(\lambda)=\frac{1-\rho}{1-\rho e^{2\lambda}}$ for any $0<\lambda<\tfrac12\ln\!\tfrac{1}{2\rho}$.
+	Thus, whenever $\alpha<1$, the corollary yields
+	\[
+	\Pr\!\big(\inf_{t\ge 0} B_t \le 0\big)\ \le\ e^{-\lambda(2\theta-1)}.
+	\]
+\end{proof}
+
+
+
+\begin{lemma}[Constant safety probability from an arbitrary start state (Ville route)]\label{lem:param-constant-c-general}
+	Assume $d\le(\tfrac14-\varepsilon)n$ with fixed $\varepsilon\in(0,1/4)$ and fix any $c\in(0,1)$.
+	Let $r_0\in\mathbb{N}$ and $\HD(r_0)\in\mathbb{N}$ be the start indices, and define
+	\[
+	b\ :=\ B_{r_0}\ =\ \frac{r_0}{c}-\HD(r_0)\,.
+	\]
+	If $b>0$ (strict feasibility at the start), then there exists a constant $\lambda_\varepsilon\in\big(0,\tfrac12\ln\frac{1}{1-4\varepsilon}\big)$, depending only on $\varepsilon$, such that
+	\[
+	\Pr\!\big(\inf_{t\ge 0} B_t \le 0\big)\ \le\ \exp\!\big(-\lambda_\varepsilon\, b\big).
+	\]
+	The bound is independent of $n$ and $d$.
+\end{lemma}
+
+\begin{proof}
+	Write $\rho:=2d/n\le \tfrac12-2\varepsilon$ and choose any $\lambda_\varepsilon\in\big(0,\tfrac12\ln\frac{1}{1-4\varepsilon}\big)$; then $\lambda_\varepsilon<\tfrac12\ln\frac{1}{2\rho}$ for all admissible $d$.
+	By Lemma~\ref{lem:buffer}, with $\theta=\tfrac{1}{c}-1$ and $s_0:=\HD(r_0)-r_0$ we have
+	$B_{t+1}-B_t=\theta-Y_{z_{t+1}}$ and $B_{r_0}=\theta r_0-s_0=b$.
+	Lemma~\ref{lem:drift-envelope-global} gives the uniform mgf bound
+	$\EE\!\big[e^{-\lambda_\varepsilon(B_{t+1}-B_t)}\mid\mathcal F_t\big]\le \alpha$
+	with $\alpha=e^{-\lambda_\varepsilon\theta}\,K(\lambda_\varepsilon)$ and
+	$K(\lambda)=\frac{1-\rho}{1-\rho e^{2\lambda}}$.
+	Applying Corollary~\ref{cor:ville-exponential} to $B_t$ started at $B_{r_0}=b>0$ yields
+	$\Pr(\inf_{t\ge 0}B_t\le 0)\le e^{-\lambda_\varepsilon b}$.
+\end{proof}
+
+\begin{lemma}[Monotone second-slope climb time]\label{prop:climb-time}
+	On the event $\{\inf_{t\ge 0} B_t>0\}$ (no jump-back), the second-slope ascent completes in expected time
+	\[
+	\EE[T_{\mathrm{climb}}]\ =\ \sum_{z=1}^{d}\frac{n}{z}\ =\ \Theta(n\log d),
+	\]
+	and, for $\tau=\Omega(n^{1+\varepsilon})$ with fixed $\varepsilon>0$, one has $\EE[T_{\mathrm{climb}}]=o(\tau)$.
+\end{lemma}
+
+\begin{proof}
+	At zero-count $z$, success probability per attempt is at least $z/n$, so the expected number of attempts for $z\!\to\! z-1$ is at most $n/z$.
+	Summing over $z=1,\dots,d$ gives $\sum_{z=1}^{d}n/z=\Theta(n\log d)$.
+	Since $d\le(\tfrac14-\varepsilon)n$, we have $\log d=O(\log n)$, hence $n\log d=o(n^{1+\varepsilon})$ and $\EE[T_{\mathrm{climb}}]=o(\tau)$.
+\end{proof}
+
+
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{lemma}[Per-instance $c$-threshold for the Ville margin]\label{lem:c-threshold-instance}
+	Let $\rho:=\tfrac{2d}{n}\in(0,1)$ and $\theta=\tfrac{1}{c}-1$. Define
+	\[
+	c_\star(n,d)\ :=\ \frac{1-\rho}{1+\rho}\ =\ \frac{1-\tfrac{2d}{n}}{1+\tfrac{2d}{n}}.
+	\]
+	If $c<c_\star(n,d)$, then there exists $\lambda\in\!\big(0,\tfrac12\ln\tfrac{1}{2\rho}\big)$ such that
+	\[
+	\alpha(\lambda)\ :=\ e^{-\lambda\theta}\,\frac{1-\rho}{\,1-\rho e^{2\lambda}\,}\ <\ 1,
+	\]
+	and hence the supermartingale/Ville bound applies (Cor.~\ref{cor:ville-exponential}).
+\end{lemma}
+
+\begin{proof}
+	Let $g(\lambda):=\ln\alpha(\lambda)=-\lambda\theta+\ln\!\big(\tfrac{1-\rho}{1-\rho e^{2\lambda}}\big)$. 
+	Then $g(0)=0$ and $g'(0)=-\theta+\tfrac{2\rho}{1-\rho}$. 
+	If $\theta>\tfrac{2\rho}{1-\rho}$ (equivalently $c<\tfrac{1-\rho}{1+\rho}$), continuity gives $g(\lambda)<0$ for all sufficiently small $\lambda>0$, i.e., $\alpha(\lambda)<1$ in the admissible domain.
+\end{proof}
+
+\begin{corollary}[Uniform floor $\ge \tfrac13$ over the admissible $d$-range]\label{cor:c-floor}
+	If $d\le (\tfrac14-\varepsilon)n$ with fixed $\varepsilon\in(0,1/4)$, then
+	\[
+	c_\star(n,d)\ =\ \frac{1-\tfrac{2d}{n}}{1+\tfrac{2d}{n}}
+	\ \ge\ \frac{1-\bigl(\tfrac12-2\varepsilon\bigr)}{1+\bigl(\tfrac12-2\varepsilon\bigr)}
+	\ =\ \frac{\tfrac12+2\varepsilon}{\tfrac32-2\varepsilon}
+	\ =\ \frac{1+4\varepsilon}{3-4\varepsilon}\ \ge\ \tfrac13.
+	\]
+	Thus the permitted constant $c$ can always be chosen at least $1/3$ (and strictly larger for any fixed $\varepsilon>0$).
+\end{corollary}
+\begin{theorem}\label{th:expoHD-cliff}
+	The {\oneoneOPTIA} using \IPHfcm{} with \linHD\ (factor $c<\tfrac{2}{3}$) and ageing parameter $\tau=\Omega(n^{1+\epsilon})$
+	optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected
+	\[
+	O\!\Big(\frac{n^{5}\log(n/d)}{d^{3}} \;+\; n^{2}\log d\Big)
+	\]
+	fitness function evaluations, where the bound accounts for a pessimistic per-iteration cost $\Theta(n)$ (mutation potential $\Omega(n)$) on both slopes.
+\end{theorem}
+
+\begin{proof}
+	\emph{Up to the second slope.}
+	For a uniformly random initial solution, the expected iterations to reach the cliff-top (exactly $n-d$ one-bits) are at most
+	$\sum_{i=d}^{n}\frac{n}{i}=\Theta\!\big(n\log\frac{n}{d}\big)$.
+	With a pessimistic $\Theta(n)$ fitness calls per iteration, one climb to the cliff-top costs $\Theta\!\big(n^{2}\log\frac{n}{d}\big)$ evaluations.
+	At the cliff-top, the only fitter point is $1^n$, so ageing triggers unless the optimum is found within $\tau$ iterations.
+	
+	We next lower bound the probability of reaching a \emph{canonical second-slope start} in $O(1)$ further iterations after an ageing kick.
+	Consider the iteration in which ageing deletes the cliff-top individual while hypermutation produces an equally good or better offspring (so the new reference is the deleted cliff-top).
+	In that case the survivor differs from the reference in at most two bits; since $c<1$, the new mutation potential is $M=1$.
+	Pessimistically assume the survivor still has $n-d$ one-bits.
+	In the next iteration, flipping a zero-bit (probability $d/n$) accepts; if in the same step the parent dies and the offspring survives (probability $1/4$), we move to $n-d+1$ one-bits within two iterations.
+	Repeating once more, another zero-flip on the first bit (probability $d/n$) accepts and increases the one-count to $n-d+2$.
+	Tracing the constant factors through the two survival events and the $(n-d)/(n-1)$ sampling correction, we obtain
+	\[
+	p_{\mathrm{can}}(n,d)\ \ge\ \gamma\Big(\frac{d}{n}\Big)^{3}
+	\]
+	for some absolute $\gamma>0$, i.e., in $O(1)$ iterations after the kick we reach a state with $r_0=2$ successful phases, $\HD(r_0)\le 3$, and the reference $x^\top$ fixed to the last cliff-top.
+	The number of such trials is geometric with mean $1/p_{\mathrm{can}}$, hence the expected first-slope cost (including restarts) is
+	\[
+	\Theta\!\Big(\frac{1}{p_{\mathrm{can}}(n,d)}\cdot n^{2}\log\tfrac{n}{d}\Big)
+	\ =\ O\!\Big(\frac{n^{5}\log(n/d)}{d^{3}}\Big).
+	\]
+	
+	\emph{Second-slope control (Ville route).}
+	From the canonical start, set $\theta=\tfrac{1}{c}-1$, $s_0=\HD(r_0)-r_0\le 1$, and define the buffer
+	\[
+	B_r\ :=\ \theta r - s_0\ -\sum_{j=r_0+1}^{r} Y_{z_j},
+	\]
+	where $Y_{z_j}\ge 0$ is the phase-level extra HD at zero-count $z_j$.
+	By Lemma~\ref{lem:buffer}, $B_{r_0}=\theta r_0-s_0\ge 2\theta-1>0$ (since $c<2/3$), and $B_{t+1}-B_t=\theta-Y_{z_{t+1}}$.
+	By the refined phase MGF (Lemma~\ref{lem:phase-mgf}), for every $0<\lambda<\tfrac12\ln\!\tfrac{1}{2\rho}$ with $\rho:=2d/n$,
+	\[
+	\EE\!\big[e^{\lambda Y_z}\big]\ \le\ K(\lambda)\ :=\ \frac{1-\rho}{\,1-\rho e^{2\lambda}\,}.
+	\]
+	Hence, by Lemma~\ref{lem:drift-envelope-global},
+	\[
+	\EE\!\big[e^{-\lambda(B_{t+1}-B_t)}\mid\mathcal F_t\big]\ \le\ e^{-\lambda\theta}\,K(\lambda)\qquad\text{for all }t\ge 0.
+	\]
+	Applying the Ville barrier bound (Corollary~\ref{cor:ville-exponential}) with any fixed
+	$\lambda_\varepsilon\in\big(0,\tfrac12\ln\!\tfrac{1}{1-4\varepsilon}\big)$ yields the $n$-independent safety estimate
+	\[
+	\Pr\!\Big(\inf_{t\ge 0} B_t\le 0\Big)\ \le\ e^{-\lambda_\varepsilon(2\theta-1)}\ =:\ 1-\delta,
+	\]
+	where $\delta=\delta(c,\varepsilon)\in(0,1)$ is a constant.
+	On the complementary event (no safety violation), the ascent on the second slope is monotone and completes in expected
+	\[
+	\sum_{z=1}^{d}\frac{n}{z}\ =\ \Theta(n\log d)\quad\text{iterations},
+	\]
+	which is $o(\tau)$ since $\tau=\Omega(n^{1+\epsilon})$.
+	With the pessimistic $\Theta(n)$ fitness calls per iteration, one second-slope attempt costs $\Theta(n^{2}\log d)$ evaluations, and the constant success probability implies a constant expected number of such attempts, contributing $O(n^{2}\log d)$ in expectation.
+	
+	\emph{Total.}
+	Summing the first-slope (with restarts) and second-slope contributions gives
+	\[
+	\EE[\text{evaluations}]
+	\ =\ O\!\Big(\frac{n^{5}\log(n/d)}{d^{3}}\Big)\ +\ O\!\big(n^{2}\log d\big),
+	\]
+	as claimed.
+\end{proof}
+
+
+\medskip
+
+\emph{Proof.}
+We assume the standard \(\mathrm{CLIFF}_{n,d}\) landscape: the “cliff-top’’ is the unique string with \(n-d\) ones; after the cliff, the second slope strictly increases with the one-count.
+Ageing removes the current best (cliff-top) individual with probability \(1/2\) and leaves a survivor on the second slope with probability \(1/2\), after which we start the global control argument.
+At that moment we have
+\[
+r_0=2,\qquad \mathrm{HD}(r_0)=3,\qquad s_0:=\mathrm{HD}(r_0)-r_0=1,
+\]
+where \(\mathrm{HD}(\cdot)\) is taken with respect to the fixed reference \(x^\top\) (the last cliff-top). 
+Initial safety \(c\cdot \mathrm{HD}(r_0)\le r_0\) yields \(3c\le 2\), hence
+\[
+c\le \tfrac23.\tag{$\star$}
+\]
+
+We will prove that with constant probability in this \emph{same} ageing epoch no “jump-back’’ to the cliff ever occurs; on that event, the process climbs monotonically to the global optimum in \(o(\tau)\) iterations. The key tool is the Hajek-type exponential MGF bound stated in the Oliveto–Witt erratum.
+
+\paragraph{The OW–Hajek bound (quoted verbatim).}
+\emph{(Oliveto–Witt, Erratum 2012, Thm.\,1 (after Hajek 1982)).}
+If
+\[
+\EE\!\left[e^{-\lambda(\ell)\,(X_{t+1}-X_t)}\mid \mathcal F_t\right]\ \le\ 1-\frac{1}{p(\ell)}
+\quad\text{for }a(\ell)<X_t<b(\ell),
+\]
+then for every \(L(\ell)\ge 0\),
+\[
+\Pr\!\big(T(\ell)\le L(\ell)\mid X_0\ge b(\ell)\big)
+\ \le\ e^{-\lambda(\ell)\,(b(\ell)-a(\ell))}\,L(\ell)\,D(\ell)\,p(\ell),
+\]
+with \(D(\ell)=\max\{1,\ \EE[e^{-\lambda(\ell)(X_{t+1}-b(\ell))}\mid X_t\ge b(\ell)]\}\).
+
+\paragraph{(i) Per-attempt extra HD.}
+Fix a phase at zero-count \(z\) on the second slope (so \(1\le z\le d\)).
+Within one hypermutation, let \(\xi_z\) be the number of kept \(1\!\to 0\) moves \emph{before} FCM regains \(\ge\) fitness; the ballot/catch-up argument gives
+\[
+\Pr(\xi_z\ge k)\ \le\ \Big(\tfrac{2z}{n}\Big)^k,\qquad k\ge 1.
+\]
+The one-step Hamming-distance gain obeys \(\Delta_z\le 1+2\xi_z\). Therefore, for any
+\[
+0<\lambda<\frac12\ln\!\Big(\frac{n}{2z}\Big),
+\]
+we have the MGF bound
+\[
+\EE\!\big[e^{\lambda(\Delta_z-1)}\big]\ \le\ \frac{1-\tfrac{2z}{n}}{\,1-\tfrac{2z}{n}e^{2\lambda}\,}.
+\tag{1}
+\]
+
+\paragraph{(ii) One phase \(z\to z-1\) and a uniform MGF. \ \ Geometric convention.}
+Let \(S_z\) be the total extra HD accumulated by \emph{failed} hypermutations before the strict improvement, and let \(\Delta_z^{\mathrm{succ}}\) be the extra HD in the improving attempt. Define the phase-level extra HD
+\[
+Y_z\ :=\ S_z+(\Delta^{\mathrm{succ}}_z-1)\ \ge 0.
+\]
+We take \(F\sim\mathrm{Geom}(p_z)\) to be the number of \emph{failures before the first success}, i.e., \(\Pr(F=f)=(1-p_z)^f p_z\) for \(f\in\{0,1,\dots\}\), with the success probability bounded below by
+\[
+p_z\ \ge\ \frac{z}{n}\,.\tag{2}
+\]
+Writing \(m_z(\lambda):=\EE[e^{\lambda(\Delta_z-1)}]\), independence and (1) yield
+\[
+\EE\!\big[e^{\lambda Y_z}\big]
+\ \le\ 
+\EE\!\big[m_z(\lambda)^F\big]\cdot m_z(\lambda)
+\ =\ \frac{p_z\,m_z(\lambda)}{\,1-(1-p_z)\,m_z(\lambda)\,}\,.
+\]
+For fixed \(m\in(0,1)\), the map \(p\mapsto \frac{pm}{1-(1-p)m}\) is increasing, hence the RHS is \(\le m_z(\lambda)\) (at \(p=1\)). Using the worst case \(z\le d\) and setting \(\rho:=\frac{2d}{n}\le \frac12-2\varepsilon\), we obtain the \emph{uniform} phase MGF bound
+\[
+\EE\!\big[e^{\lambda Y_z}\big]\ \le\ K(\lambda)\ :=\ \frac{1-\rho}{\,1-\rho e^{2\lambda}\,},
+\qquad 0<\lambda<\tfrac12\ln\frac{1}{\rho}.
+\tag{3}
+\]
+
+\paragraph{(iii) Buffer process and safety invariant.}
+Index successful phases by \(r=r_0,r_0+1,\dots\) (so each increment \(r\mapsto r+1\) is one strict improvement on the second slope). Let
+\[
+E_r:=\sum_{j=r_0+1}^{r} Y_{z_j},\qquad
+\theta:=\frac{1}{c}-1,\qquad
+B_r:=\theta r - s_0 - E_r=\theta r - 1 - E_r.
+\]
+Since \(\mathrm{HD}(r)\le r+s_0+E_r\), we have the \emph{safety invariant}
+\[
+c\cdot \mathrm{HD}(r)\ \le\ r\quad\Longleftrightarrow\quad B_r\ge 0.
+\]
+One phase changes \(B\) by
+\[
+B_{r+1}-B_r=\theta-Y_{z_{r+1}}.
+\]
+
+\paragraph{(iv) Instantiating OW–Hajek exactly.}
+Let \(X_t:=B_t\), choose interval endpoints \(a(\ell)=0\), \(b(\ell)=\ell:=B_{r_0}=2\theta-1\).
+By \((\star)\), \(c\le 2/3\) implies \(\theta\ge 1/2\), hence \(b(\ell)>a(\ell)\).
+For any \(0<\lambda<\tfrac12\ln(1/\rho)\), using (3),
+\[
+\EE\!\big[e^{-\lambda(X_{t+1}-X_t)}\mid \mathcal F_t,\ a(\ell)<X_t<b(\ell)\big]
+\ =\ e^{-\lambda\theta}\,\EE\!\big[e^{\lambda Y_{z_{t+1}}}\mid \mathcal F_t\big]
+\ \le\ e^{-\lambda\theta}\,K(\lambda)\ :=:\ \alpha.
+\]
+Hence we may take \(p(\ell)=\frac{1}{1-\alpha}\).
+For the OW constant \(D(\ell)\), note that conditioning on \(X_t\ge b(\ell)\) only decreases the exponent:
+\(X_{t+1}-b(\ell)\ge X_{t+1}-X_t\), thus
+\[
+e^{-\lambda(X_{t+1}-b(\ell))}\ \le\ e^{-\lambda(X_{t+1}-X_t)}\ \le\ 1,
+\]
+and therefore \(D(\ell)=\max\{1,\EE[\cdot]\}=1\).
+Finally, take the finite time horizon
+\[
+L(\ell)=d-2,
+\]
+which is the maximum number of remaining successful phases from \(r_0=2\) up to \(r=d\).
+
+Applying OW–Hajek gives the failure probability that the buffer ever hits \(0\) within these \(d-2\) phases (i.e., a “jump-back’’ becomes feasible):
+
+
+\begin{align*}
+	&\Pr\!\Big(\min\{t\ge 0:B_t\le 0\}\le d-2\ \Big|\ B_{r_0}=2\theta-1\Big)
+	\ \\  &\le\ 
+	e^{-\lambda(2\theta-1)}\,(d-2)\,\frac{1}{\,1-e^{-\lambda\theta}\,\dfrac{1-\rho}{1-\rho e^{2\lambda}}\,}.
+		\tag{4}
+\end{align*}
+	
+
+\paragraph{(v) Choosing parameters to make the failure probability \(<\delta\).}
+Fix
+\[
+\lambda=\tfrac14\ln\frac{1}{\rho}\ \in \ \Big(0,\tfrac12\ln\frac{1}{\rho}\Big)
+\quad\Longrightarrow\quad
+K(\lambda)=\frac{1-\rho}{1-\sqrt{\rho}}.
+\]
+Let \(\eta\in(0,1)\). Enforce the two explicit inequalities
+\[
+e^{-\lambda\theta}\,\frac{1-\rho}{1-\sqrt{\rho}}\ \le\ 1-\eta
+\qquad\text{and}\qquad
+e^{-\lambda(2\theta-1)}\,\frac{d-2}{\eta}\ \le\ \delta,
+\]
+which are solved by the single lower bound on \(\theta\):
+\[
+\theta\ \ge\ \max\!\left\{
+\ \frac{1}{\lambda}\ln\!\frac{1-\rho}{(1-\eta)(1-\sqrt{\rho})}\ ,\
+\frac{1}{2\lambda}\Big(\ln\!\frac{d-2}{\eta\delta}+1\Big)\ ,\
+\frac12
+\right\},
+\qquad
+\tag{5}
+\]
+
+Since \(\rho=2d/n\le \tfrac12-2\varepsilon<1\) is bounded away from \(1\) by the fixed \(\varepsilon\), we obtain an \(n\)-independent (constant) upper bound \(\delta\) on the failure probability in (4), and thus a \emph{constant} success probability per ageing epoch.
+
+\paragraph{(vi) Finishing the runtime bound.}
+On the “no jump-back’’ event (i.e., \(B_r\ge 0\) for all \(r\le d\)), the climb on the second slope is monotone. The expected number of iterations to finish that climb is
+\[
+\sum_{z=1}^{d}\frac{n}{z}=\Theta(n\log d)=o(\tau)
+\]
+because \(\tau=\Omega(n^{1+\varepsilon})\) and \(d\le (\tfrac14-\varepsilon)n\).
+Thus, with constant probability (from (5)) the algorithm reaches the global optimum within \emph{one} ageing epoch; repeating independent epochs gives optimisation in expected polynomially many fitness evaluations.
+
+\hfill\(\Box\)
+
 
 \textcolor{purple}{Paper is cool because static hypermutations do not work with Ageing (i,e,, they cannot escape Cliff). Inversely proportional hypermutations can still escape from local optima by performing big mutations (LeadingOnesTrap) but also work harmoniously with Ageing.}
 
