@@ -1396,31 +1396,31 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 
 \linHD $=\min\left(\lfloor c \cdot H(x,\text{best}) \rfloor, 1 \right)$ 
 
-\begin{theorem} \label{th:expoHD-cliff}
-	The {\oneoneOPTIA } using \IPHfcm{} with \linHD,  $\tau=\Omega(n^{1+\epsilon})$ and $c<1-\epsilon$ optimises \cliff{} with 
-	$d<n(\frac{1}{4}-\epsilon)$ in 
-	{\color{blue}  expected fitness function evaluations.}
-\end{theorem} 
-\begin{theorem}\label{th:expoHD-cliff}
-	The {\oneoneOPTIA} using \IPHfcm{} with \linHD\ (factor $c<\tfrac{2}{3}$), ageing parameter $\tau=\Omega(n^{1+\epsilon})$, optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected polynomially many fitness evaluations.
-\end{theorem}
-\begin{proof}
-For a solution initialised uniformly at random, the expected number of iterations until the current solution has exactly $n - d$ one-bits is at most $\sum_{i=d}^{n}\frac{n}{i} = O(\log \frac{n}{d})$. The only solution with better fitness is the $1^n$ bit-string. Thus, ageing will trigger unless the global optimum is found within $\tau$ iterations. We now bound the probability that the current individual with $n - d$ one-bits dies in the same iteration in which hypermutation creates either an equally fit individual or an individual with more one-bits.
-
-If the mutation potential is $M = 1$, the probability of creating a solution with more one-bits is at least $d/n$. This is because it is sufficient to flip one of the zero-bits. If $M > 2$, we consider the probability of creating an equally fit solution. This is possible by first flipping a one-bit into a zero-bit and then flipping a zero-bit into a one-bit. Such an event occurs with probability at least $\frac{d}{n}\cdot \frac{n - d}{n - 1}$.
-
-With probability $1/4$, the parent dies and the offspring survives for another iteration. Since the solution with the best fitness has just died due to ageing, the reference point for the mutation potential is this individual. The surviving individual differs from its parent in at most two bits, and since $c < 1$, the mutation potential is $M = 1$.
-
-We pessimistically assume that the current individual still has $n - d$ one-bits. We bound the probability that in the next iteration it flips a zero-bit into a one-bit (with probability $d/n$), dies, and has its offspring survive (again with probability $1/4$). Thus, given that the current solution has age $\tau$ and $n - d$ one-bits, in at most two iterations we obtain an individual with $n - d + 1$ one-bits. This occurs with probability at least
-\[
-\frac{d^2\cdot(n - d)}{8n^2(n - 1)} = \Omega\left(\frac{d^2}{n^2}\right).
-\]
-
-Again, we focus on the iteration immediately following the one in which such a solution is obtained. We bound the probability that hypermutation increases the number of one-bits by $d/n$. This is because flipping a zero-bit on the first attempt now improves fitness, terminates hypermutation due to FCM, and resets the offspring's age.
-
-From this point onwards we have an individual with Hamming distance at most 3 to the reference
-
-\end{proof}
+%\begin{theorem} \label{th:expoHD-cliff}
+%	The {\oneoneOPTIA } using \IPHfcm{} with \linHD,  $\tau=\Omega(n^{1+\epsilon})$ and $c<1-\epsilon$ optimises \cliff{} with 
+%	$d<n(\frac{1}{4}-\epsilon)$ in 
+%	{\color{blue}  expected fitness function evaluations.}
+%\end{theorem} 
+%\begin{theorem}\label{th:expoHD-cliff}
+%	The {\oneoneOPTIA} using \IPHfcm{} with \linHD\ (factor $c<\tfrac{2}{3}$), ageing parameter $\tau=\Omega(n^{1+\epsilon})$, optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected polynomially many fitness evaluations.
+%\end{theorem}
+%\begin{proof}
+%For a solution initialised uniformly at random, the expected number of iterations until the current solution has exactly $n - d$ one-bits is at most $\sum_{i=d}^{n}\frac{n}{i} = O(\log \frac{n}{d})$. The only solution with better fitness is the $1^n$ bit-string. Thus, ageing will trigger unless the global optimum is found within $\tau$ iterations. We now bound the probability that the current individual with $n - d$ one-bits dies in the same iteration in which hypermutation creates either an equally fit individual or an individual with more one-bits.
+%
+%If the mutation potential is $M = 1$, the probability of creating a solution with more one-bits is at least $d/n$. This is because it is sufficient to flip one of the zero-bits. If $M > 2$, we consider the probability of creating an equally fit solution. This is possible by first flipping a one-bit into a zero-bit and then flipping a zero-bit into a one-bit. Such an event occurs with probability at least $\frac{d}{n}\cdot \frac{n - d}{n - 1}$.
+%
+%With probability $1/4$, the parent dies and the offspring survives for another iteration. Since the solution with the best fitness has just died due to ageing, the reference point for the mutation potential is this individual. The surviving individual differs from its parent in at most two bits, and since $c < 1$, the mutation potential is $M = 1$.
+%
+%We pessimistically assume that the current individual still has $n - d$ one-bits. We bound the probability that in the next iteration it flips a zero-bit into a one-bit (with probability $d/n$), dies, and has its offspring survive (again with probability $1/4$). Thus, given that the current solution has age $\tau$ and $n - d$ one-bits, in at most two iterations we obtain an individual with $n - d + 1$ one-bits. This occurs with probability at least
+%\[
+%\frac{d^2\cdot(n - d)}{8n^2(n - 1)} = \Omega\left(\frac{d^2}{n^2}\right).
+%\]
+%
+%Again, we focus on the iteration immediately following the one in which such a solution is obtained. We bound the probability that hypermutation increases the number of one-bits by $d/n$. This is because flipping a zero-bit on the first attempt now improves fitness, terminates hypermutation due to FCM, and resets the offspring's age.
+%
+%From this point onwards we have an individual with Hamming distance at most 3 to the reference
+%
+%\end{proof}
 
 \begin{lemma}[Canonical start from an ageing cliff-top]\label{lem:can-start-omega-d3}
 	Assume the process is at the cliff-top (zero-count $d$) when ageing is triggered, under \IPHfcm{} with mutation potential $M(x)=\max\{1,\lfloor c\,\HD(x,x^\top)\rfloor\}$ for some $c\in(0,1)$, the reference-update rule (“update when a strictly better solution is sampled or a best-fitness solution dies”), and the convention that \emph{ageing resets only on strict improvement}. Then, within at most three iterations, the process reaches the canonical second-slope start
@@ -1736,15 +1736,14 @@ From this point onwards we have an individual with Hamming distance at most 3 to
 \end{proof}
 
 
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+%SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Introduce: the best changes only when the best dies
-if copies are allowed runtime improves
+
 
 \begin{lemma}[Per-instance $c$-threshold for the Ville margin]\label{lem:c-threshold-instance}
 	Let $\rho:=\tfrac{2d}{n}\in(0,1)$ and $\theta=\tfrac{1}{c}-1$. Define
@@ -1874,7 +1873,122 @@ if copies are allowed runtime improves
 \end{proof}
 
 
+\begin{lemma}[Junction precedes DPO and BJO with probability $1-o(1)$]
+	\label{lem:junction-first}
+	Fix $c\in(0,\tfrac13)$ and $k\ge 1$. Consider the $(1{+}1)$ Opt-IA with IPH and FCM($\ge$),
+	mutation potential $M(x)=\max\{1,\lfloor c\cdot \mathrm{HD}(x,x^\top)\rfloor\}$, and an arbitrary fixed
+	reference $x^\top$ (possibly the current parent, a local optimum, a DPO, or a BJO).
+	Let $J:=\{x:\mathrm{LO}(x)=(9/10)n-1\}$. The process starts from a uniformly random $x^{(0)}$.
+	Let $\mathcal{E}_{\mathrm{junction}}$ denote the event that the algorithm reaches $J$
+	before sampling either a deep-prefix optimum (DPO) $0^{\lfloor\log n\rfloor}y$ with $|y|_1>\tfrac{3n}{4}$
+	or the block-jump optimum (BJO) $y^\star:=0^{2k+1}1^{n-2k-1}$. Then
+	\[
+	\Pr(\mathcal{E}_{\mathrm{junction}})=1-o(1).
+	\]
+\end{lemma}
 
+\begin{proof}
+	Write $L:=\lfloor\log n\rfloor$ and $T:=n^2$.
+	We show that, up to $T$ iterations: (A) we reach $J$ w.h.p., (B) the probability of creating a DPO
+	before $J$ is $o(1)$, and (C) the probability of creating the BJO before $J$ is $e^{-\Omega(n)}$.
+	Combining gives the claim.
+	
+	\medskip\noindent
+	\emph{(A) Reaching $J$ within $T=n^2$ iterations w.h.p.} In each iteration prior to $J$, the first flip
+	hits the current leftmost zero with probability exactly $1/n$ and yields an immediate level increase
+	by FCM($\ge$). Let $X\sim\mathrm{Bin}(T,1/n)$ count such increases; $\mathbb{E}[X]=T/n=n$.
+	By a Chernoff bound,
+	\begin{align*}
+		\Pr\!\bigl(X<(9/10)n\bigr)\ \le\ \exp\!\Bigl(-\frac{(0.1)^2}{2}\,n\Bigr)\ =\ e^{-\Omega(n)}.
+	\end{align*}
+	Thus the process reaches $J$ within $T$ iterations with probability $1-e^{-\Omega(n)}$.
+	
+	\medskip\noindent
+	\emph{(B) DPO before $J$ is $o(1)$.} We split iterations into two regimes by a constant
+	$q\in(0,\tfrac{3}{16})$, say $q:=\tfrac{1}{12}$.
+	
+	\smallskip
+	\underline{Regime B.1: $M\le qn$.} In a single iteration, to produce a DPO the hypermutation must
+	flip every first-$L$ position that currently holds a $1$. This number is at least $\min\{L,\mathrm{LO}(x)\}\ge L$
+	once $\mathrm{LO}(x)\ge L$, and at most $L$ in any case; hence, conditioning only on $M$,
+	\begin{align*}
+		\Pr(\text{DPO in this iteration}\mid M)\ \le\ \Bigl(\frac{M}{n}\Bigr)^{L}\ \le\ q^{L}\ =\ n^{-\beta(q)},
+	\end{align*}
+	where $\beta(q):=-\ln q>1.67$ for $q=\tfrac{1}{12}$.
+	Next we bound how many \emph{Regime B.1} iterations can occur before either reaching $J$ or moving to
+	\emph{Regime B.2}. While $M\le qn$, each \emph{accepted} equal-fitness tail flip increases
+	$\mathrm{HD}(x,x^\top)$ by $1$ and hence increases $M$ by $1$ every $\lceil 1/c\rceil$ such accepts.
+	To cross from $M\le qn$ to $M>qn$ requires at most $\lceil qn/c\rceil$ such accepts. The probability that
+	an iteration yields an equal-fitness tail accept is at least a constant (tail length is $\ge 0.1n-1$ as
+	long as $\mathrm{LO}(x)\le (9/10)n-1$), so by standard Chernoff bounds, with probability
+	$1-e^{-\Omega(n)}$ the total number of \emph{Regime B.1} iterations is $O(n)$. Therefore,
+	\begin{align*}
+		\Pr(\text{DPO during Regime B.1})\ \le\ O(n)\cdot n^{-\beta(q)}\ =\ o(1).
+	\end{align*}
+	
+	\smallskip
+	\underline{Regime B.2: $M>qn$.} Now the hypermutation flips at least $qn$ distinct positions.
+	Even if all first-$L$ positions are included (probability $\le 1$), to end in the DPO set we must
+	also satisfy the tail-density constraint $|y|_1>\tfrac{3n}{4}$ after at least $qn-L$ tail flips.
+	By a Chernoff bound for sampling without replacement (hypergeometric tails), the probability of
+	ending with more than $\tfrac{3n}{4}$ ones in the tail after $qn-L$ flips is at most $e^{-\gamma n}$
+	for some $\gamma(q)>0$ depending only on $q$. Hence, uniformly over states in \emph{Regime B.2},
+	\[
+	\Pr(\text{DPO in one iteration})\ \le\ e^{-\gamma n}\!,
+	\]
+	and, by a union bound over at most $T=n^2$ iterations, the total contribution of \emph{Regime B.2}
+	is at most $n^2 e^{-\gamma n}=e^{-\Omega(n)}$.
+	
+	\smallskip
+	Combining B.1 and B.2, we obtain
+	\begin{align*}
+		\Pr(\text{DPO before }J\text{ within }T)\ =\ o(1).
+	\end{align*}
+	
+	\medskip\noindent
+	\emph{(C) BJO before $J$ is exponentially unlikely.} Let $y^\star=0^{2k+1}1^{n-2k-1}$.
+	In any iteration, flips are chosen uniformly without replacement. The final offspring equals $y^\star$
+	\emph{if and only if} the set of flipped positions is exactly the difference set
+	$D:=\{i\in[n]: x_i\neq y^\star_i\}$ (no re-flips are possible within an iteration). Therefore:
+	\begin{align*}
+		&\Pr(\text{offspring}=y^\star\text{ in a given iteration}\mid x)\ =\
+		\begin{cases}
+			\binom{n}{|D|}^{-1}, & \text{if } M(x)=|D|,\\
+			0, & \text{if } M(x)\neq |D|.
+		\end{cases}
+	\end{align*}
+	Since $M(x)\le cn$ for all $x$, we have the uniform bound
+	\begin{align*}
+		\Pr(\text{offspring}=y^\star\text{ in a given iteration})\
+		\le\
+		\max_{0\le m\le cn} \binom{n}{m}^{-1}
+		\ \le\
+		\binom{n}{\lfloor cn\rfloor}^{-1}
+		\ \le\
+		2^{-H(c)\,n+o(n)}
+		\ =\
+		e^{-\Omega(n)},
+	\end{align*}
+	where $H(\cdot)$ is the binary entropy in bits. This bound is independent of the parent, the reference,
+	and the iteration index. A union bound over $T=n^2$ iterations gives
+	$\Pr(\text{BJO before }J\text{ within }T)\le n^2 e^{-\Omega(n)}=e^{-\Omega(n)}$.
+	
+	\medskip\noindent
+	\emph{(Conclusion).} Putting (A), (B), and (C) together,
+	\begin{align*}
+		\Pr(\mathcal{E}_{\mathrm{junction}})\ 
+		&\ge\ 
+		\Pr(\text{reach }J\text{ within }T)\ -\ \Pr(\text{DPO before }J)\ -\ \Pr(\text{BJO before }J)
+		\\
+		&\ge\ 
+		\bigl(1-e^{-\Omega(n)}\bigr)\ -\ o(1)\ -\ e^{-\Omega(n)}
+		\ =\ 1-o(1).
+	\end{align*}
+	All bounds hold uniformly over the arbitrary fixed reference $x^\top$, and the probability is taken
+	over the randomness of the uniform initialization and the subsequent algorithmic randomness.
+\end{proof}
+Introduce: the best changes only when the best dies
+if copies are allowed runtime improves
 
 \textcolor{purple}{Paper is cool because static hypermutations do not work with Ageing (i,e,, they cannot escape Cliff). Inversely proportional hypermutations can still escape from local optima by performing big mutations (LeadingOnesTrap) but also work harmoniously with Ageing.}
 
