@@ -1871,122 +1871,440 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 	\]
 	as claimed.
 \end{proof}
-
-
-\begin{lemma}[Junction precedes DPO and BJO with probability $1-o(1)$]
-	\label{lem:junction-first}
-	Fix $c\in(0,\tfrac13)$ and $k\ge 1$. Consider the $(1{+}1)$ Opt-IA with IPH and FCM($\ge$),
-	mutation potential $M(x)=\max\{1,\lfloor c\cdot \mathrm{HD}(x,x^\top)\rfloor\}$, and an arbitrary fixed
-	reference $x^\top$ (possibly the current parent, a local optimum, a DPO, or a BJO).
-	Let $J:=\{x:\mathrm{LO}(x)=(9/10)n-1\}$. The process starts from a uniformly random $x^{(0)}$.
-	Let $\mathcal{E}_{\mathrm{junction}}$ denote the event that the algorithm reaches $J$
-	before sampling either a deep-prefix optimum (DPO) $0^{\lfloor\log n\rfloor}y$ with $|y|_1>\tfrac{3n}{4}$
-	or the block-jump optimum (BJO) $y^\star:=0^{2k+1}1^{n-2k-1}$. Then
+\begin{definition}[Notation, algorithm, and solution types]
+	\label{def:notation-algo-solutions}
+	
+	\textbf{Logarithms.}\\
+	Throughout, $\log$ denotes the base‐2 logarithm and $\ln$ the natural logarithm.  Set $L:=\lfloor \log n\rfloor$.
+	
+	\medskip\noindent
+	\textbf{Search space and basic functions.}\\
+	The search space is $\{0,1\}^n$.  For $x\in\{0,1\}^n$, $\mathrm{LO}(x)$ is the LeadingOnes value (length of the longest all‐ones prefix), and $\mathrm{HD}(x,y)$ is the Hamming distance.
+	
+	\medskip\noindent
+	\textbf{Algorithm ($(1{+}1)$ Opt‐IA with IPH and FCM($\ge$)).}\\
+	In each iteration, from parent $x$ we flip distinct positions uniformly without replacement, one‐by‐one, up to the mutation potential
 	\[
-	\Pr(\mathcal{E}_{\mathrm{junction}})=1-o(1).
+	M(x) \;=\; \max\{1,\lfloor c\,\mathrm{HD}(x,x^\top)\rfloor\},
+	\]
+	where $c\in(0,\tfrac13)$ is fixed and $x^\top$ is the current reference.
+	After any flip that yields fitness $\ge$ the parent’s, FCM($\ge$) accepts and stops; otherwise flips continue until $M(x)$ is exhausted.
+	
+	\medskip\noindent
+	\textbf{Solution types and junction set.}\\
+	\begin{itemize}
+		\item \emph{Penalized region:}\quad
+		$\displaystyle
+		\mathcal{P}
+		:= \bigl\{\,x:\text{$x$ has prefix }1^{(9/10)n}\bigr\}.
+		$
+		\item \emph{Deep‐Prefix Optima (DPO):} for $\rho\in(1/2,0.9)$,
+		$\displaystyle
+		\mathcal{D}_\rho
+		:= \bigl\{\,x:\text{$x$ has prefix }0^L,\ |x|_1\ge \rho n\bigr\}.
+		$
+		\item \emph{Block‐Jump Region (BJR\_k):} for integer $k\ge1$,
+		$\displaystyle
+		\mathcal{B}_k
+		:= \bigl\{\,x:\text{$x$ has prefix }0^{2k+1}1^{(9/10)n-2k-1}\bigr\}.
+		$
+		\item \emph{Block‐Jump Optimum (BJO):}\quad
+		the unique optimum in $\mathcal{B}_k$ is $y^\star = 0^{2k+1}1^{\,n-2k-1}$.
+		\item \emph{Junction set:}\quad
+		$\displaystyle
+		J \;=\; \bigl\{\,x:\mathrm{LO}(x)=(9/10)n-1\bigr\}.
+		$
+	\end{itemize}
+	
+	\medskip\noindent
+	\textbf{Objective function (\textsc{LTJ}$_{k,\rho}$).}\\
+	With the above sets,
+	\[
+	\textsc{LTJ}_{k,\rho}(x)
+	=\begin{cases}
+		0,                          & x\in\mathcal{P},\\[2pt]
+		\mathrm{LO}\bigl(x_{i>2k+1}\bigr)+2k+1, & x\in\mathcal{B}_k,\\[2pt]
+		n-1,                        & x\in\mathcal{D}_\rho,\\[2pt]
+		\mathrm{LO}(x),             & \text{otherwise.}
+	\end{cases}
+	\]
+	
+	\medskip\noindent
+	\textbf{Target event.}\\
+	Let $\mathcal{E}_{\mathrm{junction}}$ denote the event that the algorithm reaches $J$ before
+	sampling any $x\in\mathcal{D}_\rho$ or any $x\in\mathcal{B}_k$.
+\end{definition}
+
+\begin{lemma}[Junction precedes DPO and $\mathcal{B}_k$ with probability $1-o(1)$]
+	\label{lem:junction-first-density-Bk}
+	Under Definition~\ref{def:notation-algo-solutions}, fix $c\in(0,\tfrac13)$ and a constant $k\ge 1$.
+	Choose any $\rho\in(1/2,0.9)$ and any $\xi\in(0,\rho-\tfrac12]$ such that
+	\[
+	q^\star \;:=\; 2c\,\bigl(1-\rho+\xi\bigr) \;<\; e^{-2}.
+	\]
+	Starting from a uniformly random initial parent and with any fixed reference $x^\top$ admissible in
+	Definition~\ref{def:notation-algo-solutions} (parent, local optimum, DPO in $\mathcal{D}_\rho$, or BJO),
+	the event $\mathcal{E}_{\mathrm{junction}}$ satisfies
+	\[
+	\Pr\bigl(\mathcal{E}_{\mathrm{junction}}\bigr)\;=\;1-o(1).
 	\]
 \end{lemma}
 
 \begin{proof}
-	Write $L:=\lfloor\log n\rfloor$ and $T:=n^2$.
-	We show that, up to $T$ iterations: (A) we reach $J$ w.h.p., (B) the probability of creating a DPO
-	before $J$ is $o(1)$, and (C) the probability of creating the BJO before $J$ is $e^{-\Omega(n)}$.
-	Combining gives the claim.
+	Let $T:=n^2$.
 	
 	\medskip\noindent
-	\emph{(A) Reaching $J$ within $T=n^2$ iterations w.h.p.} In each iteration prior to $J$, the first flip
-	hits the current leftmost zero with probability exactly $1/n$ and yields an immediate level increase
-	by FCM($\ge$). Let $X\sim\mathrm{Bin}(T,1/n)$ count such increases; $\mathbb{E}[X]=T/n=n$.
-	By a Chernoff bound,
-	\begin{align*}
-		\Pr\!\bigl(X<(9/10)n\bigr)\ \le\ \exp\!\Bigl(-\frac{(0.1)^2}{2}\,n\Bigr)\ =\ e^{-\Omega(n)}.
-	\end{align*}
-	Thus the process reaches $J$ within $T$ iterations with probability $1-e^{-\Omega(n)}$.
-	
-	\medskip\noindent
-	\emph{(B) DPO before $J$ is $o(1)$.} We split iterations into two regimes by a constant
-	$q\in(0,\tfrac{3}{16})$, say $q:=\tfrac{1}{12}$.
-	
-	\smallskip
-	\underline{Regime B.1: $M\le qn$.} In a single iteration, to produce a DPO the hypermutation must
-	flip every first-$L$ position that currently holds a $1$. This number is at least $\min\{L,\mathrm{LO}(x)\}\ge L$
-	once $\mathrm{LO}(x)\ge L$, and at most $L$ in any case; hence, conditioning only on $M$,
-	\begin{align*}
-		\Pr(\text{DPO in this iteration}\mid M)\ \le\ \Bigl(\frac{M}{n}\Bigr)^{L}\ \le\ q^{L}\ =\ n^{-\beta(q)},
-	\end{align*}
-	where $\beta(q):=-\ln q>1.67$ for $q=\tfrac{1}{12}$.
-	Next we bound how many \emph{Regime B.1} iterations can occur before either reaching $J$ or moving to
-	\emph{Regime B.2}. While $M\le qn$, each \emph{accepted} equal-fitness tail flip increases
-	$\mathrm{HD}(x,x^\top)$ by $1$ and hence increases $M$ by $1$ every $\lceil 1/c\rceil$ such accepts.
-	To cross from $M\le qn$ to $M>qn$ requires at most $\lceil qn/c\rceil$ such accepts. The probability that
-	an iteration yields an equal-fitness tail accept is at least a constant (tail length is $\ge 0.1n-1$ as
-	long as $\mathrm{LO}(x)\le (9/10)n-1$), so by standard Chernoff bounds, with probability
-	$1-e^{-\Omega(n)}$ the total number of \emph{Regime B.1} iterations is $O(n)$. Therefore,
-	\begin{align*}
-		\Pr(\text{DPO during Regime B.1})\ \le\ O(n)\cdot n^{-\beta(q)}\ =\ o(1).
-	\end{align*}
-	
-	\smallskip
-	\underline{Regime B.2: $M>qn$.} Now the hypermutation flips at least $qn$ distinct positions.
-	Even if all first-$L$ positions are included (probability $\le 1$), to end in the DPO set we must
-	also satisfy the tail-density constraint $|y|_1>\tfrac{3n}{4}$ after at least $qn-L$ tail flips.
-	By a Chernoff bound for sampling without replacement (hypergeometric tails), the probability of
-	ending with more than $\tfrac{3n}{4}$ ones in the tail after $qn-L$ flips is at most $e^{-\gamma n}$
-	for some $\gamma(q)>0$ depending only on $q$. Hence, uniformly over states in \emph{Regime B.2},
+	\textbf{(A) Reaching $J$ quickly.}
+	Before $J$ is hit, the first flip equals the leftmost zero with probability $1/n$ and is accepted
+	immediately by FCM($\ge$).  If $X\sim\mathrm{Bin}(T,1/n)$ counts such increases then
+	$\mathbb{E}[X]=n$ and a Chernoff bound gives
 	\[
-	\Pr(\text{DPO in one iteration})\ \le\ e^{-\gamma n}\!,
+	\Pr\bigl(X<(9/10)n\bigr)\ \le\ e^{-a n}
 	\]
-	and, by a union bound over at most $T=n^2$ iterations, the total contribution of \emph{Regime B.2}
-	is at most $n^2 e^{-\gamma n}=e^{-\Omega(n)}$.
-	
-	\smallskip
-	Combining B.1 and B.2, we obtain
-	\begin{align*}
-		\Pr(\text{DPO before }J\text{ within }T)\ =\ o(1).
-	\end{align*}
+	for some constant $a>0$. Hence $J$ is reached within $T$ iterations with probability $1-e^{-a n}$.
 	
 	\medskip\noindent
-	\emph{(C) BJO before $J$ is exponentially unlikely.} Let $y^\star=0^{2k+1}1^{n-2k-1}$.
-	In any iteration, flips are chosen uniformly without replacement. The final offspring equals $y^\star$
-	\emph{if and only if} the set of flipped positions is exactly the difference set
-	$D:=\{i\in[n]: x_i\neq y^\star_i\}$ (no re-flips are possible within an iteration). Therefore:
-	\begin{align*}
-		&\Pr(\text{offspring}=y^\star\text{ in a given iteration}\mid x)\ =\
-		\begin{cases}
-			\binom{n}{|D|}^{-1}, & \text{if } M(x)=|D|,\\
-			0, & \text{if } M(x)\neq |D|.
-		\end{cases}
-	\end{align*}
-	Since $M(x)\le cn$ for all $x$, we have the uniform bound
-	\begin{align*}
-		\Pr(\text{offspring}=y^\star\text{ in a given iteration})\
-		\le\
-		\max_{0\le m\le cn} \binom{n}{m}^{-1}
-		\ \le\
-		\binom{n}{\lfloor cn\rfloor}^{-1}
-		\ \le\
-		2^{-H(c)\,n+o(n)}
-		\ =\
-		e^{-\Omega(n)},
-	\end{align*}
-	where $H(\cdot)$ is the binary entropy in bits. This bound is independent of the parent, the reference,
-	and the iteration index. A union bound over $T=n^2$ iterations gives
-	$\Pr(\text{BJO before }J\text{ within }T)\le n^2 e^{-\Omega(n)}=e^{-\Omega(n)}$.
+	\textbf{(B) DPO before $J$ is $o(1)$.}
+	Write $\alpha:=|x|_1/n$ and $\alpha^\top:=|x^\top|_1/n$.
+	
+	\emph{Case B.1 (near threshold): $\alpha\ge \rho-\xi$ and $\alpha^\top\ge \rho-\xi$.}
+	Using $|x\wedge x^\top|\ge |x|+|x^\top|-n$,
+	\[
+	\mathrm{HD}(x,x^\top)\ \le\ (2-\alpha-\alpha^\top)\,n\ \le\ 2(1-\rho+\xi)\,n,
+	\qquad
+	M(x)\ \le\ q^\star n\ (<e^{-2}n).
+	\]
+	A DPO requires all $L$ leading bits among the $M$ flips; hence
+	\[
+	\Pr(\text{DPO in this iteration})
+	\ \le\
+	\Bigl(\tfrac{M}{n}\Bigr)^{L}
+	\ \le\
+	(q^\star)^{L}
+	\ =\
+	n^{-\log_{2}(1/q^\star)}.
+	\]
+	Because $q^\star<e^{-2}$, we have $\log_{2}(1/q^\star)>2$, so $T\cdot n^{-\log_{2}(1/q^\star)}=o(1)$.
+	
+	\emph{Case B.2 (far from threshold): $\alpha\le \rho-\xi$.}
+	A DPO has $|x|_1\ge \rho n$, so at least $\xi n$ net $0\!\to\!1$ flips are required within at most
+	$R\le M\le cn$ tail flips. With initial zero/one fractions giving negative drift,
+	a Serfling (hypergeometric) tail bound yields
+	\[
+	\Pr\bigl(Z-O\ge \xi n\bigr)\ \le\ e^{-\gamma n}
+	\]
+	for some $\gamma>0$. Including the necessity to flip all $L$ prefix bits only decreases the probability.
+	Summing over at most $T$ iterations remains $e^{-\gamma n}$.
+	
+	Therefore $\Pr(\text{DPO before }J)=o(1)$.
 	
 	\medskip\noindent
-	\emph{(Conclusion).} Putting (A), (B), and (C) together,
-	\begin{align*}
-		\Pr(\mathcal{E}_{\mathrm{junction}})\ 
-		&\ge\ 
-		\Pr(\text{reach }J\text{ within }T)\ -\ \Pr(\text{DPO before }J)\ -\ \Pr(\text{BJO before }J)
-		\\
-		&\ge\ 
-		\bigl(1-e^{-\Omega(n)}\bigr)\ -\ o(1)\ -\ e^{-\Omega(n)}
-		\ =\ 1-o(1).
-	\end{align*}
-	All bounds hold uniformly over the arbitrary fixed reference $x^\top$, and the probability is taken
-	over the randomness of the uniform initialization and the subsequent algorithmic randomness.
+	\textbf{(C) Entering $\mathcal{B}_k$ before $J$ is $o(1)$ (using $k$ constant).}
+	Let $r:=2k{+}1$ (a fixed constant).  For any parent $x\notin\mathcal{B}_k$:
+	
+	\emph{(C.1) Once $\mathrm{LO}(x)\ge r$.}
+	Then the first $r$ bits of $x$ are $1$, so to enter $\mathcal{B}_k$ within an iteration, at the (FCM) acceptance time the offspring must differ from $x$ in at least the $r$ positions $\{1,\dots,r\}$ plus the next leftmost zero inside $S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$, i.e., in at least $r{+}1$ specific coordinates. Thus, for some constant $C=C(k)$,
+	\[
+	\Pr\bigl(\text{enter } \mathcal{B}_k \text{ in one iteration}\bigr)
+	\ \le\
+	C\,\binom{n}{r+1}^{-1}
+	\ =\
+	\Theta\!\big(n^{-(r+1)}\big).
+	\]
+	Union-bounding over at most $T=n^2$ iterations gives a total contribution
+	$O\!\big(n^{-(r-1)}\big)=O\!\big(n^{-2k}\big)=o(1)$.
+	
+	\emph{(C.2) While $\mathrm{LO}(x)< r$.}
+	Let $T_0:=\lceil 4 n\log n\rceil$.  By Chernoff on the $\mathrm{Bin}(T_0,1/n)$ count of leftmost-zero
+	flips, $\Pr(\text{reach }\mathrm{LO}\ge r\text{ within }T_0)\ge 1-e^{-a' n}$ for some $a'>0$.
+	Condition on this event. Starting from a uniformly random parent, the number $v$ of zeros in
+	$S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$ satisfies $v=\Theta(n)$ w.h.p.; over the next $T_0$ iterations,
+	accepted tail flips change $v$ by $\pm1$, and a bounded-differences (Azuma/Serfling) inequality keeps
+	$v=\Omega(n)$ w.h.p.  Hence, throughout this window, any acceptance into $\mathcal{B}_k$ would require
+	changing at least $s=\Omega(n)$ specified coordinates, giving per-iteration hazard
+	$\binom{n}{s}^{-1}=e^{-a'' n}$ for some $a''>0$.  Union over $T_0=O(n\log n)$ iterations remains
+	$e^{-a''' n}$.
+	
+	Combining (C.1) and (C.2), the probability to enter $\mathcal{B}_k$ at any time before $J$ is $o(1)$.
+	
+	\medskip\noindent
+	\textbf{(D) Combine.}
+	With probability $1-e^{-a n}$ we reach $J$ within $T$ steps by (A).  Subtracting the $o(1)$
+	contributions from (B) and (C) yields
+	\[
+	\Pr\bigl(\mathcal{E}_{\mathrm{junction}}\bigr)
+	\ \ge\
+	\bigl(1-e^{-a n}\bigr)\ -\ o(1)\ -\ o(1)
+	\ =\
+	1-o(1).
+	\]
 \end{proof}
+
+
+{\color{red}SSSSSSSSSSSSSSSSSSSSS}
+\begin{lemma}[Per-epoch probability of accepting the block-jump optimum]
+	\label{lem:BJO-epoch}
+	Fix a constant block length \(k\ge 1\) and write \(r:=2k+1\).
+	Let the IPH constant be \(c=\tfrac13\) and let an ageing epoch have length
+	\(\tau\ge n\).  
+	If the epoch begins with the parent in the junction set
+	\(J=\bigl\{x:\mathrm{LO}(x)=0.9n-1\bigr\}\),
+	then the probability that the epoch accepts the unique block-jump optimum
+	
+	\[
+	y^{\star}=0^{\,2k+1}\,1^{\,n-2k-1}
+	\]
+	
+	satisfies
+	\[
+	p_B
+	\;:=\;
+	\Pr\!\bigl(\text{$y^{\star}$ accepted during the epoch}\bigr)
+	\;=\;
+	\Omega\!\Bigl(\min\!\bigl\{\,1,\;
+	\tau\,n^{-(2k+2)}\bigr\}\Bigr),
+	\]
+	where the implicit constant depends only on \(k\).
+\end{lemma}
+
+\begin{proof}
+	At the epoch start the reference \(x^\top\) is the best individual from the
+	previous epoch (also in \(J\)).  
+	The length-\(0.1n+1\) suffix of the new parent \(x\) is still uniformly random,
+	so with probability at least \(\tfrac12\)
+	\[
+	\mathrm{HD}(x,x^\top)\;\ge\;\frac{n}{20}.
+	\]
+	Condition on this event, losing only a factor \(2\).
+	Then the mutation potential in every subsequent
+	iteration of the epoch satisfies
+	\(
+	M\ge c\,\tfrac{n}{20} = n/60.
+	\)
+	
+	\medskip\noindent
+	\emph{Per-iteration success probability.}  
+	Starting from a parent in \(J\), obtaining \(y^{\star}\) within one
+	hypermutation requires flipping exactly the \(r\)
+	leading positions \(\{1,\dots,r\}\) (changing \(1\!\to\!0\))
+	\emph{and} flipping the single zero at position \(0.9n\)
+	(changing \(0\!\to\!1\))
+	before FCM stops; no other flips matter.
+	Sampling without replacement,
+	\[
+	p_{\text{iter}}
+	\;=\;
+	\frac{(M)_{\,r+1}}{(n)_{\,r+1}}
+	\;\ge\;
+	\bigl(M/n\bigr)^{\,r+1}
+	\;\ge\;
+	(1/60)^{\,r+1}
+	\;=\;
+	\Theta\!\bigl(n^{-(2k+2)}\bigr).
+	\]
+	
+	\medskip\noindent
+	\emph{Per-epoch success probability.}
+	An epoch supplies \(\tau\) independent iterations, so a union bound yields
+	\[
+	p_B
+	\;\ge\;
+	1-(1-p_{\text{iter}})^{\tau}
+	\;\ge\;
+	\min\{1,\;\tau\,p_{\text{iter}}\}
+	\;=\;
+	\Omega\!\bigl(\min\{1,\;\tau\,n^{-(2k+2)}\}\bigr).
+	\]
+	
+	\noindent
+	The hidden constant depends only on the fixed block size \(k\).
+	\end{proof}
+
+\begin{lemma}[Per-epoch probability of accepting a DPO]
+	\label{lem:DPO-epoch}
+	Fix the IPH constant \(c=\tfrac13\) and any density parameter \(\rho\in(1/2,0.9)\).  
+	Let an ageing epoch have length \(\tau\ge n\) and begin with the parent in the
+	junction set \(J\).  
+	Then the probability that this epoch accepts \emph{some}
+	deep-prefix optimum in \(\mathcal{D}_\rho\) satisfies
+	\[
+	p_D
+	\;:=\;
+	\Pr\!\bigl(\text{a string in }\mathcal{D}_\rho\text{ is accepted during the epoch}\bigr)
+	\;=\;
+	\Omega\!\Bigl(\min\!\bigl\{\,1,\;
+	\tau\,n^{-\,\beta}\bigr\}\Bigr),
+	\]
+	where \(\beta=\log_{2}60<6\).  The implicit constant depends only on the fixed
+	parameters \(c\) and \(\rho\).
+\end{lemma}
+\begin{proof}[Proof of Lemma \ref{lem:DPO-epoch} (revised)]
+	At epoch start the reference $x^\top$ is the best string from the previous
+	epoch (also in $J$), and the new parent $x$ itself lies in~$J$.
+	Hence
+	\[
+	|x|_1\;=\;0.9n-1 \;+\; |x_{\text{suffix}}|_1.
+	\]
+	The suffix has length $0.1n+1$ and is uniform; its ones count is
+	$\mathrm{Bin}(0.1n+1,\tfrac12)$ with expectation $0.05n+O(1)$.
+	By a Chernoff bound
+	\(
+	|x_{\text{suffix}}|_1\ge 0.04n
+	\)
+	with probability $1-e^{-\Omega(n)}$.
+	Thus, already before any mutation,
+	\[
+	|x|_1
+	\;\ge\;
+	0.9n-1 + 0.04n
+	\;>\;
+	0.94n
+	\;>\;
+	\rho n
+	\qquad(\rho<0.9).
+	\tag{A}
+	\]
+	
+	\textbf{Step 1 – Linear mutation potential.}
+	As in the block-jump argument we have
+	\(
+	\Pr\!\bigl(\mathrm{HD}(x,x^\top)\ge n/20\bigr)\ge\tfrac12
+	\)
+	(owing to the uniform suffix); condition on this event.
+	Then \(M\ge n/60\) throughout the epoch.
+	
+	\textbf{Step 2 – Per-iteration flip of the \(L\) prefix bits.}
+	Let \(L=\lfloor\log_2 n\rfloor\).
+	A necessary part of generating a deep-prefix optimum is to flip the prescribed
+	\(L\) prefix positions $\{1,\dots,L\}$ from $1$ to $0$ before FCM stops.
+	Sampling without replacement,
+	\[
+	p_{\text{prefix}}
+	=\Pr\bigl(\{1,\dots,L\}\subseteq\text{ first }L\text{ flips}\bigr)
+	=\frac{(M)_{L}}{(n)_{L}}
+	\;\ge\;
+	(M/n)^{L}
+	\;\ge\;
+	(1/60)^{L}
+	=n^{-\beta},\qquad
+	\beta:=\log_{2}60<6.
+	\]
+	
+	\textbf{Step 3 – Density constraint is automatic.}
+	When those $L$ flips occur, the total ones count in the string drops by
+	\(\le L\le\log_2 n\).
+	Using (A) and \(L=o(n)\),
+	\[
+	|x|_1-L\;\ge\;0.94n-\log_2 n
+	\;\ge\;\rho n
+	\quad\text{for all sufficiently large }n.
+	\]
+	Hence the density requirement \(|x|_1\ge\rho n\) is \emph{already satisfied}
+	once the prefix flips have happened; no additional tail flips are needed, and
+	FCM immediately accepts a DPO.
+	
+	\textbf{Step 4 – Per-epoch probability.}
+	Each iteration satisfies \(p_{\text{iter}}\ge n^{-\beta}\).
+	Across the \(\tau\ge n\) iterations of the epoch,
+	\[
+	p_D
+	\;\ge\;
+	1-(1-p_{\text{iter}})^{\tau}
+	\;\ge\;
+	\min\!\bigl\{1,\;\tau\,p_{\text{iter}}\bigr\}
+	\;=\;
+	\Omega\!\bigl(\min\{1,\;\tau\,n^{-\beta}\}\bigr),
+	\]
+	completing the proof.
+\end{proof}
+
+\begin{theorem}[Expected fitness–evaluation cost in terms of \(\tau\)]
+	\label{thm:main-tau-final}
+	Let the block size \(k\ge 1\) be constant, \(r:=2k+1\), and set the IPH
+	parameter to \(c=\tfrac13\).
+	Let \(\tau=\tau(n)\ge n\) be the ageing threshold (in iterations).  
+	For the $(1{+}1)$ Opt–IA with inversely proportional hypermutation and
+	FCM($\ge$) acceptance, the expected number of fitness evaluations to optimise
+	\textsc{LTJ}\(_{k,\rho}\) is
+	
+	\[
+	\boxed{\;
+		\mathbb{E}[\text{\emph{evals}}]
+		\;=\;
+		O\!\bigl(
+		n\,\tau
+		\;+\;
+		n^{\,2k+3}
+		\;+\;
+		n^{\,\beta+1}
+		\bigr),
+		\quad
+		\beta:=\log_{2}60\ (<6).
+		\;}
+	\]
+	
+	\noindent
+	Thus the runtime is polynomial in \(n\) for every fixed \(k\) and for any
+	\(\tau=\mathrm{poly}(n)\).  If \(\tau\le n^{2k+2}\) and
+	\(\tau\le n^{\beta}\) the leading term becomes
+	\(O\!\bigl(n^{2k+3}+n^{\beta+1}\bigr)\);  
+	if \(\tau\) is larger than both thresholds, the waiting cost \(n\,\tau\)
+	dominates.
+\end{theorem}
+
+\begin{proof}
+	\textbf{1.  Evaluation cost of one epoch.}
+	Each iteration evaluates at most \(M(x)\le c\,n\;(=n/3)\) offspring, so an
+	epoch of length \(\tau\) uses
+	\[
+	\text{eval}_{\text{epoch}}\le c\,n\,\tau=\Theta(n\,\tau).
+	\]
+	
+	\textbf{2.  Per–epoch success probabilities.}
+	Starting an epoch in the junction set \(J\) (prob.\ \(1-o(1)\)), the two
+	lemmas give
+	\[
+	p_B=\Omega\!\bigl(\min\{1,\tau\,n^{-(2k+2)}\}\bigr),\quad
+	p_D=\Omega\!\bigl(\min\{1,\tau\,n^{-\beta}\}\bigr),
+	\qquad
+	\beta=\log_{2}60<6,
+	\]
+	and \(B\) and \(D\) are mutually exclusive within one epoch.
+	
+	\textbf{3.  Expected number of epochs to see both optima.}
+	A coupon–collector bound yields
+	\[
+	\mathbb{E}[T_{\mathrm{both}}]
+	\;\le\;
+	\frac1{p_B}+\frac1{p_D}
+	\;=\;
+	O\!\Bigl(
+	\max\{1,n^{2k+2}/\tau\}
+	+\max\{1,n^{\beta}/\tau\}
+	\Bigr).
+	\]
+	
+	\textbf{4.  Total expected evaluations.}
+	Multiplying by the epoch cost,
+	\[
+	\mathbb{E}[\text{evals}]
+	\le
+	\Theta(n\,\tau)\;
+	O\!\Bigl(
+	\max\{1,n^{2k+2}/\tau\}
+	+\max\{1,n^{\beta}/\tau\}
+	\Bigr)
+	=
+	O\!\bigl(
+	n\,\tau
+	+n^{2k+3}
+	+n^{\beta+1}
+	\bigr).
+	\]
+	All hidden constants depend only on the fixed parameters \(k\) and \(c\).
+\end{proof}
+
+
 Introduce: the best changes only when the best dies
 if copies are allowed runtime improves
 
