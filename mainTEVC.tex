@@ -1898,12 +1898,12 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 		\mathcal{P}
 		:= \bigl\{\,x:\text{$x$ has prefix }1^{(9/10)n}\bigr\}.
 		$
-		\item \emph{Deep‐Prefix Optima (DPO):} for $\rho\in(1/2,0.9)$,
+		\item \emph{Deep‐Prefix Optima (DPO):} for $\rho\in(0.8,0.9)$,
 		$\displaystyle
 		\mathcal{D}_\rho
 		:= \bigl\{\,x:\text{$x$ has prefix }0^L,\ |x|_1\ge \rho n\bigr\}.
 		$
-		\item \emph{Block‐Jump Region (BJR\_k):} for integer $k\ge1$,
+		\item \emph{Block‐Jump Region (BJR$_k$):} for integer $k\ge1$,
 		$\displaystyle
 		\mathcal{B}_k
 		:= \bigl\{\,x:\text{$x$ has prefix }0^{2k+1}1^{(9/10)n-2k-1}\bigr\}.
@@ -1938,7 +1938,7 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 \begin{lemma}[Junction precedes DPO and $\mathcal{B}_k$ with probability $1-o(1)$]
 	\label{lem:junction-first-density-Bk}
 	Under Definition~\ref{def:notation-algo-solutions}, fix $c\in(0,\tfrac13)$ and a constant $k\ge 1$.
-	Choose any $\rho\in(1/2,0.9)$ and any $\xi\in(0,\rho-\tfrac12]$ such that
+	Choose any $\rho\in(0.8,0.9)$ and any $\xi\in(0,\rho-\tfrac12]$ such that
 	\[
 	q^\star \;:=\; 2c\,\bigl(1-\rho+\xi\bigr) \;<\; e^{-2}.
 	\]
@@ -1971,8 +1971,10 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 	Using $|x\wedge x^\top|\ge |x|+|x^\top|-n$,
 	\[
 	\mathrm{HD}(x,x^\top)\ \le\ (2-\alpha-\alpha^\top)\,n\ \le\ 2(1-\rho+\xi)\,n,
-	\qquad
-	M(x)\ \le\ q^\star n\ (<e^{-2}n).
+	\]
+	\[
+	M(x)\ \le\ q^\star n\ <e^{-2}n
+	.
 	\]
 	A DPO requires all $L$ leading bits among the $M$ flips; hence
 	\[
@@ -2041,7 +2043,7 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 \end{proof}
 
 
-{\color{red}SSSSSSSSSSSSSSSSSSSSS}
+
 \begin{lemma}[Per-epoch probability of accepting the block-jump optimum]
 	\label{lem:BJO-epoch}
 	Fix a constant block length \(k\ge 1\) and write \(r:=2k+1\).
@@ -2049,27 +2051,20 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 	\(\tau\ge n\).  
 	If the epoch begins with the parent in the junction set
 	\(J=\bigl\{x:\mathrm{LO}(x)=0.9n-1\bigr\}\),
-	then the probability that the epoch accepts the unique block-jump optimum
-	
-	\[
-	y^{\star}=0^{\,2k+1}\,1^{\,n-2k-1}
-	\]
-	
-	satisfies
-	\[
-	p_B
-	\;:=\;
-	\Pr\!\bigl(\text{$y^{\star}$ accepted during the epoch}\bigr)
-	\;=\;
-	\Omega\!\Bigl(\min\!\bigl\{\,1,\;
-	\tau\,n^{-(2k+2)}\bigr\}\Bigr),
-	\]
-	where the implicit constant depends only on \(k\).
+	then the probability that the epoch accepts the unique block-jump optimum $y^{\star}=0^{\,2k+1}\,1^{\,n-2k-1}$ satisfies
+	\begin{align*}
+			p_B
+		\;&:=\;
+		\Pr\!\bigl(\text{$y^{\star}$ accepted during the epoch}\bigr)
+		\;\\&=\;
+		\Omega\!\Bigl(\min\!\bigl\{\,1,\;
+		\tau\,n^{-(2k+2)}\bigr\}\Bigr),
+	\end{align*}
 \end{lemma}
 
 \begin{proof}
 	At the epoch start the reference \(x^\top\) is the best individual from the
-	previous epoch (also in \(J\)).  
+	previous epoch.  
 	The length-\(0.1n+1\) suffix of the new parent \(x\) is still uniformly random,
 	so with probability at least \(\tfrac12\)
 	\[
@@ -2082,26 +2077,26 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 	M\ge c\,\tfrac{n}{20} = n/60.
 	\)
 	
-	\medskip\noindent
-	\emph{Per-iteration success probability.}  
-	Starting from a parent in \(J\), obtaining \(y^{\star}\) within one
-	hypermutation requires flipping exactly the \(r\)
-	leading positions \(\{1,\dots,r\}\) (changing \(1\!\to\!0\))
-	\emph{and} flipping the single zero at position \(0.9n\)
-	(changing \(0\!\to\!1\))
-	before FCM stops; no other flips matter.
-	Sampling without replacement,
+	\paragraph*{Per-iteration success probability (revised, $M\ge r{+}1$).}
+	Conditioned on $\mathrm{HD}(x,x^\top)\ge n/20$ we certainly have
+	$M=\lfloor c\,\mathrm{HD}\rfloor\ge r+1$.
+	Accepting $y^\star$ happens as soon as the \emph{first} $r{+}1$ distinct flips
+	include \emph{exactly} the set
+	\(\{1,\dots,r,\;0.9n\}\)
+	in any order; if this occurs, FCM stops immediately and no other
+	leading-one bit can be destroyed.
+	
+	Because flips are sampled uniformly without replacement, the probability of
+	this event is
 	\[
 	p_{\text{iter}}
-	\;=\;
-	\frac{(M)_{\,r+1}}{(n)_{\,r+1}}
-	\;\ge\;
-	\bigl(M/n\bigr)^{\,r+1}
-	\;\ge\;
-	(1/60)^{\,r+1}
-	\;=\;
-	\Theta\!\bigl(n^{-(2k+2)}\bigr).
+	=\prod_{i=0}^{r}\frac{r+1-i}{n-i}
+	=\frac{(r+1)!}{(n)_{\,r+1}}
+	=\Theta\!\bigl(n^{-(r+1)}\bigr)
+	=\Theta\!\bigl(n^{-(2k+2)}\bigr),
 	\]
+	independent of the exact value of~$M$ (we only need $M\ge r{+}1$ to allow that
+	many flips).
 	
 	\medskip\noindent
 	\emph{Per-epoch success probability.}
@@ -2111,8 +2106,6 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 	\;\ge\;
 	1-(1-p_{\text{iter}})^{\tau}
 	\;\ge\;
-	\min\{1,\;\tau\,p_{\text{iter}}\}
-	\;=\;
 	\Omega\!\bigl(\min\{1,\;\tau\,n^{-(2k+2)}\}\bigr).
 	\]
 	
@@ -2122,25 +2115,24 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 
 \begin{lemma}[Per-epoch probability of accepting a DPO]
 	\label{lem:DPO-epoch}
-	Fix the IPH constant \(c=\tfrac13\) and any density parameter \(\rho\in(1/2,0.9)\).  
+	Fix the IPH constant \(c=\tfrac13\) and any density parameter \(\rho\in(0.8,0.9)\).  
 	Let an ageing epoch have length \(\tau\ge n\) and begin with the parent in the
 	junction set \(J\).  
 	Then the probability that this epoch accepts \emph{some}
 	deep-prefix optimum in \(\mathcal{D}_\rho\) satisfies
-	\[
+	\begin{align*}
 	p_D
-	\;:=\;
+	\;&:=\;
 	\Pr\!\bigl(\text{a string in }\mathcal{D}_\rho\text{ is accepted during the epoch}\bigr)
-	\;=\;
+	\;\\&=\;
 	\Omega\!\Bigl(\min\!\bigl\{\,1,\;
 	\tau\,n^{-\,\beta}\bigr\}\Bigr),
-	\]
-	where \(\beta=\log_{2}60<6\).  The implicit constant depends only on the fixed
-	parameters \(c\) and \(\rho\).
+	\end{align*}
+	where \(\beta=\log_{2}60<6\). 
 \end{lemma}
 \begin{proof}[Proof of Lemma \ref{lem:DPO-epoch} (revised)]
 	At epoch start the reference $x^\top$ is the best string from the previous
-	epoch (also in $J$), and the new parent $x$ itself lies in~$J$.
+	epoch (from $J$ or $\mathcal{B}_k$), and the new parent $x$ itself lies in~$J$.
 	Hence
 	\[
 	|x|_1\;=\;0.9n-1 \;+\; |x_{\text{suffix}}|_1.
@@ -2178,17 +2170,17 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 	A necessary part of generating a deep-prefix optimum is to flip the prescribed
 	\(L\) prefix positions $\{1,\dots,L\}$ from $1$ to $0$ before FCM stops.
 	Sampling without replacement,
-	\[
+	\begin{align*}
 	p_{\text{prefix}}
-	=\Pr\bigl(\{1,\dots,L\}\subseteq\text{ first }L\text{ flips}\bigr)
+	&=\Pr\bigl(\{1,\dots,L\}\subseteq\text{ first }L\text{ flips}\bigr)
 	=\frac{(M)_{L}}{(n)_{L}}
 	\;\ge\;
 	(M/n)^{L}
-	\;\ge\;
+	\;\\&\ge\;
 	(1/60)^{L}
 	=n^{-\beta},\qquad
 	\beta:=\log_{2}60<6.
-	\]
+	\end{align*}
 	
 	\textbf{Step 3 – Density constraint is automatic.}
 	When those $L$ flips occur, the total ones count in the string drops by
@@ -2228,7 +2220,7 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 	\textsc{LTJ}\(_{k,\rho}\) is
 	
 	\[
-	\boxed{\;
+	\;
 		\mathbb{E}[\text{\emph{evals}}]
 		\;=\;
 		O\!\bigl(
@@ -2238,18 +2230,12 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 		\;+\;
 		n^{\,\beta+1}
 		\bigr),
-		\quad
-		\beta:=\log_{2}60\ (<6).
-		\;}
 	\]
 	
 	\noindent
-	Thus the runtime is polynomial in \(n\) for every fixed \(k\) and for any
-	\(\tau=\mathrm{poly}(n)\).  If \(\tau\le n^{2k+2}\) and
-	\(\tau\le n^{\beta}\) the leading term becomes
-	\(O\!\bigl(n^{2k+3}+n^{\beta+1}\bigr)\);  
-	if \(\tau\) is larger than both thresholds, the waiting cost \(n\,\tau\)
-	dominates.
+	where $\beta:=\log_{2}60\ <6$.
+	
+
 \end{theorem}
 
 \begin{proof}
@@ -2266,8 +2252,6 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 	\[
 	p_B=\Omega\!\bigl(\min\{1,\tau\,n^{-(2k+2)}\}\bigr),\quad
 	p_D=\Omega\!\bigl(\min\{1,\tau\,n^{-\beta}\}\bigr),
-	\qquad
-	\beta=\log_{2}60<6,
 	\]
 	and \(B\) and \(D\) are mutually exclusive within one epoch.
 	
@@ -2286,24 +2270,29 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 	
 	\textbf{4.  Total expected evaluations.}
 	Multiplying by the epoch cost,
-	\[
+	\begin{align*}
 	\mathbb{E}[\text{evals}]
-	\le
+	&\le
 	\Theta(n\,\tau)\;
 	O\!\Bigl(
 	\max\{1,n^{2k+2}/\tau\}
 	+\max\{1,n^{\beta}/\tau\}
 	\Bigr)
-	=
+	\\&=
 	O\!\bigl(
 	n\,\tau
 	+n^{2k+3}
 	+n^{\beta+1}
 	\bigr).
-	\]
-	All hidden constants depend only on the fixed parameters \(k\) and \(c\).
+	\end{align*}
 \end{proof}
 
+	Thus the runtime is polynomial in \(n\) for every fixed \(k\) and for any
+\(\tau=\mathrm{poly}(n)\).  If \(\tau\le n^{2k+2}\) and
+\(\tau\le n^{\beta}\) the leading term becomes
+\(O\!\bigl(n^{2k+3}+n^{\beta+1}\bigr)\);  
+if \(\tau\) is larger than both thresholds, the waiting cost \(n\,\tau\)
+dominates.
 
 Introduce: the best changes only when the best dies
 if copies are allowed runtime improves
