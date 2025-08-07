@@ -826,6 +826,8 @@ $E(f_i){\color{blue}\ge} i \cdot n^{\frac{1}{n}+\frac{n-i-1}{2n}-\epsilon}+n-i$.
 Given that {\expoHD } provides larger hill-climbing speed-ups compared to the other mutation potentials and is stable to the scaling of fitness functions,
 we will use it in the remainder of the paper.
 
+\textcolor{purple}{However, {\expoHD } only allows to flip at most $\sqrt{n}$ bits when far away from the optimum, which means that apart from at initialisation the algorithm hardly ever hypermutates.}
+
  	
  	\section{Inefficient Behaviour of IPH in Practice}In this section we consider the usage of  {\expoHD } in realistic applications where the optimum is unknown.
  	To this end, the best seen solution will be used by the operator, rather than the unknown optimum. {\color{blue} As a design choice, when the algorithm finds a new solution that is as good as the previous best we update the best seen solution.}
