@@ -904,7 +904,7 @@ we will use it in the remainder of the paper.
  	%    \end{algorithmic} \label{alg:alg1+ageing}
  	%\end{algorithm}
  	\begin{algorithm}[t] 
- 		\caption{$(1+1)$~Opt-IA}
+ 		\caption{$(1+1)$~Opt-IA }
  		\begin{algorithmic}[1] % The number tells where the line numbering should start
  			\STATE Initialise $x \in\{0,1\}^n$ uniformly at random %and add to $P$ 
  			\STATE set $\alpha(x):=0$ and $\text{best}:=x$      
@@ -924,7 +924,7 @@ we will use it in the remainder of the paper.
  			\IF{$\alpha(w) \geq \tau$}
  			\STATE with probability $p_{\text{die}}=1/2$
  			{\color{blue}\IF{$f(w) = f(\text{best})$} 
- 			\STATE $\text{best}=w$
+ 			\STATE $\text{best}:=w$
  			\ENDIF}
  			\STATE reinitialise $w$ uniformly at random with $\alpha(w)=0$
  			\ENDIF
