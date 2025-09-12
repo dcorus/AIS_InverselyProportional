@@ -917,15 +917,15 @@ we will use it in the remainder of the paper.
  			\ELSE
  			\STATE $\alpha(y):=\alpha(x)$
  			\ENDIF
- 			\IF{$f(y) > f(\text{best})$}
+ 			\IF{{\color{blue}$f(y) > f(\text{best})$}}
  			\STATE $\text{best}:=y$
  			\ENDIF
  			\FOR{$w \in \{x,y\}$}
  			\IF{$\alpha(w) \geq \tau$}
  			\STATE with probability $p_{\text{die}}=1/2$
- 			\IF{$f(w) = f(\text{best})$} 
+ 			{\color{blue}\IF{$f(w) = f(\text{best})$} 
  			\STATE $\text{best}=w$
- 			\ENDIF
+ 			\ENDIF}
  			\STATE reinitialise $w$ uniformly at random with $\alpha(w)=0$
  			\ENDIF
  			\ENDFOR
