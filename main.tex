@@ -976,7 +976,7 @@ we will use it in the remainder of the paper.
 We start by showing that without knowing the location of the optimum in advance the algorithm becomes very efficient for hill-climbing on \textsc{OneMax} and \textsc{LeadingOnes}.
 
 \begin{theorem} \label{thm:onemaxexpo}
-The expected runtime of the \oneoneOPTIA~using \IPHfcm{}  with {\expoHD } for optimising
+The expected runtime of the \oneoneOPTIA~using \IPHfcm{}  with {\expoHD } \textcolor{purple}{and with {\linHD }} for optimising
 \textsc{OneMax} is $\Theta(n\log n)$ with $\tau=\Omega(n^{1+\epsilon})$ {\color{blue}for any arbitrary} constant $\epsilon>0$.
 \end{theorem}
 \begin{proof}
@@ -991,7 +991,7 @@ To prove the lower bound we make a case distinction with respect to whether the 
 \end{proof}
 
 \begin{theorem} \label{thm:leadingonesexpo}
-The expected runtime of the \oneoneOPTIA~using \IPHfcm{}  with {\expoHD } for optimising
+The expected runtime of the \oneoneOPTIA~using \IPHfcm{}  with {\expoHD } \textcolor{purple}{and with {\linHD }} for optimising
 \textsc{LeadingOnes} is $\Theta(n^2)$ with $\tau=\Omega(n^{1+\epsilon})$ {\color{blue}for any arbitrary} 
 constant $\epsilon>0$.
 \end{theorem}
@@ -1000,51 +1000,51 @@ For any suboptimal $x\in\{0,1\}^n$ it is sufficient to flip the leftmost $0$-bit
 
 For the lower bound, it is sufficient to prove that the {\color{blue}expectation conditional on ageing not triggering} is $\Omega(n^2)$, since ageing will not trigger with overwhelming probability. In that case we have to consider how much the objective function value will increase in expectation when the leftmost $0$-bit is flipped by the operator. The bits on the right of the leftmost $0$-bit does not contribute to the fitness value and thus each can be a $0$-bit or $1$-bit with equal probability. Therefore, the expected number of "free-riders", i.e., the sequence of consecutive $1$-bits that follow the leftmost $0$-bit is at most $\sum_{i=0}^{n}2^{-i}\leq 2$. Since the expected increase after every mutation is at most $2$, the expected number of necessary successful mutations where the leftmost $0$-bit is flipped is at least $n/2$ to find the optimal solution. The expected time for each such successful mutation is $(1/n)^{-1}=n$ iterations and consequently the expected time until the optimum is found given that the ageing operator does not trigger is $\Omega(n^2)$.  
 \end{proof}
-We now move on to \textsc{TwoMax}. The following theorem shows that after the algorithm escapes from the local optimum, the mutation rate increases as the algorithm climbs up the opposite branch.
-This behaviour causes a large waste of fitness evaluations defying the objectives of IPH.
-\begin{theorem}\label{thm:twomaxexpo}
-	The expected runtime of the \oneoneOPTIA{} using \IPHfcm{} with
-	the {\expoHD} mutation potential for optimising
-	\textsc{TwoMax} is $\Theta(n^{2}\log n + {\color{blue}\tau})$, provided the ageing
-	threshold satisfies $\tau=\Omega(n^{1+\epsilon})$  {\color{blue}for any arbitrary} constant
-	$\epsilon>0$.
-\end{theorem}
-
-\begin{proof}
-	We follow the same argument in Theorem~\ref{thm:onemaxexpo} to conclude that in expected $O(n\log n)$ time, the algorithm will find one of the optima. {\color{blue} Without losing generality, let $1^n$ be the first optimum that the algorithm samples}. 
-	
-	After finding the first optimum, no single-bit flip can yield an equally fit solution. {\color{blue}Thus, after $\tau$ steps ageing will trigger since the current solution cannot improve. After $n$ steps the probability that the old solution has not died is $\left(1-2^{-n}\right)$ }  Thus, with 
-	$\left(1-2^{-n}\right) \cdot \left(1-e^{-\Omega(n^\epsilon)} \right)$ probability a new solution will be initialised within $\tau + n$ steps. Now, the current \emph{best seen} is the first discovered optimum until a new optimum is sampled again. 
-	
-	Let the first and second branch denote the subsets of the solution space which consist of solutions with less than and more than Hamming distance $n/2$ to the first discovered optimum respectively. We first consider the case when the new solution is initialised on the first branch. Given that the current solution has fitness $i$, the distance to the best seen is $n-i$ and the mutation potential is $M=n^{\frac{n-i}{n}}$. Since the first constructive mutation ensures that the probability of improvement is always at least $1/n$, w.o.p.,  ageing will not be triggered until either optimum is discovered. Thus, given that the current solution is always on the first branch, the proof of Theorem~\ref{cor:omexpohd} carries over and the expected time to find the first discovered optimum once again is at most $O(n^{3/2}\log{n})$ in expectation. When the first discovered optimum is sampled again, w.o.p. the current solution is reinitialised with the first discovered optimum as the best seen solution in at most $\tau + n$ iterations.
-	
-	Now, we consider the case where the current solution is on the second branch. A lower 
-	bound on the probability that the current solution will reach the optimum of the second branch before 
-	sampling an improving solution on the first branch will conclude the proof since the expected time to do so is $O(n^{3/2}\log{n})$ given that the current solution does not switch branches before. 
-	% 
-	
-	{\color{blue}Let $n/2 + k$ be the number of $0$-bits in a second branch solution. In order to sample a solution with at least $n/2 +k$ $1$-bits, i.e., a solution with at least equal fitness on the other branch, at least $2k$ bits must be flipped. We will first show that for $k \in [ \sqrt{n},n/2-1]$ the mutation potential $M(k)=n^\frac{n/2 -k}{n}$ is always smaller than $2k$. We will analyse the sign of the function 
-	
-	\begin{align*}
-		 n^{\frac{n/2 -k}{n}} < 2k \iff f(k):= \ln{2k} - (1/2 - k/n)\ln{n}  > 0
-	\end{align*}
-	
-	We will first consider the endpoints of the interval.
-	For large enough $n$, $f(\sqrt{n})=\ln{2}-\frac{\ln{n}}{\sqrt{n}}$ and  $f(n/2 -1 )=\frac{\ln{n}}{n} - \ln{(n-2)}$ are both positive. The first derivative of $f(k)$ is $f'(k)=\frac{1}{k} - \frac{\ln{n}}{n}$ whose critical point $k=\frac{n}{\ln{n}}$ lies in the interval $[\sqrt{n},n/2-1]$. In particular, $f$ increases on $[\sqrt{n}, n/ \ln{n}]$ and decreases on $[n/\ln{n},n/2 -1 ]$, concluding that it stays positive for the entire interval. Consequently, we have established that once the individual on the second branch has at least $n/2 + \sqrt{n}$ $0$-bits, the hypermutation operator can not yield an equally good solution on the first branch. 
-	
-	Next, we will argue that a reinitialised solution has a $\Omega(1)$ probability of having at least $n/2 + \sqrt{n}$ $0$-bits. Since the number of $0$-bits is $Bin(n, 1/2)$ distributed, the desired event is that the outcome deviates at least by two standard deviations from the mean and has probability $1-\phi(2) = \Omega(1)$. 
-	
-}
-
-	 Given that no switch occurs, the expected time to find the second optimum is $\sum_{i=1}^{n/2+\epsilon n} \frac{n}{i} \cdot 
-	n^{\frac{n-i}{n}}=O(n^{2}\log{n})$. Since, we will have to restart a constant number of times in expectation until we guarantee that the solution will not switch until the second optimum is found, the expected time to find both optima is $O(n^{2}\log{n})$.
-	
-	For the lower bound, assume that the first discovered solution is $1^n$ and consider the last $\frac{n}{\log{n}}$ fitness-levels before the second optimum $0^n$ is discovered. Due to FCM, the current solution has to visit each of these levels and the minimum mutation potential in these fitness levels is $n^{\frac{n-n/\log{n}}{n}}=\frac{n}{e}$. Thus, the expected time is at least $\sum_{i=1}^{n/\log{n}} \frac{n}{i}\cdot \frac{n}{e} = \Omega(n^2 \log{n})$. 
-	
-	
-	
-\end{proof}
-
+%We now move on to \textsc{TwoMax}. The following theorem shows that after the algorithm escapes from the local optimum, the mutation rate increases as the algorithm climbs up the opposite branch.
+%This behaviour causes a large waste of fitness evaluations defying the objectives of IPH.
+%\begin{theorem}\label{thm:twomaxexpo}
+%	The expected runtime of the \oneoneOPTIA{} using \IPHfcm{} with
+%	the {\expoHD} mutation potential for optimising
+%	\textsc{TwoMax} is $\Theta(n^{2}\log n + {\color{blue}\tau})$, provided the ageing
+%	threshold satisfies $\tau=\Omega(n^{1+\epsilon})$  {\color{blue}for any arbitrary} constant
+%	$\epsilon>0$.
+%\end{theorem}
+%
+%\begin{proof}
+%	We follow the same argument in Theorem~\ref{thm:onemaxexpo} to conclude that in expected $O(n\log n)$ time, the algorithm will find one of the optima. {\color{blue} Without losing generality, let $1^n$ be the first optimum that the algorithm samples}. 
+%	
+%	After finding the first optimum, no single-bit flip can yield an equally fit solution. {\color{blue}Thus, after $\tau$ steps ageing will trigger since the current solution cannot improve. After $n$ steps the probability that the old solution has not died is $\left(1-2^{-n}\right)$ }  Thus, with 
+%	$\left(1-2^{-n}\right) \cdot \left(1-e^{-\Omega(n^\epsilon)} \right)$ probability a new solution will be initialised within $\tau + n$ steps. Now, the current \emph{best seen} is the first discovered optimum until a new optimum is sampled again. 
+%	
+%	Let the first and second branch denote the subsets of the solution space which consist of solutions with less than and more than Hamming distance $n/2$ to the first discovered optimum respectively. We first consider the case when the new solution is initialised on the first branch. Given that the current solution has fitness $i$, the distance to the best seen is $n-i$ and the mutation potential is $M=n^{\frac{n-i}{n}}$. Since the first constructive mutation ensures that the probability of improvement is always at least $1/n$, w.o.p.,  ageing will not be triggered until either optimum is discovered. Thus, given that the current solution is always on the first branch, the proof of Theorem~\ref{cor:omexpohd} carries over and the expected time to find the first discovered optimum once again is at most $O(n^{3/2}\log{n})$ in expectation. When the first discovered optimum is sampled again, w.o.p. the current solution is reinitialised with the first discovered optimum as the best seen solution in at most $\tau + n$ iterations.
+%	
+%	Now, we consider the case where the current solution is on the second branch. A lower 
+%	bound on the probability that the current solution will reach the optimum of the second branch before 
+%	sampling an improving solution on the first branch will conclude the proof since the expected time to do so is $O(n^{3/2}\log{n})$ given that the current solution does not switch branches before. 
+%	% 
+%	
+%	{\color{blue}Let $n/2 + k$ be the number of $0$-bits in a second branch solution. In order to sample a solution with at least $n/2 +k$ $1$-bits, i.e., a solution with at least equal fitness on the other branch, at least $2k$ bits must be flipped. We will first show that for $k \in [ \sqrt{n},n/2-1]$ the mutation potential $M(k)=n^\frac{n/2 -k}{n}$ is always smaller than $2k$. We will analyse the sign of the function 
+%	
+%	\begin{align*}
+%		 n^{\frac{n/2 -k}{n}} < 2k \iff f(k):= \ln{2k} - (1/2 - k/n)\ln{n}  > 0
+%	\end{align*}
+%	
+%	We will first consider the endpoints of the interval.
+%	For large enough $n$, $f(\sqrt{n})=\ln{2}-\frac{\ln{n}}{\sqrt{n}}$ and  $f(n/2 -1 )=\frac{\ln{n}}{n} - \ln{(n-2)}$ are both positive. The first derivative of $f(k)$ is $f'(k)=\frac{1}{k} - \frac{\ln{n}}{n}$ whose critical point $k=\frac{n}{\ln{n}}$ lies in the interval $[\sqrt{n},n/2-1]$. In particular, $f$ increases on $[\sqrt{n}, n/ \ln{n}]$ and decreases on $[n/\ln{n},n/2 -1 ]$, concluding that it stays positive for the entire interval. Consequently, we have established that once the individual on the second branch has at least $n/2 + \sqrt{n}$ $0$-bits, the hypermutation operator can not yield an equally good solution on the first branch. 
+%	
+%	Next, we will argue that a reinitialised solution has a $\Omega(1)$ probability of having at least $n/2 + \sqrt{n}$ $0$-bits. Since the number of $0$-bits is $Bin(n, 1/2)$ distributed, the desired event is that the outcome deviates at least by two standard deviations from the mean and has probability $1-\phi(2) = \Omega(1)$. 
+%	
+%}
+%
+%	 Given that no switch occurs, the expected time to find the second optimum is $\sum_{i=1}^{n/2+\epsilon n} \frac{n}{i} \cdot 
+%	n^{\frac{n-i}{n}}=O(n^{2}\log{n})$. Since, we will have to restart a constant number of times in expectation until we guarantee that the solution will not switch until the second optimum is found, the expected time to find both optima is $O(n^{2}\log{n})$.
+%	
+%	For the lower bound, assume that the first discovered solution is $1^n$ and consider the last $\frac{n}{\log{n}}$ fitness-levels before the second optimum $0^n$ is discovered. Due to FCM, the current solution has to visit each of these levels and the minimum mutation potential in these fitness levels is $n^{\frac{n-n/\log{n}}{n}}=\frac{n}{e}$. Thus, the expected time is at least $\sum_{i=1}^{n/\log{n}} \frac{n}{i}\cdot \frac{n}{e} = \Omega(n^2 \log{n})$. 
+%	
+%	
+%	
+%\end{proof}
+%
 
 %\begin{theorem}
 %The expected runtime of Algorithm \ref{alg:alg1+ageing} with \expoF to optimise \textsc{TwoMax} is $?$ with $\tau=?$.
