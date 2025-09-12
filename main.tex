@@ -829,7 +829,7 @@ we will use it in the remainder of the paper.
 \textcolor{purple}{However, {\expoHD } only allows to flip at most $\sqrt{n}$ bits when far away from the optimum, which means that apart from at initialisation the algorithm hardly ever hypermutates.}
 
  	
- 	\section{Inefficient Behaviour of IPH in Practice}
+ 	\section{Behaviour of IPH in Practice}
 	
 	\textcolor{purple}{We do not update the current Best with individuals of equal fitness to the best because if trapped on a plateau of local optima, this allows to increase the hamming distance from the local optimum, thus increases the chances of escaping via higher mutation rates. We, instead, update the Best to the last seen individual of highest fitness (i.e. the current solution) when ageing is triggered because if a local optima has been escaped via a small mutation, this limits the hamming distance between the new solution and the Best, thus decreases the chances of jumping back to the previous local optimum.}
 
