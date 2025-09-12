@@ -829,7 +829,13 @@ we will use it in the remainder of the paper.
 \textcolor{purple}{However, {\expoHD } only allows to flip at most $\sqrt{n}$ bits when far away from the optimum, which means that apart from at initialisation the algorithm hardly ever hypermutates.}
 
  	
- 	\section{Inefficient Behaviour of IPH in Practice}In this section we consider the usage of  {\expoHD } in realistic applications where the optimum is unknown.
+ 	\section{Inefficient Behaviour of IPH in Practice}
+	
+	\textcolor{purple}{We do not update the current Best with individuals of equal fitness to the best because if trapped on a plateau of local optima, this allows to increase the hamming distance from the local optimum, thus increases the chances of escaping via higher mutation rates. We, instead, update the Best to the last seen individual of highest fitness (i.e. the current solution) when ageing is triggered because if a local optima has been escaped via a small mutation, this limits the hamming distance between the new solution and the Best, thus decreases the chances of jumping back to the previous local optimum.}
+
+	
+	
+	In this section we consider the usage of  {\expoHD } in realistic applications where the optimum is unknown.
  	To this end, the best seen solution will be used by the operator, rather than the unknown optimum. {\color{blue} As a design choice, when the algorithm finds a new solution that is as good as the previous best we update the best seen solution.}
  	We combine \IPHfcm{} using {\expoHD } with hybrid ageing, as in the Opt-IA AIS \cite{CutelloNicosiaPavoneTimmis2007}, and embed it in a $(1+1)$~Opt-IA shown in Algorithm \ref{alg:alg1+ageing}. \new{To use the ageing operator an age, $\alpha(x)$, is assigned to the individual $x$ and is initially set to zero.} After the Hypermutate$(x)$ operator, %, our algorithm  
  	%1) calculates $M:=$ \expoHD, and 2) creates $y$ by flipping at most $M$ distinct bits of $x$ selected uniformly at random one after another until constructive mutation happens.
