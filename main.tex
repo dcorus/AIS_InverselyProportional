@@ -843,21 +843,6 @@ we will use it in the remainder of the paper.
  	Among the different variants of ageing, {\it hybrid} ageing has been shown to be very efficient at escaping local optima~\cite{OlivetoSudholt2014ageing,CorusOlivetoYazdaniGECCO2017,CorusOlivetoYazdaniPPSN2018Approx}. Using this operator,  individuals are assigned with initial age zero. During each iteration of the algorithm, the age  increases by 1 and is passed to the offspring if it does not improve over its parent's fitness. If the offspring is fitter than the parent, then its age is set to 0. At the end of each iteration, any individual with age larger than a threshold $\tau$ is removed with probability $1/2$. In case there is no other individual left, a new individual is initialised uniformly at random. 
  
  Ageing has been shown to enable algorithms to escape from local optima either by identifying a gradient leading away from it or by restarting the whole optimisation process. Our aim behind the algorithm design is that by escaping local optima via ageing, the number of local optima that are identified by the algorithm increases over time. Thus as time goes by {\expoHD } should approximate its ideal behaviour better and better.
- 	However, we will show that this is not the case. For the purpose we consider the well-studied
- 	%In this section we analyse a more realistic version of Algorithm \ref{alg:simple} with mutation potentials that consider the best individual seen so far instead of the optimum. Combined with hybrid ageing to make it capable of escaping difficult local optima, we analyse the resulting algorithm (shown in Algorithm \ref{alg:alg1+ageing}) on 
- 	bimodal benchmark function \textsc{TwoMax} % shown in~(\ref{func:twomax}) and 
- 	illustrated in Figure~\ref{fig:twomax}~\cite{FriedrichOSWECJ09,SudholtBookChapter2019,OlivetoSudholtZarges2018,CovantesOsunaSudholt2017,CorusLissovoiOlivetoWittTELO2021}:
- 	
- 	\begin{equation}\label{func:twomax}
- 		\textsc{TwoMax}(x):=\max \left\{\sum_{i=1}^n x_i, \; n-\sum_{i=1}^n x_i \right\}.
- 	\end{equation} 
- 	
- 	\textsc{TwoMax} is often used to evaluate the global exploration capabilities of evolutionary algorithms, i.e., whether the population can identify both optima of the function. The standard $(\mu+1)$~EA fails to identify both optima of \textsc{TwoMax} efficiently, hence, the function has been often used to evaluate the effectiveness of diversity mechanisms for improving the global exploration capabilities of populations-based EAs~\cite{FriedrichOSWECJ09,SudholtBookChapter2019,OlivetoSudholtZarges2018,CovantesOsunaSudholt2017}. \new{Recently Corus et al.~\cite{CorusLissovoiOlivetoWittTELO2021} have been shown that artificial diversity mechanisms are not necessary for the $(\mu+1)$~EA to efficiently identify both optima of the function. It suffices to decrease the selection pressure of the algorithm e.g., by employing  inverse tournament selection. In particular, they show that the reason why the traditional $(\mu+1)$~EA fails is that the uniform parent selection usually employed leads to premature convergence of the population.
- 	With sufficiently low selective pressure and a linear population size the $(\mu+1)$~EA can optimise  \textsc{TwoMax} in approximately $\Theta(n^2 \log n)$ w.o.p.~\cite{CorusLissovoiOlivetoWittTELO2021}.} In the next section we will present an AIS using IPH that is considerably faster.
- 	
- 	In this section, our analysis shows that once the $(1+1)$~Opt-IA using \IPHfcm{} with \expoHD{}  escapes from one local optimum, the mutation rate will increase as the algorithm climbs up the other branch.
- 	As a result, the algorithm struggles to identify the other optimum and wastes more and more fitness function evaluations as it approaches it. Thus, the whole purpose behind IPH is defeated.
- 	
  	On the bright side, we will show that {\expoHD } combined with ageing can efficiently escape from local optima. We will use the well known \cliff{} function %(shown in  (\ref{func:cliff})) 
  	for this purpose where static hypermutations are inefficient:
  	\begin{equation} \label{func:cliff}
