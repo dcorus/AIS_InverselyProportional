@@ -562,7 +562,7 @@ Now we prove the upper bound. The probability of improvement in each step is at 
 \end{proof}
 
 
-Theorem \ref{expohdOnLO} shows that the exponential fitness-based mutation 
+Theorem \ref{expohdOnLO} shows that the exponential based mutation 
 potential provides at least a logarithmic and at most a $\sqrt 
 n$ factor speed-up compared to static mutation potentials. Before proving the main results, we introduce the following  lemma that will be used in the proof of the upcoming theorems.
 \begin{lemma}\label{lem:expo}
@@ -1663,6 +1663,37 @@ The \textsc{LeadingTrapJump} function was introduced as an example where the use
 	sampling any $x\in\mathcal{D}_\rho$ or any $x\in\mathcal{B}_k$.
 \end{definition}
 
+
+
+\begin{theorem}[Expected fitness–evaluation cost in terms of \(\tau\)]
+	\label{thm:main-tau-final}
+	Let the block size \(k\ge 1\) be constant, \(r:=2k+1\), and set the IPH
+	parameter to \(c=\tfrac13\).
+	Let \(\tau=\tau(n)\ge n\) be the ageing threshold (in iterations).  
+	For the $(1{+}1)$ Opt–IA with inversely proportional hypermutation and
+	FCM($\ge$) acceptance, the expected number of fitness evaluations to optimise
+	\textsc{LTJ}\(_{k,\rho}\) is
+	
+	\[
+	\;
+	\mathbb{E}[\text{\emph{evals}}]
+	\;=\;
+	O\!\bigl(
+	n\,\tau
+	\;+\;
+	n^{\,2k+3}
+	\;+\;
+	n^{\,\beta+1}
+	\bigr),
+	\]
+	
+	\noindent
+	where $\beta:=\log_{2}60\ <6$.
+	
+	
+\end{theorem}
+
+
 \begin{lemma}[Junction precedes DPO and $\mathcal{B}_k$ with probability $1-o(1)$]
 	\label{lem:junction-first-density-Bk}
 	Under Definition~\ref{def:notation-algo-solutions}, fix $c\in(0,\tfrac13)$ and a constant $k\ge 1$.
@@ -1938,34 +1969,7 @@ The \textsc{LeadingTrapJump} function was introduced as an example where the use
 	completing the proof.
 \end{proof}
 
-\begin{theorem}[Expected fitness–evaluation cost in terms of \(\tau\)]
-	\label{thm:main-tau-final}
-	Let the block size \(k\ge 1\) be constant, \(r:=2k+1\), and set the IPH
-	parameter to \(c=\tfrac13\).
-	Let \(\tau=\tau(n)\ge n\) be the ageing threshold (in iterations).  
-	For the $(1{+}1)$ Opt–IA with inversely proportional hypermutation and
-	FCM($\ge$) acceptance, the expected number of fitness evaluations to optimise
-	\textsc{LTJ}\(_{k,\rho}\) is
-	
-	\[
-	\;
-		\mathbb{E}[\text{\emph{evals}}]
-		\;=\;
-		O\!\bigl(
-		n\,\tau
-		\;+\;
-		n^{\,2k+3}
-		\;+\;
-		n^{\,\beta+1}
-		\bigr),
-	\]
-	
-	\noindent
-	where $\beta:=\log_{2}60\ <6$.
-	
-
-\end{theorem}
-
+\textcolor{green}{Now that the lemmata are established we can prove our theorem.}
 \begin{proof}
 	\textbf{1.  Evaluation cost of one epoch.}
 	Each iteration evaluates at most \(M(x)\le c\,n\;(=n/3)\) offspring, so an
