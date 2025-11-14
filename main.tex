@@ -1594,6 +1594,7 @@ The \textsc{LeadingTrapJump} function was introduced as an example where the use
 
 
 
+
 \begin{definition}[Notation, algorithm, and solution types]
 	\label{def:notation-algo-solutions}
 	
@@ -1652,6 +1653,10 @@ The \textsc{LeadingTrapJump} function was introduced as an example where the use
 	\end{cases}
 	\]
 	
+	
+	Essentially the function consists of a  main \leadingones~ slope of increasing fitness until $(9/10)n -1$ leading ones are reached. From there it is necessary to add a constant number $2k$ of leading zeroes before the last $n/10$ leading ones can be inserted to reach the optimum. However, there is a trap consisting of many leading zeroes ($\log n$ ?) that has fitness value higher than any point other than the optimum. High mutation rates are likely to end up in the trap, while low mutation rates are likely to find the optimum. Naturally  if the values of the local and global optima are switched, then high mutation rates will be successful with high probability, while low mutation rates will fail. In the following we will show that the (1+1) Opt-IA with symmetric IPH efficiently optimises the function independent of the location of the optimum, while SBM will get trapped on the all-ones bit-string with high probability if the trap is globally optimal while static hypermutations with mutation potential get stuck in the trap with high probability when the all-ones bit string is optimal.
+	
+		
 	\medskip\noindent
 	\textbf{Target event.}\\
 	Let $\mathcal{E}_{\mathrm{junction}}$ denote the event that the algorithm reaches $J$ before
