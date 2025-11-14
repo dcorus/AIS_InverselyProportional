@@ -832,7 +832,7 @@ we will use it in the remainder of the paper.
  	\section{Behaviour of IPH in Practice}
 	
 	\textcolor{purple}{We do not update the current Best with individuals of equal fitness to the best because if trapped on a plateau of local optima, this allows to increase the hamming distance from the local optimum, thus increases the chances of escaping via higher mutation rates. We, instead, update the Best to the last seen individual of highest fitness (i.e. the current solution) when ageing is triggered because if a local optima has been escaped via a small mutation, this limits the hamming distance between the new solution and the Best, thus decreases the chances of jumping back to the previous local optimum.}
-
+	\textcolor{green}{While this new update mechanism allows the algorithm to escape the local optimum of CLIFF, this behaviour is closely tied to the idiosyncrasies of that landscape. In particular the fact that even moderately large mutations yield an offspring in the basin of attraction of the local optimum while any efficient algorithm must follow the second gradient towards the global optimum. Thus the reason why small mutations near the previous best seen are beneficial in CLIFF is because we want to avoid going near the local optima over and over again rather than investing in a thorough exploitation in its vicinity, which is the intuitive reasoning behind IPH. As a solution in the second gradient goes higher and higher in fitness levels it can tolerate larger and largers mutation without going back to the first slope.  }
 	
 	
 	In this section we consider the usage of  {\expoHD } in realistic applications where the optimum is unknown.
@@ -1168,8 +1168,8 @@ takes {\color{blue}$O(n^{3/2}\log{\frac{n}{d}}+\tau )$} fitness evaluations, our
 \end{proof}
 
 %{\color{red} This also cannot optimise Jump. We can mention this here maybe? Even with ageing.}
-
-\section{A Function Class Where IPH is Essential} 
+\section{When IPH outperforms high mutation rates}
+\section{When IPH outperforms low mutation rates}
 In this section we introduce a function class where inversely proportional hypermutations are essential.
 The function class is inspired from one previously used to show the advantages and disadvantages of using high mutation rates in the context of rank-based mutation in population based algorithms~\cite{OlivetoLehreNeumann09}.
 In rank-based mutation algorithms~\cite{RankBasedMutation} each individual has a different mutation rate based on their rank in the population i.e., the best individual has a low mutation rate while the worst individual a very high one.
@@ -1260,6 +1260,20 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 %From this point onwards we have an individual with Hamming distance at most 3 to the reference
 %
 %\end{proof}
+
+\begin{theorem}\label{th:expoHD-cliff}
+	The {\oneoneOPTIA} using \IPHfcm{} with \linHD\ (factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$) and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
+	optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected
+	\[
+	O\!\Big(\frac{n^{5}\log(n/d)}{d^{3}} \;+\; n^{2}\log d\Big)
+	\]
+	fitness function evaluations, where the bound accounts for a pessimistic per-iteration cost $\Theta(n)$ (mutation potential $\Omega(n)$) on both slopes.
+\end{theorem}
+
+\textcolor{blue}{In order to prove the above theorem we will first establish the supporting lemmata.}
+
+
+
 
 \begin{lemma}[Canonical start from an ageing cliff-top]\label{lem:can-start-omega-d3}
 	Assume the process is at the cliff-top (zero-count $d$) when ageing is triggered, under \IPHfcm{} with mutation potential $M(x)=\max\{1,\lfloor c\,\HD(x,x^\top)\rfloor\}$ for some $c\in(0,1)$, the reference-update rule (“update when a strictly better solution is sampled or a best-fitness solution dies”), and the convention that \emph{ageing resets only on strict improvement}. Then, within at most three iterations, the process reaches the canonical second-slope start
@@ -1631,17 +1645,9 @@ We will introduce a new parameter $c\leq 1$ for determining our mutation potenti
 	$\Pr(\inf_{t\ge 0} B_t\le 0)\le e^{-\lambda b}$.
 \end{proof}
 
+\textcolor{blue}{Now that the supporting lemmata are established.}
 
-\begin{theorem}\label{th:expoHD-cliff}
-	The {\oneoneOPTIA} using \IPHfcm{} with \linHD\ (factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$) and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
-	optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected
-	\[
-	O\!\Big(\frac{n^{5}\log(n/d)}{d^{3}} \;+\; n^{2}\log d\Big)
-	\]
-	fitness function evaluations, where the bound accounts for a pessimistic per-iteration cost $\Theta(n)$ (mutation potential $\Omega(n)$) on both slopes.
-\end{theorem}
-
-\begin{proof}
+\begin{proof}[Proof of Theorem~\ref{th:expoHD-cliff}]
 	\emph{Up to the second slope.}
 	From a uniformly random start, the expected iterations to reach the cliff-top ($n-d$ ones) are
 	$\sum_{i=d}^{n}\frac{n}{i}=\Theta\!\big(n\log\tfrac{n}{d}\big)$, which at $\Theta(n)$ evaluations/iteration costs
