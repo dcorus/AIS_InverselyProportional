@@ -1077,69 +1077,6 @@ For the lower bound, it is sufficient to prove that the {\color{blue}expectation
 % \begin{theorem}
 % Algorithm \ref{alg:alg1+ageing} with \expoHD on  \textsc{LoLz}. 
 % \end{theorem}
-Now we show that differently from static hypermutations, {\expoHD }
-combined with ageing can escape from the local optima of \cliff, 
-hence optimises the function efficiently. The condition that $d$ is not prohibitively large is necessary to avoid
-that the reinitialised solutions due to ageing have larger fitness than a solution with $n-d+1$ $1$-bits, {\color{blue} which would cause the latter to be removed from the population}.
-We believe that this assumption is realistic for practical applications.
-
-\begin{theorem}\label{thm:cliffexpo}
-The {\oneoneOPTIA } using \IPHfcm{} with {\expoHD } and $\tau=\Omega(n^{1+\epsilon})$ 
-for 
-an arbitrarily small constant $\epsilon$,  optimises \cliff{} with 
-$d<n(\frac{1}{4}-\epsilon)$ in expected {\color{blue} $O\left( \left(n^{3/2}\log{\frac{n}{d}}+\tau \right)\cdot \frac{n^2}{d^2}\right)$ }
- fitness function evaluations. 
-\end{theorem}
-
-\begin{proof}
-The analysis will follow a similar idea to the proof of 
-Theorem~\ref{thm:twomaxexpo}. After initialisation, the initial mutation 
-potential is $M=1$ since the current solution is the best seen solution. With 
-single bit-flips it takes in expectation at most {\color{blue}$O(n \log{\frac{n}{d}})$} to find 
-a local optimum of the cliff (i.e., a search point with $n-d$ 1-bits). Since the 
-local optima {\color{blue} have better fitness value than any other suboptimal solution, as long as the current solution is a local optimum, $M=1$ regardless of how many restarts happened before. Moreover,} a local optimum cannot be improved with single bit flips and in $\tau$ generations after it was first discovered the ageing will be triggered and in the following 
-$n$ steps the current solution will be removed from the population due to 
-ageing with probability at least {\color{blue} $1-\frac{4}{3}^{-n}$}. The Hamming distance of the  
-reinitialised solution will be distributed binomially with parameters $n$ and 
-$1/2$ and w.o.p. will be smaller than $n/2 + 
-n^{2/3}$, yielding an initial mutation potential of $M{\color{blue}\leq n^{\frac{n/2+n^{2/3}}{n}}=n^{1/2}\cdot n^{n^{-1/3}}=} O(n^{1/2})$. {\color{blue}Since we only consider improvements after the first bit-flip,} we 
-pessimistically assume that the mutation potential will not decrease until a  
-local optima is found again, which implies that the expected time {\color{blue} between the consecutive discoveries of the local optima} will be at 
-most {\color{blue}$O(n^{3/2}\log{\frac{n}{d}}+\tau)$ } since each iteration will waste an extra 
-$O(n^{1/2})$ fitness function evaluations {\color{blue} until finding a local optimum}. After finding a local optimum 
-again, the mutation potential will be $M=1$ since it will replace the 
-previously observed local optimum as the best seen. The process of 
-reinitialisation and reaching the local optima will repeat until a solution at the bottom of the Cliff is created and accepted.
-
-If the local optima produces an offspring with $n-d+1$ bits, which happens  with probability 
-$d/n$ and if this solution survives the ageing operator (with 
-probability $(1-p_{\text{die}})$), then  the reinitialised solution will be rejected w.o.p. 
-since its fitness value will be smaller than $n-d$ due to our assumption $d<n(\frac{1}{4}-\epsilon)$. 
-The Hamming distance of this new solution to the best seen will be exactly one 
-since it is created via a single bit-flip, thus its mutation potential 
-will be $M=1$.  Moreover, if the surviving offspring improves again (with 
-probability $(d-1)/n$) in the next iteration, it will reset its age to zero and 
-will 
-have Hamming distance of at least two to any local optima.  In expected 
-$O(n\log d)$ generations, this solution will reach 
-the global optimum unless a solution with less or equal $n-d$ 1-bits is sampled 
-before. {\color{blue}While $M=1$, the distance to the local optima can only increase by improvements. In particular until we have improved for $\ln{2}\cdot n / \ln(n)$ times, which gives us the minimum distance to the local optima which yields $M\geq 2$. The distance of any individual on the second slope to any local optimum is bounded by $2d<n/2$ which implies that $M\leq \sqrt{n}$ and also that we will never be able to sample a solution with at most $n-d$ 1-bits since all bitstrings with $M>1$ have more than $\sqrt{n}$ distance to the local optima. }  Therefore, 
-once a solution with $n-d+2$ bits is added to the population, the algorithm 
-finds 
-the optimum in {\color{blue}$O(n\log{d})$} iterations and in at 
-most {\color{blue} $O(n^{3/2}\log{d})$} fitness function evaluations since the mutation 
-potential is at most $\sqrt{n}$. The probability of obtaining a solution with 
-$n-d+2$ 1-bits at the end of each cycle of reinitialisation and removal of the 
-local optima due to ageing  is $(1-p_{\text{die}})^2 \cdot (d/n)\cdot ((d-1)/n)$. Since each such cycle 
-takes {\color{blue}$O(n^{3/2}\log{\frac{n}{d}}+\tau )$} fitness evaluations, our claim follows after absorbing smaller order term into $O\left(\left(n^{3/2}\log{\frac{n}{d}}+\tau\right)\cdot \frac{n^2}{d^2} \right)$.
-% use the Ballot Theorem to bound the Hamming 
-% distance given the number of 1-bits. Ballot theorem implies that sampling an 
-% solution at least as good as the parent (which are the only solutions that are 
-% accepted) has probability at most $2 i /n$ where $i$ is the number of 0-bits in 
-% the solution. Since the probability of improving in the first step is at least 
-% $i/n$, we can conclude that the conditional probability that an accepted 
-% offspring is a Hamming neighbour of its parent is at least $1/2$ .
-\end{proof}
 
 %{\color{red} This also cannot optimise Jump. We can mention this here maybe? Even with ageing.}
 \section{When IPH outperforms high mutation rates}
@@ -1155,6 +1092,70 @@ The class of \textsc{Cliff} functions, illustrated in Figure~\ref{fig:cliff}, is
 It was originally designed as a problem instance where non-elitist EAs outperform elitist EAs~\cite{JaegerskuepperStorch}. This function  has a \textsc{OneMax} slope with length $n-d$ which leads the algorithms towards the local optima. The local optima are followed by a second \textsc{OneMax} slope (of length $d$) of lower fitness which leads to the global optimum. While elitist algorithms need to make a jump of size $d$ to find the global optimum, non-elitist algorithms can easily find the second slope by accepting inferior solutions, %by a mutation size which is as small as 1, then 
 and then hillclimb up to the global optimum \cite{LissovoiOlivetoWarwicker2019AAAI,CorusOlivetoYazdani2019TCS,CorusOlivetoYazdani2021TEVC,HeviaSudholtAlgo24}. 
 Due to the high mutation rates of static hypermutations, even if they were to escape the local optima of \textsc{Cliff} (which is unlikely due to FCM and linear mutation potentials), they would still jump back with high probability.  
+
+Now we show that differently from static hypermutations, {\expoHD }
+combined with ageing can escape from the local optima of \cliff, 
+hence optimises the function efficiently. The condition that $d$ is not prohibitively large is necessary to avoid
+that the reinitialised solutions due to ageing have larger fitness than a solution with $n-d+1$ $1$-bits, {\color{blue} which would cause the latter to be removed from the population}.
+We believe that this assumption is realistic for practical applications.
+
+\begin{theorem}\label{thm:cliffexpo}
+	The {\oneoneOPTIA } using \IPHfcm{} with {\expoHD } and $\tau=\Omega(n^{1+\epsilon})$ 
+	for 
+	an arbitrarily small constant $\epsilon$,  optimises \cliff{} with 
+	$d<n(\frac{1}{4}-\epsilon)$ in expected {\color{blue} $O\left( \left(n^{3/2}\log{\frac{n}{d}}+\tau \right)\cdot \frac{n^2}{d^2}\right)$ }
+	fitness function evaluations. 
+\end{theorem}
+
+\begin{proof}
+	The analysis will follow a similar idea to the proof of 
+	Theorem~\ref{thm:twomaxexpo}. After initialisation, the initial mutation 
+	potential is $M=1$ since the current solution is the best seen solution. With 
+	single bit-flips it takes in expectation at most {\color{blue}$O(n \log{\frac{n}{d}})$} to find 
+	a local optimum of the cliff (i.e., a search point with $n-d$ 1-bits). Since the 
+	local optima {\color{blue} have better fitness value than any other suboptimal solution, as long as the current solution is a local optimum, $M=1$ regardless of how many restarts happened before. Moreover,} a local optimum cannot be improved with single bit flips and in $\tau$ generations after it was first discovered the ageing will be triggered and in the following 
+	$n$ steps the current solution will be removed from the population due to 
+	ageing with probability at least {\color{blue} $1-\frac{4}{3}^{-n}$}. The Hamming distance of the  
+	reinitialised solution will be distributed binomially with parameters $n$ and 
+	$1/2$ and w.o.p. will be smaller than $n/2 + 
+	n^{2/3}$, yielding an initial mutation potential of $M{\color{blue}\leq n^{\frac{n/2+n^{2/3}}{n}}=n^{1/2}\cdot n^{n^{-1/3}}=} O(n^{1/2})$. {\color{blue}Since we only consider improvements after the first bit-flip,} we 
+	pessimistically assume that the mutation potential will not decrease until a  
+	local optima is found again, which implies that the expected time {\color{blue} between the consecutive discoveries of the local optima} will be at 
+	most {\color{blue}$O(n^{3/2}\log{\frac{n}{d}}+\tau)$ } since each iteration will waste an extra 
+	$O(n^{1/2})$ fitness function evaluations {\color{blue} until finding a local optimum}. After finding a local optimum 
+	again, the mutation potential will be $M=1$ since it will replace the 
+	previously observed local optimum as the best seen. The process of 
+	reinitialisation and reaching the local optima will repeat until a solution at the bottom of the Cliff is created and accepted.
+	
+	If the local optima produces an offspring with $n-d+1$ bits, which happens  with probability 
+	$d/n$ and if this solution survives the ageing operator (with 
+	probability $(1-p_{\text{die}})$), then  the reinitialised solution will be rejected w.o.p. 
+	since its fitness value will be smaller than $n-d$ due to our assumption $d<n(\frac{1}{4}-\epsilon)$. 
+	The Hamming distance of this new solution to the best seen will be exactly one 
+	since it is created via a single bit-flip, thus its mutation potential 
+	will be $M=1$.  Moreover, if the surviving offspring improves again (with 
+	probability $(d-1)/n$) in the next iteration, it will reset its age to zero and 
+	will 
+	have Hamming distance of at least two to any local optima.  In expected 
+	$O(n\log d)$ generations, this solution will reach 
+	the global optimum unless a solution with less or equal $n-d$ 1-bits is sampled 
+	before. {\color{blue}While $M=1$, the distance to the local optima can only increase by improvements. In particular until we have improved for $\ln{2}\cdot n / \ln(n)$ times, which gives us the minimum distance to the local optima which yields $M\geq 2$. The distance of any individual on the second slope to any local optimum is bounded by $2d<n/2$ which implies that $M\leq \sqrt{n}$ and also that we will never be able to sample a solution with at most $n-d$ 1-bits since all bitstrings with $M>1$ have more than $\sqrt{n}$ distance to the local optima. }  Therefore, 
+	once a solution with $n-d+2$ bits is added to the population, the algorithm 
+	finds 
+	the optimum in {\color{blue}$O(n\log{d})$} iterations and in at 
+	most {\color{blue} $O(n^{3/2}\log{d})$} fitness function evaluations since the mutation 
+	potential is at most $\sqrt{n}$. The probability of obtaining a solution with 
+	$n-d+2$ 1-bits at the end of each cycle of reinitialisation and removal of the 
+	local optima due to ageing  is $(1-p_{\text{die}})^2 \cdot (d/n)\cdot ((d-1)/n)$. Since each such cycle 
+	takes {\color{blue}$O(n^{3/2}\log{\frac{n}{d}}+\tau )$} fitness evaluations, our claim follows after absorbing smaller order term into $O\left(\left(n^{3/2}\log{\frac{n}{d}}+\tau\right)\cdot \frac{n^2}{d^2} \right)$.
+	% use the Ballot Theorem to bound the Hamming 
+	% distance given the number of 1-bits. Ballot theorem implies that sampling an 
+	% solution at least as good as the parent (which are the only solutions that are 
+	% accepted) has probability at most $2 i /n$ where $i$ is the number of 0-bits in 
+	% the solution. Since the probability of improving in the first step is at least 
+	% $i/n$, we can conclude that the conditional probability that an accepted 
+	% offspring is a Hamming neighbour of its parent is at least $1/2$ .
+\end{proof}
 
 \section{When IPH outperforms low mutation rates}
 In this section we introduce a function class where inversely proportional hypermutations are essential.
