@@ -1117,24 +1117,24 @@ The \textsc{LeadingTrapJump} function was introduced as an example where the use
 
 
 \begin{definition}[Notation, algorithm, and solution types]
-	\label{def:notation-algo-solutions}
-	
-	\textbf{Logarithms.}\\
-	Throughout, $\log$ denotes the base‐2 logarithm and $\ln$ the natural logarithm.  Set $L:=\lfloor \log n\rfloor$.
-	
-	\medskip\noindent
-	\textbf{Search space and basic functions.}\\
-	The search space is $\{0,1\}^n$.  For $x\in\{0,1\}^n$, $\mathrm{LO}(x)$ is the LeadingOnes value (length of the longest all‐ones prefix), and $\mathrm{HD}(x,y)$ is the Hamming distance.
-	
-	\medskip\noindent
-	\textbf{Algorithm ($(1{+}1)$ Opt‐IA with IPH and FCM($\ge$)).}\\
-	In each iteration, from parent $x$ we flip distinct positions uniformly without replacement, one‐by‐one, up to the mutation potential
-	\[
-	M(x) \;=\; \max\{1,\lfloor c\,\mathrm{HD}(x,x^\top)\rfloor\},
-	\]
-	where $c\in(0,\tfrac13)$ is fixed and $x^\top$ is the current reference.
-	After any flip that yields fitness $\ge$ the parent’s, FCM($\ge$) accepts and stops; otherwise flips continue until $M(x)$ is exhausted.
-	
+%	\label{def:notation-algo-solutions}
+%	
+%	\textbf{Logarithms.}\\
+%	Throughout, $\log$ denotes the base‐2 logarithm and $\ln$ the natural logarithm.  Set $L:=\lfloor \log n\rfloor$.
+%	
+%	\medskip\noindent
+%	\textbf{Search space and basic functions.}\\
+%	The search space is $\{0,1\}^n$.  For $x\in\{0,1\}^n$, $\mathrm{LO}(x)$ is the LeadingOnes value (length of the longest all‐ones prefix), and $\mathrm{HD}(x,y)$ is the Hamming distance.
+%	
+%	\medskip\noindent
+%	\textbf{Algorithm ($(1{+}1)$ Opt‐IA with IPH and FCM($\ge$)).}\\
+%	In each iteration, from parent $x$ we flip distinct positions uniformly without replacement, one‐by‐one, up to the mutation potential
+%	\[
+%	M(x) \;=\; \max\{1,\lfloor c\,\mathrm{HD}(x,x^\top)\rfloor\},
+%	\]
+%	where $c\in(0,\tfrac13)$ is fixed and $x^\top$ is the current reference.
+%	After any flip that yields fitness $\ge$ the parent’s, FCM($\ge$) accepts and stops; otherwise flips continue until $M(x)$ is exhausted.
+%	
 	\medskip\noindent
 	\textbf{Solution types and junction set.}\\
 	\begin{itemize}
