@@ -1217,13 +1217,12 @@ We first need to bound from below the probability that the algorithm visits the 
 
 \begin{lemma}[Junction precedes DPO and $\mathcal{B}_k$ with probability $1-o(1)$]
 	\label{lem:junction-first-density-Bk}
-	Under Definition~\ref{def:notation-algo-solutions}, fix $c\in(0,\tfrac13)$ and a constant $k\ge 1$.
+	Fix $c\in(0,\tfrac13)$ and a constant $k\ge 1$.
 	Choose any $\rho\in(0.8,0.9)$ and any $\xi\in(0,\rho-\tfrac12]$ such that
 	\[
 	q^\star \;:=\; 2c\,\bigl(1-\rho+\xi\bigr) \;<\; e^{-2}.
 	\]
-	Starting from a uniformly random initial parent and with any fixed reference $x^\top$ admissible in
-	Definition~\ref{def:notation-algo-solutions} (parent, local optimum, DPO in $\mathcal{D}_\rho$, or BJO),
+	Starting from a uniformly random initial parent and with any fixed reference $x^\top$ 
 	the event $\mathcal{E}_{\mathrm{junction}}$ satisfies
 	\[
 	\Pr\bigl(\mathcal{E}_{\mathrm{junction}}\bigr)\;=\;1-o(1).
