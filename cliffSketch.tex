@@ -7,7 +7,7 @@ immediately after an ageing event at the cliff-top; and (ii) showing that from
 this configuration the algorithm reaches the optimum without dangerous increases in mutation potential.
 
 
-\begin{theorem}[Main Runtime Bound]
+\begin{theorem}[Main Runtime Bound] \label{th:expoHD-cliff}
 	Let $d < n(\tfrac14-\varepsilon)$ for fixed $\varepsilon>0$, and assume IPH 
 	with linear mutation potential $M(x)=\max\{1,\lfloor c\,\mathrm{HD}(x,x^\top)\rfloor\}$ 
 	for some 
@@ -33,7 +33,7 @@ the iteration of ageing followed by two additional iterations can place the
 algorithm into a configuration with low Hamming distance to the locked 
 reference and with mutation potential~$1$.  The following lemma formalises this.
 
-\begin{lemma}[Canonical Start After Cliff-Top Ageing]
+\begin{lemma}[Canonical Start After Cliff-Top Ageing]\label{lem:can-start-omega-d3}
 	Suppose ageing is triggered at the cliff-top (zero-count~$d$).  
 	Under IPH with $c\in(0,1)$, the reference-update rule, and ageing resets only 
 	on strict improvements, the algorithm reaches within at most three steps the 
@@ -78,7 +78,7 @@ requires tightly controlling how many detrimental flips a hypermutation can
 accumulate before recovering to parent-level fitness.  The next lemma provides
 the crucial starting point: an exponential tail bound for this damaging prefix.
 
-\begin{lemma}[Exponential Tail for Catch-Up Length]
+\begin{lemma}[Exponential Tail for Catch-Up Length] \label{lem:xi-tail}
 	Let the current solution on the second slope have $z\le d$ zero-bits and 
 	define $p=z/n$.  
 	Let $\xi_z$ be the number of $1\to0$ flips before fitness first returns to 
@@ -96,7 +96,7 @@ first success.
 Using the tail bound above, we obtain uniform exponential moment bounds for 
 entire phases.
 
-\begin{lemma}[Phase Moment-Generating Bound]
+\begin{lemma}[Phase Moment-Generating Bound] \label{lem:phase-mgf}
 	Consider a phase at zero-count $z$ and let $Y_z$ denote the total 
 	Hamming-distance increase from all failed attempts in the phase.  
 	Let $\rho = 2d/n$.  
@@ -113,7 +113,7 @@ entire phases.
 To track the safety of mutation potential across phases, we introduce a 
 linear \emph{buffer} capturing the invariant $c\,\mathrm{HD}(r)\le r$.
 
-\begin{lemma}[Buffer Process and Safety Criterion]
+\begin{lemma}[Buffer Process and Safety Criterion] \label{lem:buffer}
 	Let successful phases be indexed by $r=r_0,r_0+1,\dots$ and define
 	\[
 	s_0=\mathrm{HD}(r_0)-r_0, \qquad 
@@ -135,7 +135,7 @@ linear \emph{buffer} capturing the invariant $c\,\mathrm{HD}(r)\le r$.
 Combining the phase MGF with the buffer update yields an exponential drift 
 envelope suitable for applying Ville's inequality.
 
-\begin{lemma}[Exponential Drift Envelope]
+\begin{lemma}[Exponential Drift Envelope] \label{lem:drift-envelope-global}
 	Let $\rho=2d/n$.  
 	For any $0<\lambda<\tfrac12\ln\tfrac{1}{2\rho}$ define
 	\[
@@ -159,7 +159,8 @@ for turning such a drift envelope into a bound on barrier crossing.
 	\]
 \end{theorem}
 
-\begin{corollary}[Buffer Barrier Bound]
+\begin{corollary}[Buffer Barrier Bound] \label{cor:ville-exponential}
+	
 	If $B_0=b>0$ and there exist $\lambda>0$ and $\alpha<1$ with
 	\[
 	\mathbb{E}[e^{-\lambda(B_{t+1}-B_t)}\mid\mathcal{F}_t]\le\alpha,
@@ -173,7 +174,8 @@ for turning such a drift envelope into a bound on barrier crossing.
 To guarantee the drift negativity required above, we identify the admissible 
 range of the mutation-potential factor~$c$.
 
-\begin{lemma}[Per-Instance $c$-Threshold]
+\begin{lemma}[Per-Instance $c$-Threshold] \label{lem:c-threshold-instance}
+	
 	Let $\rho=2d/n$ and $\theta=\frac{1}{c}-1$.  
 	Define
 	\[
@@ -195,13 +197,14 @@ range has a nontrivial lower bound.
 	c_\star(n,d) \;\ge\; \frac{1+4\varepsilon}{3-4\varepsilon} \;\ge\; \tfrac13.
 	\]
 \end{corollary}
+\label{cor:c-floor}
 
 
 Finally, combining the threshold on $c$ with the initial buffer value at 
 $(r_0,\mathrm{HD}(r_0))=(2,2)$ yields a uniform constant bound on the 
 probability of avoiding a jump-back.
 
-\begin{lemma}[Constant Safety Probability]
+\begin{lemma}[Constant Safety Probability] \label{lem:param-constant-c-general}
 	If $c<c_\star(n,d)$ and 
 	$b=B_{r_0}=\frac{r_0}{c}-\mathrm{HD}(r_0)>0$, 
 	then 
@@ -216,7 +219,10 @@ probability of avoiding a jump-back.
 Once the mutation potential remains safe throughout, progress on the second 
 slope is monotone and its runtime is easily bounded.
 
-\begin{lemma}[Second-Slope Climb Time]
+
+
+\begin{lemma}[Second-Slope Climb Time] \label{prop:climb-time}
+	
 	If $B_t>0$ for all $t$, then the second-slope ascent completes in expected
 	\[
 	\Theta(n\log d)
