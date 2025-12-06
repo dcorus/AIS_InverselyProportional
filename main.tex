@@ -952,7 +952,7 @@ The expected runtime of the \oneoneOPTIA~using \IPHfcm{}  with {\expoHD } \textc
 \textsc{OneMax} is $\Theta(n\log n)$ with $\tau=\Omega(n^{1+\epsilon})$ {\color{blue}for any arbitrary} constant $\epsilon>0$.
 \end{theorem}
 \begin{proof}
-Let $x_t$ be the current solution at the beginning of the iteration $t$. Immediately after the initialisation, the best seen solution is the current individual $x_1$ itself and the mutation potential is $M=$ {\expoHD }$=n^{H(x_1,x_1)/n}=n^0=1$. Note that  $x_t \neq x_{t+1}$ if and only if either $f(x_{t+1})\geq f(x_t)$ or $x_{t+1}$ is reinitialised after $x_t$ is removed from the population due to ageing. Thus, the mutation operator flips a single bit at every iteration until ageing is triggered for the first time.
+Let $x_t$ be the current solution at the beginning of the iteration $t$. Immediately after the initialisation, the best seen solution is the current individual $x_1$ itself and the mutation potential is $M=$ {\expoHD }$=n^{H(x_1,x_1)/n}=n^0=1$. \textcolor{blue}{Similarly the linear mutation is also $1$ due $c\cdot H(x_1,x_1)$ being $0$ and stays $1$ since neutral mutations in \textsc{OneMax} requires at least two bits to be flipped.} Note that  $x_t \neq x_{t+1}$ if and only if either $f(x_{t+1})\geq f(x_t)$ or $x_{t+1}$ is reinitialised after $x_t$ is removed from the population due to ageing. Thus, the mutation operator flips a single bit at every iteration until ageing is triggered for the first time.
 The improvement probability will be at least $ 1/n $ until either $1^n$ or $0^n$ is sampled. 
 Given that the ageing threshold $\tau$  is at least $n^{1+\epsilon}$ for some constant $\epsilon >0 $, 
 the probability that the current solution will not improve $\tau$ times consecutively is at most 
