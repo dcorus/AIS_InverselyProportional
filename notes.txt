@@ -58,16 +58,5 @@ Thm 6 remove expohd
 
 Thm 7 remove expohd - copy the old part part of the proof which gives the speed up
 
+Fix fig 2 expo should start from sqrt n 
 
-
-label{th:expoHD-cliff}
-\label{lem:can-start-omega-d3}
-\label{lem:xi-tail}
-\label{lem:phase-mgf}
-\label{lem:buffer}
-\label{lem:drift-envelope-global}
-\label{cor:ville-exponential}
-\label{prop:climb-time}
-\label{lem:c-threshold-instance}
-\label{cor:c-floor}
-\label{lem:param-constant-c-general}
