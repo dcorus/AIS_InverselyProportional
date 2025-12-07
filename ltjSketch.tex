@@ -1,3 +1,20 @@
+
+Formally, for constants $k\ge1$ and $\rho\in(0.8,0.9)$, let $r := 2k+1$, 
+$L := \lfloor\log_2 n\rfloor$, 
+$\mathcal{P} := \{\,x : \mathrm{LO}(x)\ge 0.9n\,\}$, 
+$\mathcal{B}_k := \{\,0^{r} 1^{(0.9n-r)} *\,\}$, 
+and $\mathcal{D}_\rho := \{\,0^{L} * : |x|_1 \ge \rho n\,\}$.
+The function $\mathrm{LTJ}_{k,\rho} : \{0,1\}^n \to \mathbb{R}$ is
+\[
+\mathrm{LTJ}_{k,\rho}(x)
+=
+\begin{cases}
+	0, & x \in \mathcal{P},\\[2pt]
+	\mathrm{LO}\bigl(x_{i>r}\bigr)+r, & x \in \mathcal{B}_k,\\[2pt]
+	n, & x \in \mathcal{D}_\rho,\\[2pt]
+	\mathrm{LO}(x), & \text{otherwise.}
+\end{cases}
+\]
 The landscape consists of a long LeadingOnes slope rising from fitness 
 $\mathrm{LO}(x)$ up to level $0.9n-1$, followed by a large penalised region.  
 Two off-slope structures contain the global optima but are inaccessible to 
@@ -13,27 +30,9 @@ way to reach them is via large hypermutation events.
 The junction $J := \{x : \mathrm{LO}(x)=0.9n-1\}$ acts as a central gateway: 
 each ageing epoch that restarts the search will, with high probability, ascend 
 the LeadingOnes slope back to $J$ before any off-slope structure is encountered.  
-From $J$, the \oneoneOPTIA~using \IPHfcm{}~with \linHD can perform jumps of the 
+From $J$, the \oneoneOPTIA~using \IPHfcm{}~with \linHD~can perform jumps of the 
 appropriate magnitude to reach either the entrance of the block-jump slope or 
 the plateau $\mathcal{D}_\rho$.
-
-Formally, for constants $k\ge1$ and $\rho\in(0.8,0.9)$, let $r := 2k+1$, 
-$L := \lfloor\log_2 n\rfloor$, 
-$\mathcal{P} := \{\,x : \mathrm{LO}(x)\ge 0.9n\,\}$, 
-$\mathcal{B}_k := \{\,0^{r} 1^{(0.9n-r)} *\,\}$, 
-and $\mathcal{D}_\rho := \{\,0^{L} * : |x|_1 \ge \rho n\,\}$.
-The function $\mathrm{LTJ}_{k,\rho} : \{0,1\}^n \to \mathbb{R}$ is
-\[
-\mathrm{LTJ}_{k,\rho}(x)
-=
-\begin{cases}
-	0, & x \in \mathcal{P},\\[2pt]
-	n + (0.9n-r), & x \in \mathcal{B}_k,\\[2pt]
-	n^2, & x \in \mathcal{D}_\rho,\\[2pt]
-	\mathrm{LO}(x), & \text{otherwise.}
-\end{cases}
-\]
-Thus every $x$ with prefix $0^{r}1^{(0.9n-r)} *$ lies at the beginning of the block-jump slope leading to the corresponding global optimum, while every $x$ with prefix $0^L *$ and sufficiently dense suffix lies on the deep-prefix plateau.
 
 \begin{theorem} \label{thm:main-tau-final}
 	Let $k\ge1$ and $\rho\in(0.8,0.9)$ be constants, and let the \oneoneOPTIA~using \IPHfcm{} with \linHD~operate with ageing threshold $\tau\ge n$.
@@ -52,20 +51,25 @@ Since each event corresponds to reaching either the start of a short slope leadi
 	Starting from any random individual, the \oneoneOPTIA~using \IPHfcm{}~with \linHD~reaches the junction $J = \{x : \mathrm{LO}(x)=0.9n-1\}$ before accepting any individual in $\mathcal{B}_k$ or $\mathcal{D}_\rho$ with high probability.
 \end{lemma}
 
-The argument parallels the slope analysis for CLIFF-type functions.
-Within $n^2$ iterations, the algorithm performs at least $0.9n$ LeadingOnes improvements with high probability.
-Before reaching $J$, deep-prefix entrances require flipping the $L$-bit prefix to $0^L$, an event whose probability per iteration is at most $(M(x)/n)^L$.
-Since $M(x)$ is bounded by $q^\star n$ for a constant $q^\star<1$, this becomes $(q^\star)^L = n^{-\alpha^\star}$ for $\alpha^\star > 2$, yielding total probability $o(1)$ over $n^2$ iterations.
-Block-jump entrances require either flipping $\Theta(n)$ specified bits (when $\mathrm{LO}(x)<r$), which has probability $\exp(-\Theta(n))$, or flipping exactly $r+1$ bits (when $\mathrm{LO}(x)\ge r$), which has probability $\Theta(n^{-(r+1)})$; summing over $n^2$ iterations again gives $o(1)$.
+Within $n^2$ iterations, the algorithm performs at least $0.9n$ LeadingOnes 
+improvements with high probability.  
+Before reaching $J$, deep-prefix entrances require flipping the $L$-bit prefix 
+to $0^L$, an event whose probability per iteration is at most $(M(x)/n)^L$.  
+Since under \linHD\ the mutation potential satisfies $M(x) \le q^\star n$ for 
+some constant $q^\star < 1$ (determined solely by $c$ and $\rho$), this becomes 
+$(q^\star)^L = n^{-\alpha^\star}$ for $\alpha^\star := \log_2(1/q^\star) > 2$, 
+yielding total probability $o(1)$ over $n^2$ iterations.
 Thus the slope is climbed to $J$ with high probability.
 
 \begin{lemma} \label{lem:BJO-epoch}
 	Let an ageing epoch begin at the junction.
 	Then, with probability $\Omega(\min\{1,\,\tau\,n^{-(2k+2)}\})$, the epoch performs a jump placing the individual at the beginning of the block-jump slope.
 \end{lemma}
-
-The suffix of the individual at $J$ is essentially random.
-With constant probability its Hamming distance from the reference individual $x^\top$ is at least $n/20$, guaranteeing $M(x)\ge n/60$ throughout the epoch.
+.
+The suffix of the individual at $J$ is essentially random relative to the best individual stored from the 
+previous epoch. 
+With high probability their Hamming distance is at least $n/20$, guaranteeing 
+$M(x)\ge n/60$ throughout the epoch.  
 Under this event, the probability that the first $r+1$ flips of the hypermutation hit exactly the positions defining the prefix $0^{r}1^{(0.9n-r)} *$ is $\Theta(n^{-(r+1)})$.
 Evaluating this over $\tau$ iterations yields the stated bound.
 
