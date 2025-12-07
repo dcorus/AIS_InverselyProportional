@@ -1,0 +1,85 @@
+The landscape consists of a long LeadingOnes slope rising from fitness 
+$\mathrm{LO}(x)$ up to level $0.9n-1$, followed by a large penalised region.  
+Two off-slope structures contain the global optima but are inaccessible to 
+standard hill-climbers.  
+The set $\mathcal{B}_k$ begins with the prefix $0^{r}1^{(0.9n-r)} *$ and forms a 
+short slope that deterministically increases toward its unique optimum; reaching 
+this prefix is therefore equivalent to entering the block-jump basin.  
+In contrast, the set $\mathcal{D}_\rho$ consists of individuals with prefix 
+$0^{L} *$ whose suffix has ones-density at least $\rho$, and forms a wide 
+plateau of globally optimal fitness, not a slope.  
+Both structures are hidden behind the penalised barrier, and the only reliable 
+way to reach them is via large hypermutation events.  
+The junction $J := \{x : \mathrm{LO}(x)=0.9n-1\}$ acts as a central gateway: 
+each ageing epoch that restarts the search will, with high probability, ascend 
+the LeadingOnes slope back to $J$ before any off-slope structure is encountered.  
+From $J$, the \oneoneOPTIA~using \IPHfcm{}~with \linHD can perform jumps of the 
+appropriate magnitude to reach either the entrance of the block-jump slope or 
+the plateau $\mathcal{D}_\rho$.
+
+Formally, for constants $k\ge1$ and $\rho\in(0.8,0.9)$, let $r := 2k+1$, 
+$L := \lfloor\log_2 n\rfloor$, 
+$\mathcal{P} := \{\,x : \mathrm{LO}(x)\ge 0.9n\,\}$, 
+$\mathcal{B}_k := \{\,0^{r} 1^{(0.9n-r)} *\,\}$, 
+and $\mathcal{D}_\rho := \{\,0^{L} * : |x|_1 \ge \rho n\,\}$.
+The function $\mathrm{LTJ}_{k,\rho} : \{0,1\}^n \to \mathbb{R}$ is
+\[
+\mathrm{LTJ}_{k,\rho}(x)
+=
+\begin{cases}
+	0, & x \in \mathcal{P},\\[2pt]
+	n + (0.9n-r), & x \in \mathcal{B}_k,\\[2pt]
+	n^2, & x \in \mathcal{D}_\rho,\\[2pt]
+	\mathrm{LO}(x), & \text{otherwise.}
+\end{cases}
+\]
+Thus every $x$ with prefix $0^{r}1^{(0.9n-r)} *$ lies at the beginning of the block-jump slope leading to the corresponding global optimum, while every $x$ with prefix $0^L *$ and sufficiently dense suffix lies on the deep-prefix plateau.
+
+\begin{theorem} \label{thm:main-tau-final}
+	Let $k\ge1$ and $\rho\in(0.8,0.9)$ be constants, and let the \oneoneOPTIA~using \IPHfcm{} with \linHD~operate with ageing threshold $\tau\ge n$.
+	Then the expected number of fitness evaluations to optimise $\mathrm{LTJ}_{k,\rho}$ is
+	$O(n\tau + n^{2k+3} + n^{\beta+1})$, 
+	where $\beta := \log_2 60 < 6$.
+\end{theorem}
+
+To establish Theorem~\ref{thm:main-tau-final}, we rely on three ingredients.
+First, every ageing epoch returns to the junction $J$ with high probability.
+Second, an epoch beginning at $J$ performs sufficiently long jumps to reach the beginning of the block-jump slope with probability $\Theta(n^{-(2k+2)})$ per iteration.
+Third, an epoch beginning at $J$ performs a logarithmic jump onto the deep-prefix plateau with probability $\Theta(n^{-\beta})$ per iteration, where $\beta < 6$.
+Since each event corresponds to reaching either the start of a short slope leading deterministically to its optimum (for $\mathcal{B}_k$) or directly a plateau of global optima (for $\mathcal{D}_\rho$), these per-epoch probabilities govern the entire runtime.
+
+\begin{lemma} \label{lem:junction-first-density-Bk}
+	Starting from any random individual, the \oneoneOPTIA~using \IPHfcm{}~with \linHD~reaches the junction $J = \{x : \mathrm{LO}(x)=0.9n-1\}$ before accepting any individual in $\mathcal{B}_k$ or $\mathcal{D}_\rho$ with high probability.
+\end{lemma}
+
+The argument parallels the slope analysis for CLIFF-type functions.
+Within $n^2$ iterations, the algorithm performs at least $0.9n$ LeadingOnes improvements with high probability.
+Before reaching $J$, deep-prefix entrances require flipping the $L$-bit prefix to $0^L$, an event whose probability per iteration is at most $(M(x)/n)^L$.
+Since $M(x)$ is bounded by $q^\star n$ for a constant $q^\star<1$, this becomes $(q^\star)^L = n^{-\alpha^\star}$ for $\alpha^\star > 2$, yielding total probability $o(1)$ over $n^2$ iterations.
+Block-jump entrances require either flipping $\Theta(n)$ specified bits (when $\mathrm{LO}(x)<r$), which has probability $\exp(-\Theta(n))$, or flipping exactly $r+1$ bits (when $\mathrm{LO}(x)\ge r$), which has probability $\Theta(n^{-(r+1)})$; summing over $n^2$ iterations again gives $o(1)$.
+Thus the slope is climbed to $J$ with high probability.
+
+\begin{lemma} \label{lem:BJO-epoch}
+	Let an ageing epoch begin at the junction.
+	Then, with probability $\Omega(\min\{1,\,\tau\,n^{-(2k+2)}\})$, the epoch performs a jump placing the individual at the beginning of the block-jump slope.
+\end{lemma}
+
+The suffix of the individual at $J$ is essentially random.
+With constant probability its Hamming distance from the reference individual $x^\top$ is at least $n/20$, guaranteeing $M(x)\ge n/60$ throughout the epoch.
+Under this event, the probability that the first $r+1$ flips of the hypermutation hit exactly the positions defining the prefix $0^{r}1^{(0.9n-r)} *$ is $\Theta(n^{-(r+1)})$.
+Evaluating this over $\tau$ iterations yields the stated bound.
+
+\begin{lemma} \label{lem:DPO-epoch}
+	Let an ageing epoch begin at the junction.
+	Then, with probability $\Omega(\min\{1,\,\tau\,n^{-\beta}\})$, the epoch performs a jump placing the individual onto the deep-prefix plateau.
+\end{lemma}
+
+At $J$, the ones-density of the suffix already exceeds $\rho$ with high probability.
+Thus it suffices to flip the prefix to $0^L *$.
+Under the same high-Hamming-distance event ensuring $M(x)\ge n/60$, the probability that the first $L$ flips hit positions $\{1,\dots,L\}$ is at least $(1/60)^L = n^{-\beta}$.
+Evaluating over $\tau$ iterations gives the lemma.
+
+Each ageing epoch evaluates $\Theta(n\tau)$ individuals.
+By Lemma~\ref{lem:junction-first-density-Bk}, epochs reach $J$ with high probability, and by Lemmas~\ref{lem:BJO-epoch} and~\ref{lem:DPO-epoch}, an epoch discovers each off-slope structure with probabilities $p_B$ and $p_D$, respectively.
+A coupon-collector argument then implies that the expected number of epochs needed to reach both the block-jump basin and the deep-prefix plateau is $O(1/p_B + 1/p_D)$.
+Multiplying by the cost per epoch yields the bound stated in Theorem~\ref{thm:main-tau-final}.
