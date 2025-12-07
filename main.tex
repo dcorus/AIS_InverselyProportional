@@ -963,6 +963,18 @@ To prove the lower bound we make a case distinction with respect to whether the 
 \end{proof}
 
 \begin{theorem} \label{thm:leadingonesexpo}
+	The expected runtime of \textcolor{green}{the old  \oneoneOPTIA~} using \IPHfcm{}  with {\expoHD } \textcolor{purple}{and with {\linHD }} for optimising
+	\textsc{LeadingOnes} is $\Theta(n^2)$ with $\tau=\Omega(n^{1+\epsilon})$ {\color{blue}for any arbitrary} 
+	constant $\epsilon>0$.
+\end{theorem}
+\begin{proof}
+For any suboptimal $x\in\{0,1\}^n$ it is sufficient to flip the leftmost $0$-bit of $x$ to improve its \textsc{LeadingOnes} value. Thus, the same argument in Theorem~\ref{thm:onemaxexpo} which establishes that the ageing will not trigger with overwhelming probability also holds. We can similarly continue with a fitness level argument, {\color{blue} with the only difference in that} the improvement probability for \textsc{LeadingOnes} is always $1/n$ regardless of the current function value and thus the sum yields $\sum\limits_{i=1}^{n}n = n^2$.
+
+For the lower bound, it is sufficient to prove that the {\color{blue}expectation conditional on ageing not triggering} is $\Omega(n^2)$, since ageing will not trigger with overwhelming probability. In that case we have to consider how much the objective function value will increase in expectation when the leftmost $0$-bit is flipped by the operator. The bits on the right of the leftmost $0$-bit does not contribute to the fitness value and thus each can be a $0$-bit or $1$-bit with equal probability. Therefore, the expected number of "free-riders", i.e., the sequence of consecutive $1$-bits that follow the leftmost $0$-bit is at most $\sum_{i=0}^{n}2^{-i}\leq 2$. Since the expected increase after every mutation is at most $2$, the expected number of necessary successful mutations where the leftmost $0$-bit is flipped is at least $n/2$ to find the optimal solution. The expected time for each such successful mutation is $(1/n)^{-1}=n$ iterations and consequently the expected time until the optimum is found given that the ageing operator does not trigger is $\Omega(n^2)$.  
+	
+\end{proof}
+
+\begin{theorem} \label{thm:leadingonesexpo}
 The expected runtime of the \oneoneOPTIA~using \IPHfcm{}  with {\expoHD } \textcolor{purple}{and with {\linHD }} for optimising
 \textsc{LeadingOnes} is $\Theta(n^3)$ with $\tau=\Omega(n^{1+\epsilon})$ {\color{blue}for any arbitrary} 
 constant $\epsilon>0$.
@@ -975,9 +987,6 @@ constant $\epsilon>0$.
 	There are $\Theta(n)$ levels $\ell$ in the interval $[n/3,2n/3]$, and each such level contributes $\Omega(n^2)$ expected evaluations. Thus the total expected optimisation time is $\Omega(n^3)$. Finally, stochastic ageing can only increase the number of evaluations and therefore cannot invalidate the lower bound. Since the function has $n$ levels, $1/n$ probability of improvement and $M\leq n$, the expected runtime is bounded from above by $O(n^3)$ as well.
 }	
 	
-For any suboptimal $x\in\{0,1\}^n$ it is sufficient to flip the leftmost $0$-bit of $x$ to improve its \textsc{LeadingOnes} value. Thus, the same argument in Theorem~\ref{thm:onemaxexpo} which establishes that the ageing will not trigger with overwhelming probability also holds. We can similarly continue with a fitness level argument, {\color{blue} with the only difference in that} the improvement probability for \textsc{LeadingOnes} is always $1/n$ regardless of the current function value and thus the sum yields $\sum\limits_{i=1}^{n}n = n^2$.
-
-For the lower bound, it is sufficient to prove that the {\color{blue}expectation conditional on ageing not triggering} is $\Omega(n^2)$, since ageing will not trigger with overwhelming probability. In that case we have to consider how much the objective function value will increase in expectation when the leftmost $0$-bit is flipped by the operator. The bits on the right of the leftmost $0$-bit does not contribute to the fitness value and thus each can be a $0$-bit or $1$-bit with equal probability. Therefore, the expected number of "free-riders", i.e., the sequence of consecutive $1$-bits that follow the leftmost $0$-bit is at most $\sum_{i=0}^{n}2^{-i}\leq 2$. Since the expected increase after every mutation is at most $2$, the expected number of necessary successful mutations where the leftmost $0$-bit is flipped is at least $n/2$ to find the optimal solution. The expected time for each such successful mutation is $(1/n)^{-1}=n$ iterations and consequently the expected time until the optimum is found given that the ageing operator does not trigger is $\Omega(n^2)$.  
 \end{proof}
 %We now move on to \textsc{TwoMax}. The following theorem shows that after the algorithm escapes from the local optimum, the mutation rate increases as the algorithm climbs up the opposite branch.
 %This behaviour causes a large waste of fitness evaluations defying the objectives of IPH.
