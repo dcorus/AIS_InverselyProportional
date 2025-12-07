@@ -1,0 +1,73 @@
+state theorem first then proove lemma then prove theorem
+
+Make cliff runtime dependent on c and prove that some c work for both
+
+negative jump result for expohd
+
+a new file for, move new results before inefficient
+remove section 4&5, new section 4 will be hypermutations work with ageing section 6 becomes section 5
+
+Change title of chapter 4 and remove twomax
+
+keep theorems on leadingones and onemax but modify
+
+claim linear should work with partition
+
+section 3 might go if the proofs are too long in the following parts
+
+We need to have the lower bounds for static and sbm
+
+Add result for ridge along with LO
+
+Add a sentence that static hypermutation does solve if c is not 1.
+
+remove expohd for cliff and add lin instead
+
+we outperform sbm and static on cliff
+we outperform sbm and local search in LTJ
+
+Proof idea of the large theorems
+
+Move Ville and its corollary to the beginning
+
+Tell that corollary 2 is a corollary to lemma 9
+
+Explain what we mean by safety before Lemma 6
+
+Moment generating function bound
+
+Ville's bound add back the reference
+
+Might want to switch the order of ville and the envelope bound
+
+Maybe move Ville before Lemma 6
+
+Point out when you start phase 2
+
+Don't say drift negativity call it drift upper bound
+
+Remove Lemma names
+
+Cite Serfling add explanation
+
+With the prev version we can prove linear speed ups but that does not hypermutate
+
+remove expo from both proofs
+
+Thm 6 remove expohd
+
+Thm 7 remove expohd - copy the old part part of the proof which gives the speed up
+
+
+
+label{th:expoHD-cliff}
+\label{lem:can-start-omega-d3}
+\label{lem:xi-tail}
+\label{lem:phase-mgf}
+\label{lem:buffer}
+\label{lem:drift-envelope-global}
+\label{cor:ville-exponential}
+\label{prop:climb-time}
+\label{lem:c-threshold-instance}
+\label{cor:c-floor}
+\label{lem:param-constant-c-general}
