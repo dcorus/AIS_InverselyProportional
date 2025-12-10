@@ -86,7 +86,7 @@ In the literature two key features of clonal selection algorithms have been iden
 \end{enumerate}
 Indeed, well-known clonal selection algorithms employ mutation operators applied to immune cells (i.e., candidate solutions) with a rate that decreases with their similarity to the 
 antigen (i.e., global optima) during affinity maturation. Often such operators are referred to as {\it inversely proportional hypermutations} (IPH). 
-\new{Two of the most popular} clonal selection algorithms, Clonalg \cite{DecastroVonzuben2002}   and \new{the} Opt-IA \new{immune algorithm~\cite{CutelloNicosiaPavoneTimmis2007}, both employ inversely proportional hypermutations se well as their many variants~\cite{ClonalSelectionReview}}.  % with their ``Hypermutations with fitness inversely proportional mutation potential''. 
+\new{Two of the most popular} clonal selection algorithms, Clonalg \cite{DecastroVonzuben2002}   and \new{the} Opt-IA \new{immune algorithm~\cite{CutelloNicosiaPavoneTimmis2007}, se well as their many variants~\cite{ClonalSelectionReview}, both employ inversely proportional hypermutations }.  % with their ``Hypermutations with fitness inversely proportional mutation potential''. 
 
 %
 The ideal behaviour of the IPH operator is that the mutation rate is minimal in proximity of the global optimum and increases as the difference between the fitness of the global optimum
@@ -100,7 +100,7 @@ i.e., the algorithm will struggle to identify the optimum.
 Previous theoretical analyses, though, have highlighted various problems with %inversely proportional hypermutation 
 IPH operators from the literature even when the fitness value of the global optimum is known.
 Zarges~ \cite{Zarges2008} analysed the effects of mutating candidate solutions with a rate that is inversely proportional to their fitness for the \textsc{OneMax} problem.
-She considered two different rates for the decrease of the mutation rate as the fitness increases: a linear decay (i.e., each bit \new{is flipped} with probability $\frac{\textsc{{\color{blue}\text{Opt}-}OneMax(x)}}{\text{Opt}}$, where Opt is the optimum value) 
+She considered two different rates for the decrease of the mutation rate as the fitness increases: a linear decay (i.e., each bit \new{is flipped} with probability $\frac{\textsc{{\color{blue}\text{Opt}-}OneMax(x)}}{\text{Opt}}$, where \textsc{Opt} is the value of the optimum) 
 and an exponential decay (i.e., each bit flips with probability $e^{- \rho \frac{\textsc{OneMax(x)}}{\text{Opt}}}$ where $\rho$ is called the {\it decay} parameter).
 The motivation behind these choices are that the former operator flips in expectation exactly the number of bits that maximises the probability of reaching the optimum in the next step while the latter is the
 operator used in the Clonalg algorithm.  
@@ -116,7 +116,7 @@ On the other hand, the Opt-IA clonal selection algorithm, that \new{uses a mutat
 Indeed, the operator using a static mutation potential (i.e., a linear number of bits are flipped unless an improvement is found along the way) has been proven to be very effective at escaping local
 optima of standard multimodal benchmark functions \cite{CorusOlivetoYazdaniGECCO2017} and at finding arbitrarily good approximations for the Number Partitioning NP-Hard problem \cite{CorusOlivetoYazdaniPPSN2018Approx,CorusOlivetoYazdaniAIJ2019} at the expense
 of being slower at hillclimbing during the exploitation phases (it is up to a linear factor slower than the standard bit mutation (SBM) used by evolutionary algorithms for easy unimodal functions such as OneMax and LeadingOnes).
-Hence, differently from other clonal selection algorithms (such as Clonalg and Opt-IA without FCM), hypermutations with mutation potential coupled with FCM can cope with the desired behaviour of inversely proportional mutation rates by being capable of making progress efficiently with high mutation rates. % thanks to FCM.
+Hence, \new{the first insight we provide in this paper is that,} differently from other clonal selection algorithms (such as Clonalg and Opt-IA without FCM), hypermutations with mutation potential coupled with FCM can cope with the desired behaviour of inversely proportional mutation rates by being capable of making progress efficiently with high mutation rates. % thanks to FCM.
 
 In this paper we first consider whether Opt-IA may become faster during the exploitation phases if inversely proportional mutation potentials are applied rather than static ones.
 \new{The reason to believe this is that the hypermutations waste many fitness function evaluations during exploitation, since the probability of flipping bits that lead to an improvement decreases when the optimum is approached.} 
@@ -137,7 +137,7 @@ A result of this first analysis is that a mutation potential that increases expo
 provides the larger speed-ups \new{for hillclimbing unimodal functions}. Furthermore, using the Hamming distance rather than the fitness as the measure to quantify proximity to the optimum
 makes the operator robust to fitness function scaling.
 %Hence we consider this operator, called  \expoHD, in the rest of the paper.
-\new{However, an exponential decay with the distance to the optimum also implies that high mutation rates would occur only when the current solution is prohibitively far away from the optimum. For instance a randomly generated solution with expected Hamming distance for the optimum flips $\sqrt{n}$ bits and this mutation will decrease exponentially fast with further improvements. The analyses for multimodal functions will indeed indicate that a linear decrease of the mutation rate is a better compromise in pratice as it allows allows for longer phases where large mutations occur.}
+\new{However, an exponential decay with the distance to the optimum also implies that high mutation rates would occur only when the current solution is prohibitively far away from the optimum. For instance a randomly generated solution with expected Hamming distance $n/2$ from the optimum flips $\sqrt{n}$ bits and this mutation will decrease exponentially fast with further improvements. For this reason we find that a linear decrease of the mutation rate is a better compromise in pratice as it allows allows for longer phases where large mutations occur} \textcolor{purple}{ and flips the number of bits that increase the probability of hitting the optimum in the next step.}
 
 %{\color{red}Our results indicate that... we prefer distance rather than fitness because...}
 Afterwards we propose a clonal selection algorithm that we call (1+1)~Opt-IA
@@ -147,7 +147,9 @@ In the literature it has been shown that ageing allows algorithms to escape from
 %Usually such best solution is some local optimum from which the algorithm has escaped
 %through the ageing operator either by restarting or 
 %via hypermutation. 
-\new{The idea behind our proposed AIS is that the more the search space is explored, the better is the ideal behaviour of the IPH approximated through the discovery of better and better local optima.}
+\new{The idea behind our proposed AIS is that the more the search space is explored, the better is the ideal behaviour of the IPH approximated through the discovery of better and better local optima.
+We propose two variants. The first one, called $(1+1)$~Opt-IA$_{\textsc{LastBest}}$, updates the location of the best seen solution whenever a new solution with fitness value at least as good as the previous one is identified. This guarantees that the mutation rate is minimal on the optimum once it is identified exactly in the spirit of inversely proportional hypermutations, and allows for the best possible expected runtimes when hillclimbing unimodal functions such as \textsc{OneMax} and \textsc{LeadingOnes}. However, the Opt-IA using such an operator loses power compared to static hypermutations because it cannot escape from the best identified local optima via large mutations as its mutation rate will be minimal. To this end, we define a second variant called $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$, that only updates the location of the best seen solution when a strictly better solution is identified. This algorithm is capable of increasing its mutation rate again when stuck on large plateaus of local optima by increasing its Hamming distance from the best seen solution.
+}
 
 %Our analysis reveals that such a strategy does not produce the desired effect, and a further improvement \new{of} the algorithm is required.
 %Since the mutation rate decreases with the distance to the best found local optimum, the algorithm may encounter difficulties at \new{finding} new promising optima. 
@@ -157,20 +159,21 @@ In the literature it has been shown that ageing allows algorithms to escape from
 %On the other hand 
 \new{We first use the \textsc{Cliff} benchmark function to prove the effectiveness of the IPH over static hypermutations. In particular, we show} 
 that the IPH can escape local optima when coupled with ageing, \new{because this operator allows the algorithm to escape the local optimum by accepting solutions of inferior fitness.} We remark that static hypermutations cannot optimise the function efficiently because %, once the local optimum is escaped the high mutation rates force the algorithm to jump back to the local optima.
-the operator only stops if a constructive mutation is identified, thus will not return inferior solutions that may survive the ageing operator and allow the algorithm to escape the local optima of the function class.
-\new{A different problem would occur if hypermutations inversely proportional to fitness were to be used. Since the difference in fitness between the local optima and the bottom of the Cliff is very large, the operator's mutation rate at the bottom of the cliff would be too high leading the algorithm back to the local optima with high probability.}
+the operator only stops if a constructive mutation is identified, thus will not return inferior solutions that may survive the ageing operator and allow the algorithm to escape the local optima of the function class. \new{This makes a difference between polynomial and superpolynomial runtimes for super-constant cliff distances, and an expected runtime of $O(n^2 \log n)$ versus exponential for linear cliffs. 
+A different problem would occur if hypermutations inversely proportional to fitness were to be used. Since the difference in fitness between the local optima and the bottom of the Cliff is very large, the operator's mutation rate at the bottom of the cliff would be too high leading the algorithm back to the local optima with high probability.}
 
-\new{We conclude the paper by providing an example benchmark function where the IPH is efficient while traditional standard bit mutations (SBM) that use lower mutation rates are not. The benchmark function, called \textsc{LeadingTrapJump}, was previously used in the literature to highlight when high mutation rates are beneficial and when not~\cite{OlivetoLehreNeumann09}. Essentially, by switching the fitness values of the local optima and the global optimum one can provide examples where SBM outperforms high mutation rates and viceversa. Herein we show that IPH can identify the global optimum in both cases.}
+\new{We conclude the paper by providing an example benchmark function where it is necessary to escape from local optima using large mutations. Thus the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ is efficient while traditional standard bit mutations (SBM) that use lower mutation rates are not. The benchmark function, called \textsc{LeadingTrapJump}, is inspired from one previously used in the literature to highlight when high mutation rates are beneficial and when not~\cite{OlivetoLehreNeumann09}. Essentially, by switching the fitness values of the local optima and the global optimum one can provide examples where SBM outperforms high mutation rates and viceversa. Herein we show that the the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ can identify the global optimum in both cases.}
 
-\new{TODO: these two paragraphs!}
-%To fix the issue we define a {\it Symmetric} IPH operator that decreases the potential with respect to the distance to the best local optimum and uses the same rate of decrease in all other directions.
-We prove the effectiveness of our strategy, and subsequent speed-ups over static hypermutations, % for the \textsc{TwoMax} benchmark function while showing that the local optima of 
-% \textsc{Cliff} can still be escaped by the {\it Symmetric} IPH operator.
-for all the unimodal and multimodal function classes considered in this paper. 
-%during affinity maturation (What is this?) antibodies undergo hypermutations with a rate that is inversely 
+%\new{TODO: these two paragraphs!}
+%%To fix the issue we define a {\it Symmetric} IPH operator that decreases the potential with respect to the distance to the best local optimum and uses the same rate of decrease in all other directions.
+%We prove the effectiveness of our strategy, and subsequent speed-ups over static hypermutations, % for the \textsc{TwoMax} benchmark function while showing that the local optima of 
+%% \textsc{Cliff} can still be escaped by the {\it Symmetric} IPH operator.
+%for all the unimodal and multimodal function classes considered in this paper. 
+%%during affinity maturation (What is this?) antibodies undergo hypermutations with a rate that is inversely 
 
 
 A summary of the results obtained in the paper is provided in Table \ref{table:afl} highlighting the speed-ups achieved by the IPH operator compared to the standard bit mutations traditionally  used by evolutionary algorithms and to the static hypermutation operator with FCM.
+\new{It can be noticed how the IPH operator is a better compromise to hillclimb faster and allow escaping local optima both by accepting solutions of inferior fitness {\it and} by performing large jumps in the search space.}
 
 \new{The original extended abstract~\cite{CorusOlivetoYazdaniIPH2019} of this paper analysed the advantages of using an exponential decay of the mutation rate since this provides the largest speed-ups for unimodal function in ideal conditions where the optimum is known (see Section \ref{sec:OptKnown}). However, a great disadvantage of the exponential decay is that large mutations hardly ever occur in practice. Indeed no superiority of IPH over a SBM operator was provided.  To this end, in this version we analyse the use of the linear decay operator and  provide examples where the IPH indeed considerably outperforms SBM providing a difference between polynomial and superpolynomial expected runtimes.}
 %has been substantially reorganised, apart for the introduction of two new theorems (Theorems \ref{thm:onemaxexpo} and \ref{thm:leadingonesexpo}) and the inclusion of all the proofs including those missing in the previous abstract.
@@ -178,6 +181,53 @@ A summary of the results obtained in the paper is provided in Table \ref{table:a
 
 %As we don't know what the optimum is in reality, we can use different strategies. 
 %we want to discuss the solution in Thomas's paper as the best possible for onemax (Is it the best for any function?nop, not even for onemax) when we know everything about the search space, which is ideal. But it doesnt seem to work for any function with local optimum, since the distance is not included in ranking. 
+%\begin{table*}[t!]
+%	\caption{Expected runtimes of the different mutation operators when embedded in a (1+1) algorithmic framework for the benchmark functions considered in this paper.
+%		`$^*$' indicates that the results are obtained assuming the optimum is known. For all the other results, the optimum in unknown to the algorithm.}
+%	%The same result as $(1+1)~IA^{hype}$ using static hypermutation ($M=n$) has been shown for the original IPM of Opt-IA \cite{JansenZarges2011}.}
+%\begin{center}
+%	\resizebox{2\columnwidth}{!}{
+%		
+%		\begin{tabular}{ |l l l l l| }
+%			\hline
+%			(1+1) Algorithms & \textsc{OneMax} &  \textsc{LeadingOnes} & \textsc{TwoMax} &\textsc{Cliff}$_d$
+%			\T\B \\ \hline
+%			
+%			EA  (SBM) &$\Theta(n \log n)$ \cite{DrosteJansenWegener2002}& $\Theta(n^2)$ \cite{DrosteJansenWegener2002} & $O(n^n)$ \cite{FriedrichOSWECJ09},& $O(n^d)$ \cite{JaegerskuepperStorch}
+%			\T\B\\
+%			
+%			
+%			IA$_{\text{static}}$ & $\Theta(n^2\log n)$ \cite{CorusOlivetoYazdani2019TCS} & $\Theta(n^3)$\cite{CorusOlivetoYazdani2019TCS} & $\Theta(n^2 \log n)$ &$O(\frac{n^{d+1}\cdot e^d}{d^d})$ \cite{CorusOlivetoYazdani2019TCS}
+%			\T\B\\
+%			
+%			IA$_{\text{\linHD}}^*$  & $\Theta(n^2)$ & $\Theta(n^3)$ &-&-
+%			\T\B\\ 
+%			IA$_{\text{\expoF}}^*$ & $O(n^{\frac{3}{2}}\log n)$, $\Omega(n^{\frac{3}{2}-\epsilon})$ & $O(\frac{n^3}{\log n})$, $\Omega(n^{\frac{5}{2}+\epsilon})$ &-&-
+%			\T\B \\
+%			IA$_{\text{\expoHD}}^*$ & $O(n^{\frac{3}{2}}\log n)$, $\Omega(n^{\frac{3}{2}-\epsilon})$ & $O(n^{\frac{5/2+\epsilon}{\ln n}})$, $\Omega(n^{\frac{9}{4}-\epsilon})$ &-&-
+%			\T\B \\
+%			
+%			
+%			
+%			Opt-IA$_{\text{\expoHD}}$ & $\Theta(n \log n) $ & $\Theta(n^2)$& $\Theta(n^2 \log n)$ & \tiny{$O(n^{\frac{3}{2}}\log{n}+ \tau 
+%				n^{\frac{1}{2}} + \frac{n^{\frac{7}{2}}}{d^2})$}
+%			\T\B \\
+%			Opt-IA$_{\text{Sym \expoHD}}$ & $\Theta(n \log n)$ & $\Theta(n^2)$ & $O(n^{\frac{3}{2}} \log n)$ &  \tiny{$O(n^{\frac{3}{2}}\log{n}+ \tau n^{\frac{1}{2}} + \frac{n^{\frac{7}{2}}}{d^2})$}
+%			\T\B \\
+%			% $(1+1)$~IA using \bexpo & $\Theta(n \log n)$ & $\Theta(n^2)$
+%			%\T\B \\
+%			% Fast $(1+1)$~IA$_{\beta}$ & $O(n \log n)$ & $O(n^2)$
+%			% \T\B \\
+%			
+%			\hline
+%		\end{tabular}
+%	}
+%	
+%\end{center}
+%\label{table:afl}
+%\end{table*}
+
+
 \begin{table*}[t!]
 	\caption{Expected runtimes of the different mutation operators when embedded in a (1+1) algorithmic framework for the benchmark functions considered in this paper.
 		`$^*$' indicates that the results are obtained assuming the optimum is known. For all the other results, the optimum in unknown to the algorithm.}
@@ -187,29 +237,20 @@ A summary of the results obtained in the paper is provided in Table \ref{table:a
 		
 		\begin{tabular}{ |l l l l l| }
 			\hline
-			(1+1) Algorithms & \textsc{OneMax} &  \textsc{LeadingOnes} & \textsc{TwoMax} &\textsc{Cliff}$_d$
+			(1+1) Algorithms & \textsc{OneMax} &  \textsc{LeadingOnes} & \textsc{Cliff}$_d$ &\textsc{LeadingTrapJump}$_k,\rho$
 			\T\B \\ \hline
 			
-			EA  (SBM) &$\Theta(n \log n)$ \cite{DrosteJansenWegener2002}& $\Theta(n^2)$ \cite{DrosteJansenWegener2002} & $O(n^n)$ \cite{FriedrichOSWECJ09},& $O(n^d)$ \cite{JaegerskuepperStorch}
+			EA  (SBM) &$\Theta(n \log n)$ \cite{DrosteJansenWegener2002}& $\Theta(n^2)$ \cite{DrosteJansenWegener2002} & $\Theta(n^d)$ \cite{JaegerskuepperStorch} & \color{red}{$\Omega(n^{\log n})?$}
 			\T\B\\
 			
 			
-			IA$_{\text{static}}$ & $\Theta(n^2\log n)$ \cite{CorusOlivetoYazdani2019TCS} & $\Theta(n^3)$\cite{CorusOlivetoYazdani2019TCS} & $\Theta(n^2 \log n)$ &$O(\frac{n^{d+1}\cdot e^d}{d^d})$ \cite{CorusOlivetoYazdani2019TCS}
+			Opt-IA$_{\textsc{static}}$ & $\Theta(n^2\log n)$ \cite{CorusOlivetoYazdani2019TCS} & $\Theta(n^3)$\cite{CorusOlivetoYazdani2019TCS} &$O(\frac{n^{d+1}\cdot e^d}{d^d})$ \cite{CorusOlivetoYazdani2019TCS} & \color{red}{$O(n\tau + n^{2k+3} + n^{6})$?}
 			\T\B\\
 			
-			IA$_{\text{\linHD}}^*$  & $\Theta(n^2)$ & $\Theta(n^3)$ &-&-
-			\T\B\\ 
-			IA$_{\text{\expoF}}^*$ & $O(n^{\frac{3}{2}}\log n)$, $\Omega(n^{\frac{3}{2}-\epsilon})$ & $O(\frac{n^3}{\log n})$, $\Omega(n^{\frac{5}{2}+\epsilon})$ &-&-
-			\T\B \\
-			IA$_{\text{\expoHD}}^*$ & $O(n^{\frac{3}{2}}\log n)$, $\Omega(n^{\frac{3}{2}-\epsilon})$ & $O(n^{\frac{5/2+\epsilon}{\ln n}})$, $\Omega(n^{\frac{9}{4}-\epsilon})$ &-&-
-			\T\B \\
 			
 			
-			
-			Opt-IA$_{\text{\expoHD}}$ & $\Theta(n \log n) $ & $\Theta(n^2)$& $\Theta(n^2 \log n)$ & \tiny{$O(n^{\frac{3}{2}}\log{n}+ \tau 
-				n^{\frac{1}{2}} + \frac{n^{\frac{7}{2}}}{d^2})$}
-			\T\B \\
-			Opt-IA$_{\text{Sym \expoHD}}$ & $\Theta(n \log n)$ & $\Theta(n^2)$ & $O(n^{\frac{3}{2}} \log n)$ &  \tiny{$O(n^{\frac{3}{2}}\log{n}+ \tau n^{\frac{1}{2}} + \frac{n^{\frac{7}{2}}}{d^2})$}
+			Opt-IA$_{\textsc{LastBest}}$ & $\Theta(n \log n) $ & $\Theta(n^2)$& \color{red}{$O\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)$?} & \color{red}{$\Omega(n^{\log n})$?}			\T\B \\
+			Opt-IA$_{\textsc{FirstBest}}$ & $\Theta(n \log n)$ & $\Theta(n^3)$ &$O\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)$&    $O(n\tau + n^{2k+3} + n^{6})$
 			\T\B \\
 			% $(1+1)$~IA using \bexpo & $\Theta(n \log n)$ & $\Theta(n^2)$
 			%\T\B \\
@@ -223,8 +264,6 @@ A summary of the results obtained in the paper is provided in Table \ref{table:a
 \end{center}
 \label{table:afl}
 \end{table*}
-
-
 
 
 
