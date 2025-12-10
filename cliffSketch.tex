@@ -1,4 +1,4 @@
-We now present the proof sketch of our main result on the  $\mathrm{CLIFF}_d$ function, together with 
+We now present the proof sketch of our main result on the  $\mathrm{Cliff}_d$ function, together with 
 all supporting lemmata.  All proofs are deferred to the appendix; the 
 statements here are mathematically identical to those in the full technical 
 development, but streamlined for readability.  The argument proceeds in two 
@@ -9,13 +9,13 @@ this configuration the algorithm reaches the optimum without dangerous increases
 
 \begin{theorem}[Main Runtime Bound] \label{th:expoHD-cliff}
 	Let $d < n(\tfrac14-\varepsilon)$ for fixed $\varepsilon>0$, and assume IPH 
-	with linear mutation potential $M(x)=\max\{1,\lfloor c\,\mathrm{HD}(x,x^\top)\rfloor\}$ 
+	with linear mutation potential  $M(x)=\max\{1,\lfloor c\,\mathrm{HD}(x,\textcolor{purple}{x^\top})\rfloor\}$ 
 	for some 
 	\[
 	c < \frac{1+4\varepsilon}{3-4\varepsilon}.
 	\]
 	If the ageing threshold satisfies $\tau=\Omega(n^{1+\varepsilon'})$ for some 
-	$\varepsilon'>0$, then the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ optimises $\mathrm{CLIFF}_d$ in expected
+	$\varepsilon'>0$, then the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ optimises $\mathrm{Cliff}_d$ in expected
 	\[
 	O\!\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)
 	\]
@@ -54,7 +54,7 @@ positions.
 
 Repeated ascents to the cliff-top therefore form a geometric waiting-time 
 process.  Since each ascent takes $\Theta(n^2\log(n/d))$ evaluations, the 
-total time to obtain the canonical start is:
+total time to obtain the canonical start is \new{provided by the following corollary}.
 
 \begin{corollary}[Expected Time to Canonical Start]
 	The expected evaluation count until the first occurrence of 
