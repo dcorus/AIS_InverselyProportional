@@ -1,23 +1,19 @@
 
-\setcounter{theorem}{\numexpr\getrefnumber{th:expoHD-cliff}-1\relax}
-
-
-\begin{theorem}
+\begin{theorem}\label{th:expoHD-cliff}
 	The {\oneoneOPTIA} using \IPHfcm{} with \linHD\ (factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$) and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
 	optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected
 	\[
 	O\!\Big(\frac{n^{5}\log(n/d)}{d^{3}} \;+\; n^{2}\log d\Big)
 	\]
-	fitness function evaluations.
+	fitness function evaluations, where the bound accounts for a pessimistic per-iteration cost $\Theta(n)$ (mutation potential $\Omega(n)$) on both slopes.
 \end{theorem}
 
 \textcolor{blue}{In order to prove the above theorem we will first establish the supporting lemmata.}
 
 
-\setcounter{lemma}{\getrefnumber{lem:can-start-omega-d3}-1\relax}
 
 
-\begin{lemma}[Canonical start from an ageing cliff-top]
+\begin{lemma}[Canonical start from an ageing cliff-top]\label{lem:can-start-omega-d3}
 	Assume the process is at the cliff-top (zero-count $d$) when ageing is triggered, under \IPHfcm{} with mutation potential $M(x)=\max\{1,\lfloor c\,\HD(x,x^\top)\rfloor\}$ for some $c\in(0,1)$, the reference-update rule (“update when a strictly better solution is sampled or a best-fitness solution dies”), and the convention that \emph{ageing resets only on strict improvement}. Then, within at most three iterations, the process reaches the canonical second-slope start
 	\[
 	r_0=2\qquad\text{and}\qquad \HD(r_0)=2
@@ -47,9 +43,9 @@
 	which proves the claim.
 \end{proof}
 
-\setcounter{lemma}{\getrefnumber{lem:xi-tail}-1\relax}
 
-\begin{lemma}[Exponential tail for catch-up length]
+
+\begin{lemma}[Exponential tail for catch-up length]\label{lem:xi-tail}
 	Fix a state on the second slope with $z$ zero-bits (so $z\le d<(\tfrac14-\varepsilon)n$) and let $p:=z/n$.
 	During one hypermutation, let $\xi_z$ be the number of $1\!\to 0$ flips that occur \emph{before} the process first returns to fitness $\ge$ parent (i.e., before the first ``catch-up'' to deficit $0$). Then for every $k\ge 1$,
 	\[
@@ -197,9 +193,6 @@
 	
 	
 \end{proof}
-
-
-
 \begin{lemma}[Buffer process and safety invariant]\label{lem:buffer}
 	Let successful phases be indexed by $r=r_0,r_0+1,\dots$ and write
 	$s_0:=\HD(r_0)-r_0$, $\theta:=\tfrac{1}{c}-1$, 
@@ -288,11 +281,16 @@
 		\ =\ \alpha	
 	\end{align*}
 \end{proof}
+\begin{theorem}[Ville’s inequality for nonnegative supermartingales]\label{thm:ville}
+	Let $(M_t)_{t\ge 0}$ be a nonnegative supermartingale adapted to $(\mathcal F_t)_{t\ge 0}$. 
+	Then for every $a>0$,
+	\[
+	\Pr\!\big(\sup_{t\ge 0} M_t \ge a\big)\ \le\ \frac{\EE[M_0]}{a}.
+	\]
+	\emph{(Ville, 1939; see also Doob, 1953, Ch.~VII.)}
+\end{theorem}
 
-
-\setcounter{corollary}{\numexpr\getrefnumber{cor:ville-exponential}-1\relax}
-
-\begin{corollary}[Ville barrier bound for a process with an exponential mgf drift]
+\begin{corollary}[Ville barrier bound for a process with an exponential mgf drift]\label{cor:ville-exponential}
 	Let $(B_t)_{t\ge 0}$ be adapted to $(\mathcal F_t)_{t\ge 0}$ with $B_0=b>0$.
 	Assume there exist $\lambda>0$ and $\alpha\in(0,1)$ such that, for all $t\ge 0$,
 	\[
@@ -314,6 +312,21 @@
 \end{proof}
 
 
+\begin{lemma}[Monotone second-slope climb time]\label{prop:climb-time}
+	On the event $\{\inf_{t\ge 0} B_t>0\}$ (no jump-back), the second-slope ascent completes in expected time
+	\[
+	\EE[T_{\mathrm{climb}}]\ =\ \sum_{z=1}^{d}\frac{n}{z}\ =\ \Theta(n\log d),
+	\]
+	and, for $\tau=\Omega(n^{1+\varepsilon})$ with fixed $\varepsilon>0$, one has $\EE[T_{\mathrm{climb}}]=o(\tau)$.
+\end{lemma}
+
+\begin{proof}
+	At zero-count $z$, success probability per attempt is at least $z/n$, so the expected number of attempts for $z\!\to\! z-1$ is at most $n/z$.
+	Summing over $z=1,\dots,d$ gives $\sum_{z=1}^{d}n/z=\Theta(n\log d)$.
+	Since $d\le(\tfrac14-\varepsilon)n$, we have $\log d=O(\log n)$, hence $n\log d=o(n^{1+\varepsilon})$ and $\EE[T_{\mathrm{climb}}]=o(\tau)$.
+\end{proof}
+
+
 %SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -322,12 +335,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\RestateCounter{lemma}{lem:c-threshold-instance}
 
-%\setcounter{lemma}{\numexpr\getrefnumber{}-1\relax}
-
-\begin{lemma}[Per-instance $c$-threshold for the Ville margin]
-	%\label{lem:c-threshold-instance}
+\begin{lemma}[Per-instance $c$-threshold for the Ville margin]\label{lem:c-threshold-instance}
 	Let $\rho:=\tfrac{2d}{n}\in(0,1)$ and $\theta=\tfrac{1}{c}-1$. Define
 	\[
 	c_\star(n,d)\ :=\ \frac{1-\rho}{1+\rho}\ =\ \frac{1-\tfrac{2d}{n}}{1+\tfrac{2d}{n}}.
@@ -345,28 +354,7 @@
 	If $\theta>\tfrac{2\rho}{1-\rho}$ (equivalently $c<\tfrac{1-\rho}{1+\rho}$), continuity gives $g(\lambda)<0$ for all sufficiently small $\lambda>0$, i.e., $\alpha(\lambda)<1$ in the admissible domain.
 \end{proof}
 
-
-\setcounter{lemma}{\numexpr\getrefnumber{prop:climb-time}-1\relax}
-
-\begin{lemma}[Monotone second-slope climb time]
-	On the event $\{\inf_{t\ge 0} B_t>0\}$ (no jump-back), the second-slope ascent completes in expected time
-	\[
-	\EE[T_{\mathrm{climb}}]\ =\ \sum_{z=1}^{d}\frac{n}{z}\ =\ \Theta(n\log d),
-	\]
-	and, for $\tau=\Omega(n^{1+\varepsilon})$ with fixed $\varepsilon>0$, one has $\EE[T_{\mathrm{climb}}]=o(\tau)$.
-\end{lemma}
-
-\begin{proof}
-	At zero-count $z$, success probability per attempt is at least $z/n$, so the expected number of attempts for $z\!\to\! z-1$ is at most $n/z$.
-	Summing over $z=1,\dots,d$ gives $\sum_{z=1}^{d}n/z=\Theta(n\log d)$.
-	Since $d\le(\tfrac14-\varepsilon)n$, we have $\log d=O(\log n)$, hence $n\log d=o(n^{1+\varepsilon})$ and $\EE[T_{\mathrm{climb}}]=o(\tau)$.
-\end{proof}
-
-
-
-%\setcounter{corollary}{\numexpr\getrefnumber{cor:c-floor}-1\relax}
-\begin{corollary}[Uniform floor $\ge \tfrac13$ over the admissible $d$-range]
-	\label{cor:c-floor}
+\begin{corollary}[Uniform floor $\ge \tfrac13$ over the admissible $d$-range]\label{cor:c-floor}
 	If $d\le (\tfrac14-\varepsilon)n$ with fixed $\varepsilon\in(0,1/4)$, then
 	\[
 	c_\star(n,d)\ =\ \frac{1-\tfrac{2d}{n}}{1+\tfrac{2d}{n}}
@@ -377,9 +365,8 @@
 \end{corollary}
 
 
-\setcounter{lemma}{\numexpr\getrefnumber{lem:param-constant-c-general}-1\relax}
 \begin{lemma}[Constant safety probability from an arbitrary start (Ville route)]
-	
+	\label{lem:param-constant-c-general}
 	Assume $d\le(\tfrac14-\varepsilon)n$ and fix $c\in(0,c_\star(n,d))$ with 
 	$c_\star(n,d)=\frac{1-2d/n}{1+2d/n}$.
 	Let $r_0,\HD(r_0)\in\mathbb{N}$ and set $b:=B_{r_0}=\frac{r_0}{c}-\HD(r_0)>0$.
@@ -467,4 +454,3 @@
 	\]
 	as claimed.
 \end{proof}
-

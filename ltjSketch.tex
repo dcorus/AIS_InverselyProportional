@@ -35,10 +35,8 @@ appropriate magnitude to reach either the entrance of the block-jump slope or
 the plateau $\mathcal{D}_\rho$.
 
 \begin{theorem} \label{thm:main-tau-final}
-	Let $k\ge1$ and $\rho\in(0.8,0.9)$ be constants, and let the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$~using \IPHfcm{} with \linHD~operate with ageing threshold $\tau\ge n$.
-	Then the expected number of fitness evaluations to optimise $\mathrm{LTJ}_{k,\rho}$ is
-	$O(n\tau + n^{2k+3} + n^{\beta+1})$, 
-	where $\beta := \log_2 60 < 6$.
+The  $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$~with ageing threshold $\tau=\Omega(n^{1+\epsilon})$ using  \linHD~ optimises $\mathrm{LTJ}_{k,\rho}$ in
+	$O(n\tau + n^{2k+3} + n^{\beta+1})$ fitness function evaluations	where $\beta := \log_2 60 < 6$.
 \end{theorem}
 
 To establish Theorem~\ref{thm:main-tau-final}, we rely on three ingredients.

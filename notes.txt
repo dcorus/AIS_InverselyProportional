@@ -60,3 +60,6 @@ Thm 7 remove expohd - copy the old part part of the proof which gives the speed 
 
 Fix fig 2 expo should start from sqrt n 
 
+add for any c in the previous statements
+
+add SBM has expo runtime

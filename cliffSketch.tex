@@ -19,18 +19,15 @@ this configuration the algorithm reaches the optimum without dangerous increases
 	\[
 	O\!\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)
 	\]
-	fitness evaluations, assuming a pessimistic $\Theta(n)$ evaluation cost per 
-	iteration.
+	fitness evaluations.
 \end{theorem}
 
 To establish this result, we first analyse how the algorithm reaches a highly 
-structured ``canonical'' state shortly after ageing at the cliff-top, and then 
-analyse its behaviour on the second slope under this canonical start.
-
+structured ``canonical'' state shortly after ageing at the cliff-top.
 At the cliff-top the algorithm cannot improve except by sampling the global 
 optimum, and so ageing will eventually be triggered.  The key insight is that 
-the iteration of ageing followed by two additional iterations can place the 
-algorithm into a configuration with low Hamming distance to the locked 
+the iteration of ageing followed by two additional \textcolor{blue}{fitness improvements} can place the 
+algorithm into a configuration \textcolor{blue}{two extra 1-bits and u}with low Hamming distance to the locked 
 reference and with mutation potential~$1$.  The following lemma formalises this.
 
 \begin{lemma}[Canonical Start After Cliff-Top Ageing]\label{lem:can-start-omega-d3}
@@ -152,12 +149,6 @@ envelope suitable for applying Ville's inequality.
 Ville's inequality for nonnegative supermartingales provides the standard tool 
 for turning such a drift envelope into a bound on barrier crossing.
 
-\begin{theorem}[Ville's Inequality]
-	If $(M_t)$ is a nonnegative supermartingale, then for any $a>0$,
-	\[
-	\Pr\!\left(\sup_{t\ge0} M_t \ge a\right)\le \frac{\mathbb{E}[M_0]}{a}.
-	\]
-\end{theorem}
 
 \begin{corollary}[Buffer Barrier Bound] \label{cor:ville-exponential}
 	
