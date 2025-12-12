@@ -3,7 +3,7 @@
 
 \begin{theorem}[Expected fitness–evaluation cost in terms of \(\tau\)]
 	%\label{thm:main-tau-final}
-	The  $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$~with ageing threshold $\tau=\Omega(n^{1+\epsilon})$ using  \linHD~ optimises $\mathrm{LTJ}_{k,\rho}$ in
+	The  $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$~with ageing threshold $\tau=\Omega(n^{1+\epsilon})$ using  \linHD~ with $c<1/3$ optimises $\mathrm{LTJ}_{k,\rho}$ in
 	$O(n\tau + n^{2k+3} + n^{\beta+1})$ fitness function evaluations	where $\beta := \log_2 60 < 6$.
 \end{theorem}
 
@@ -11,17 +11,17 @@ We first need to bound from below the probability that the algorithm visits the 
 
 \RestateCounter{lemma}{lem:junction-first-density-Bk}
 \begin{lemma}[Junction precedes DPO and $\mathcal{B}_k$ with probability $1-o(1)$]
-%	\label{lem:junction-first-density-Bk}
-	Fix $c\in(0,\tfrac13)$ and a constant $k\ge 1$.
-	Choose any $\rho\in(0.8,0.9)$ and any $\xi\in(0,\rho-\tfrac12]$ such that
-	\[
-	q^\star \;:=\; 2c\,\bigl(1-\rho+\xi\bigr) \;<\; e^{-2}.
-	\]
-	Starting from a uniformly random initial parent and with any fixed reference $x^\top$ 
-	the event $\mathcal{E}_{\mathrm{junction}}$ satisfies
-	\[
-	\Pr\bigl(\mathcal{E}_{\mathrm{junction}}\bigr)\;=\;1-o(1).
-	\]
+		Starting from any random individual, the \oneoneOPTIA~using \IPHfcm{}~with \linHD~reaches the junction $J = \{x : \mathrm{LO}(x)=0.9n-1\}$ before accepting any individual in $\mathcal{B}_k$ or $\mathcal{D}_\rho$ with probability $1-o(1)$.
+%	
+%	
+%%	\label{lem:junction-first-density-Bk}
+%	Fix $c\in(0,\tfrac13)$ and a constant $k\ge 1$.
+	
+%	Starting from a uniformly random initial parent and with any fixed reference $x^\top$ 
+%	the event $\mathcal{E}_{\mathrm{junction}}$ satisfies
+%	\[
+%	\Pr\bigl(\mathcal{E}_{\mathrm{junction}}\bigr)\;=\;1-o(1).
+%	\]
 \end{lemma}
 
 \begin{proof}
@@ -29,18 +29,21 @@ We first need to bound from below the probability that the algorithm visits the 
 	
 	\medskip\noindent
 	\textbf{(A) Reaching $J$ quickly.}
-	Before $J$ is hit, the first flip equals the leftmost zero with probability $1/n$ and is accepted
+	Before $J$, $\mathcal{B}_k$ or $\mathcal{D}_\rho$ is hit, the first flip equals the leftmost zero with probability $1/n$ and is accepted
 	immediately by FCM($\ge$).  If $X\sim\mathrm{Bin}(T,1/n)$ counts such increases then
 	$\mathbb{E}[X]=n$ and a Chernoff bound gives
 	\[
 	\Pr\bigl(X<(9/10)n\bigr)\ \le\ e^{-a n}
 	\]
-	for some constant $a>0$. Hence $J$ is reached within $T$ iterations with probability $1-e^{-a n}$.
+	for some constant $a>0$. Hence $J$ is reached within $T$ iterations with probability $1-e^{-a n}$ if we condition on that neither $\mathcal{B}_k$ nor $\mathcal{D}_\rho$ is sampled first.
 	
 	\medskip\noindent
-	\textbf{(B) DPO before $J$ is $o(1)$.}
-	Write $\alpha:=|x|_1/n$ and $\alpha^\top:=|x^\top|_1/n$.
-	
+	\textbf{(B) $\mathcal{D}_\rho$ before $J$ is $o(1)$.}
+	Let $\alpha:=|x|_1/n$ and $\alpha^\top:=|x^\top|_1/n$.
+	Choose any $\rho\in(0.8,0.9)$ and any $\xi\in(0,\rho-\tfrac12]$ such that
+	\[
+	q^\star \;:=\; 2c\,\bigl(1-\rho+\xi\bigr) \;<\; e^{-2}.
+	\]
 	\emph{Case B.1 (near threshold): $\alpha\ge \rho-\xi$ and $\alpha^\top\ge \rho-\xi$.}
 	Using $|x\wedge x^\top|\ge |x|+|x^\top|-n$,
 	\[
@@ -50,9 +53,9 @@ We first need to bound from below the probability that the algorithm visits the 
 	M(x)\ \le\ q^\star n\ <e^{-2}n
 	.
 	\]
-	A DPO requires all $L$ leading bits among the $M$ flips; hence
+	$\mathcal{D}_\rho$ definition requires all $L$ leading bits among the $M$ flips; hence
 	\[
-	\Pr(\text{DPO in this iteration})
+	\Pr(\text{$\mathcal{D}_\rho$ in this iteration})
 	\ \le\
 	\Bigl(\tfrac{M}{n}\Bigr)^{L}
 	\ \le\
@@ -63,44 +66,165 @@ We first need to bound from below the probability that the algorithm visits the 
 	Because $q^\star<e^{-2}$, we have $\log_{2}(1/q^\star)>2$, so $T\cdot n^{-\log_{2}(1/q^\star)}=o(1)$.
 	
 	\emph{Case B.2 (far from threshold): $\alpha\le \rho-\xi$.}
-	A DPO has $|x|_1\ge \rho n$, so at least $\xi n$ net $0\!\to\!1$ flips are required within at most
-	$R\le M\le cn$ tail flips. With initial zero/one fractions giving negative drift,
+	Since all $\mathcal{D}_\rho$ solutions have $|x|_1\ge \rho n$, at least $\xi n$ net $0\!\to\!1$ flips ($Z-O$) are required within at most
+	$cn$ bit-flips. With initial zero/one fractions giving negative drift,
 	a Serfling (hypergeometric) tail bound yields
 	\[
 	\Pr\bigl(Z-O\ge \xi n\bigr)\ \le\ e^{-\gamma n}
 	\]
 	for some $\gamma>0$. Including the necessity to flip all $L$ prefix bits only decreases the probability.
-	Summing over at most $T$ iterations remains $e^{-\gamma n}$.
+	Summing over at most $T$ iterations remains $e^{-\gamma n}$. Therefore $\Pr(\text{$\mathcal{D}_\rho$ before }J)=o(1)$.
 	
-	Therefore $\Pr(\text{DPO before }J)=o(1)$.
 	
 	\medskip\noindent
+	\medskip\noindent
 	\textbf{(C) Entering $\mathcal{B}_k$ before $J$ is $o(1)$ (using $k$ constant).}
-	Let $r:=2k{+}1$ (a fixed constant).  For any parent $x\notin\mathcal{B}_k$:
+	Let $r:=2k{+}1$, let $S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$, and fix any constant
+	$\delta\in(0,\tfrac{9}{10})$.  Consider any iteration with parent
+	$x\notin\mathcal{B}_k$ and write $\ell:=\mathrm{LO}(x)$ and
+	$v:=|\{i\in S:x_i=0\}|$.  We distinguish two cases depending on $\ell$.
 	
-	\emph{(C.1) Once $\mathrm{LO}(x)\ge r$.}
-	Then the first $r$ bits of $x$ are $1$, so to enter $\mathcal{B}_k$ within an iteration, at the (FCM) acceptance time the offspring must differ from $x$ in at least the $r$ positions $\{1,\dots,r\}$ plus the next leftmost zero inside $S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$, i.e., in at least $r{+}1$ specific coordinates. Thus, for some constant $C=C(k)$,
+	\emph{Case 1: $\ell < (\tfrac{9}{10}-\delta)n$.}
+	Then the unconstrained segment
+	$S\cap\{\ell{+}1,\dots,\tfrac{9}{10}n\}$ has size at least $\delta n$.
+	Conditioned on the history up to the current iteration, the bits in this segment
+	are unbiased and independent, hence by Chernoff $v=\Omega(n)$ with probability
+	$1-e^{-\Theta(n)}$.  On this event, to enter
+	$\mathcal{B}_k=\{0^{r}1^{(0.9n-r)}*\}$ and be accepted under FCM($\ge$), the
+	offspring at acceptance must flip all $r$ positions $\{1,\dots,r\}$ and must flip
+	all $v=\Omega(n)$ zeros in $S$ to $1$, i.e., it must flip $\Omega(n)$ specified
+	positions.  Therefore, regardless of the mutation potential, the per-iteration
+	probability of entering $\mathcal{B}_k$ is at most
+	$\binom{n}{\Omega(n)}^{-1}=e^{-\Theta(n)}$.  Union-bounding over at most
+	$T\le n^2$ iterations yields a total contribution $e^{-\Theta(n)}$.
+	The exceptional event $v=o(n)$ itself has probability $e^{-\Theta(n)}$ per
+	iteration and is negligible under the same union bound.
+	
+	\emph{Case 2: $\ell \ge (\tfrac{9}{10}-\delta)n$.}
+	Then the set
+	$F:=\{r{+}1,\dots,\ell\}$ of leading-one positions that must not be flipped before
+	acceptance has size $|F|=\ell-r=\Omega(n)$.  Since $x\notin\mathcal{B}_k$, at
+	least one bit in $S$ is $0$, so entering $\mathcal{B}_k$ and being accepted
+	requires flipping the $r$ positions $\{1,\dots,r\}$ and at least one further
+	specified position in $S$ before any position in $F$ is flipped (otherwise
+	$\mathrm{LO}$ decreases and FCM($\ge$) rejects).  Let $R$ denote any fixed choice
+	of such $r{+}1$ required positions.  A necessary condition for acceptance into
+	$\mathcal{B}_k$ is that all positions in $R$ appear before all positions in $F$ in
+	the random order in which the hypermutation flips bit positions.  Since the
+	relative order of the $|F|+|R|$ positions in $F\cup R$ is uniform, we obtain
 	\[
-	\Pr\bigl(\text{enter } \mathcal{B}_k \text{ in one iteration}\bigr)
-	\ \le\
-	C\,\binom{n}{r+1}^{-1}
-	\ =\
-	\Theta\!\big(n^{-(r+1)}\big).
+	\Pr\bigl(\mathcal{B}_k \text{ in this iteration}\bigr)
+	\le
+	\binom{|F|+r+1}{r+1}^{-1}
+	\le
+	\Bigl(\tfrac{r+1}{|F|}\Bigr)^{r+1}
+	=
+	O\!\bigl(n^{-(r+1)}\bigr).
 	\]
-	Union-bounding over at most $T=n^2$ iterations gives a total contribution
-	$O\!\big(n^{-(r-1)}\big)=O\!\big(n^{-2k}\big)=o(1)$.
+	Union-bounding over at most $T\le n^2$ iterations yields a total contribution
+	$O(n^{-(r-1)})=O(n^{-2k})=o(1)$.
 	
-	\emph{(C.2) While $\mathrm{LO}(x)< r$.}
-	Let $T_0:=\lceil 4 n\log n\rceil$.  By Chernoff on the $\mathrm{Bin}(T_0,1/n)$ count of leftmost-zero
-	flips, $\Pr(\text{reach }\mathrm{LO}\ge r\text{ within }T_0)\ge 1-e^{-a' n}$ for some $a'>0$.
-	Condition on this event. Starting from a uniformly random parent, the number $v$ of zeros in
-	$S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$ satisfies $v=\Theta(n)$ w.h.p.; over the next $T_0$ iterations,
-	accepted tail flips change $v$ by $\pm1$, and a bounded-differences (Azuma/Serfling) inequality keeps
-	$v=\Omega(n)$ w.h.p.  Hence, throughout this window, any acceptance into $\mathcal{B}_k$ would require
-	changing at least $s=\Omega(n)$ specified coordinates, giving per-iteration hazard
-	$\binom{n}{s}^{-1}=e^{-a'' n}$ for some $a''>0$.  Union over $T_0=O(n\log n)$ iterations remains
-	$e^{-a''' n}$.
-	
+	Combining the two cases, the probability to enter $\mathcal{B}_k$ at any time
+	before reaching $J$ is $o(1)$.
+%	
+%	\textbf{(C) Entering $\mathcal{B}_k$ before $J$ is $o(1)$ (using $k$ constant).}
+%	Let $r:=2k{+}1$, let $S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$, and fix any constant
+%	$\delta\in(0,\tfrac{9}{10})$.  Consider any parent $x\notin\mathcal{B}_k$ and
+%	write $\ell:=\mathrm{LO}(x)$ and $v:=|\{i\in S:x_i=0\}|$.  We distinguish two
+%	cases depending on whether $\ell$ is far from $\tfrac{9}{10}n$.
+%	
+%	\emph{Case 1: $\ell \le (\tfrac{9}{10}-\delta)n$.}
+%	Then the unconstrained part of $S$, namely
+%	$S\cap\{\ell{+}1,\dots,\tfrac{9}{10}n\}$, has size at least $\delta n$.
+%	Conditioned on the history up to the current iteration, these bits are
+%	independent unbiased bits, hence $v=\Omega(n)$ with probability
+%	$1-e^{-\Theta(n)}$ by Chernoff.  On this event, in order to enter
+%	$\mathcal{B}_k=\{0^{r}1^{(0.9n-r)}*\}$ at any (FCM) acceptance time, the offspring
+%	must flip all $r$ positions $\{1,\dots,r\}$ and must flip all $v=\Omega(n)$ zeros
+%	in $S$ to $1$, i.e., it must flip $\Omega(n)$ specified positions.  Therefore the
+%	per-iteration probability of entering $\mathcal{B}_k$ is at most
+%	$\binom{n}{\Omega(n)}^{-1}=e^{-\Theta(n)}$, and union-bounding over at most
+%	$T\le n^2$ iterations yields a total contribution $e^{-\Theta(n)}$.
+%	
+%	\emph{Case 2: $\ell > (\tfrac{9}{10}-\delta)n$.}
+%	Then $\ell-r=\Omega(n)$.  To enter $\mathcal{B}_k$ and be accepted in one
+%	iteration, the offspring at the (FCM) acceptance time must flip the $r$ positions
+%	$\{1,\dots,r\}$ from $1$ to $0$ and must flip the leftmost $0$ in $S$ to $1$,
+%	while not flipping any of the remaining leading-one positions
+%	$\{r{+}1,\dots,\ell\}$ before acceptance (otherwise $\mathrm{LO}$ would decrease
+%	and FCM($\ge$) rejects).  Thus, letting $F:=\{r{+}1,\dots,\ell\}$, we may bound the
+%	per-iteration probability by the event of hitting these $r{+}1$ specified
+%	positions while avoiding the $\Omega(n)$ forbidden positions in $F$, i.e.
+%	\begin{align*}
+%		\Pr\bigl(\mathcal{B}_k \text{ in this iteration}\bigr)
+%		&\le
+%		\frac{\binom{n-|F|}{r+1}}{\binom{n}{r+1}}
+%		\cdot
+%		\binom{n-|F|}{r+1}^{-1}
+%		=
+%		\binom{n}{r+1}^{-1}
+%		=
+%		\Theta\!\bigl(n^{-(r+1)}\bigr).
+%	\end{align*}
+%	Union-bounding over at most $T\le n^2$ iterations gives a total contribution
+%	$O(n^{-2k})=o(1)$.
+%	
+%	Combining the two cases, the probability to enter $\mathcal{B}_k$ at any time
+%	before reaching $J$ is $o(1)$.
+%	
+%	
+%	\medskip\noindent
+%	\textbf{(C) Entering $\mathcal{B}_k$ before $J$ is $o(1)$ (using $k$ constant).}
+%	Let $r:=2k{+}1$.  For any parent $x\notin\mathcal{B}_k$:
+%
+%	\emph{(C.1) Once $\mathrm{LO}(x)\ge r$.}
+%Then $x$ has prefix $1^{\mathrm{LO}(x)} *$ with $\mathrm{LO}(x)\ge r$.  
+%To enter $\mathcal{B}_k$ and be \emph{accepted} in one iteration, the offspring at the (FCM) acceptance time must (i) flip all $r$ positions $\{1,\dots,r\}$ from $1$ to $0$, and (ii) flip the next leftmost $0$ in $S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$ to $1$, but also (iii) must not flip any of the remaining $\mathrm{LO}(x)-r$ leading-one positions $\{r{+}1,\dots,\mathrm{LO}(x)\}$ before acceptance, since any such flip would reduce $\mathrm{LO}$ and be rejected by FCM($\ge$).  
+%Hence entering $\mathcal{B}_k$ in one iteration requires flipping at least $r{+}1$ specified positions while avoiding at least $\mathrm{LO}(x)-r$ additional specified positions.  
+%Therefore, for some constant $C=C(k)$,
+%\begin{align*}
+%	&\Pr\bigl(\mathcal{B}_k \text{ in this iteration}\bigr)
+%	\le
+%	C\,
+%	\frac{\binom{n-(\mathrm{LO}(x)-r)}{r+1}}{\binom{n}{r+1}}
+%	\cdot
+%	\binom{n-(\mathrm{LO}(x)-r)}{r+1}^{-1}
+%	\\
+%	&=
+%	C\,\binom{n}{r+1}^{-1}
+%	=
+%	\Theta\!\bigl(n^{-(r+1)}\bigr).
+%\end{align*}
+%Union-bounding over at most $T=n^2$ iterations gives a total contribution
+%$O\!\big(n^{-(r-1)}\big)=O\!\big(n^{-2k}\big)=o(1)$.
+%
+%//////////////////
+%
+%
+%	
+%	\emph{(C.1) Once $\mathrm{LO}(x)\ge r$.}
+%	Then the first $r$ bits of $x$ are $1$, so to enter $\mathcal{B}_k$ within an iteration, at the (FCM) acceptance time the offspring must differ from $x$ in at least the $r$ positions $\{1,\dots,r\}$ plus the next leftmost zero inside $S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$, i.e., in at least $r{+}1$ specific coordinates. Thus, for some constant $C=C(k)$,
+%	\[
+%	\Pr\bigl(\text{enter } \mathcal{B}_k \text{ in one iteration}\bigr)
+%	\ \le\
+%	C\,\binom{n}{r+1}^{-1}
+%	\ =\
+%	\Theta\!\big(n^{-(r+1)}\big).
+%	\]
+%	Union-bounding over at most $T=n^2$ iterations gives a total contribution
+%	$O\!\big(n^{-(r-1)}\big)=O\!\big(n^{-2k}\big)=o(1)$.
+%	
+%	\emph{(C.2) While $\mathrm{LO}(x)< r$.}
+%	Let $T_0:=\lceil 4 n\log n\rceil$.  By Chernoff on the $\mathrm{Bin}(T_0,1/n)$ count of leftmost-zero
+%	flips, $\Pr(\text{reach }\mathrm{LO}\ge r\text{ within }T_0)\ge 1-e^{-a' n}$ for some $a'>0$.
+%	Condition on this event. Starting from a uniformly random parent, the number $v$ of zeros in
+%	$S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$ satisfies $v=\Theta(n)$ w.h.p.; over the next $T_0$ iterations,
+%	accepted tail flips change $v$ by $\pm1$, and a bounded-differences (Azuma/Serfling) inequality keeps
+%	$v=\Omega(n)$ w.h.p.  Hence, throughout this window, any acceptance into $\mathcal{B}_k$ would require
+%	changing at least $s=\Omega(n)$ specified coordinates, giving per-iteration hazard
+%	$\binom{n}{s}^{-1}=e^{-a'' n}$ for some $a''>0$.  Union over $T_0=O(n\log n)$ iterations remains
+%	$e^{-a''' n}$.
+%	
 	Combining (C.1) and (C.2), the probability to enter $\mathcal{B}_k$ at any time before $J$ is $o(1)$.
 	
 	\medskip\noindent
