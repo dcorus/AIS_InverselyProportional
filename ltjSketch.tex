@@ -11,20 +11,20 @@ The function $\mathrm{LTJ}_{k,\rho} : \{0,1\}^n \to \mathbb{R}$ is
 \begin{cases}
 	0, & x \in \mathcal{P},\\[2pt]
 	\mathrm{LO}\bigl(x_{i>r}\bigr)+r, & x \in \mathcal{B}_k,\\[2pt]
-	n, & x \in \mathcal{D}_\rho,\\[2pt]
+	\textcolor{purple}{n+1}, & x \in \mathcal{D}_\rho,\\[2pt]
 	\mathrm{LO}(x), & \text{otherwise.}
 \end{cases}
 \]
 The landscape consists of a long LeadingOnes slope rising from fitness 
 $\mathrm{LO}(x)$ up to level $0.9n-1$, followed by a large penalised region.  
-Two off-slope structures contain the \textcolor{purple}{global optima} but are inaccessible to 
+Two off-slope structures contain the \textcolor{purple}{two sets of optima} but are inaccessible to 
 standard hill-climbers.  
 The set $\mathcal{B}_k$ begins with the prefix $0^{r}1^{(0.9n-r)} *$ and forms a 
-short slope, \new{called block-jump slope,} that \textcolor{purple}{deterministically increases toward its unique optimum; reaching 
-this prefix is therefore equivalent to entering the block-jump basin.}  
+short slope, \new{called block-jump slope,} that \textcolor{purple}{deterministically increases toward its unique local optimum; reaching 
+this prefix is therefore equivalent to entering the leading ones path to the local optimum.}  
 In contrast, the set $\mathcal{D}_\rho$ consists of individuals with prefix 
-$0^{L} *$ \textcolor{purple}{whose suffix has ones-density at least $\rho$}, and forms a wide 
-plateau of globally optimal fitness, \new{which we call  deep-prefix plateau}, and is not a slope.  
+$0^{L} *$ \textcolor{purple}{whose suffix has ones-density at least $\rho$} i.e., $\rho n$ ones, and forms a wide 
+plateau of globally optimal fitness, \new{which we call  deep-prefix plateau}.  
 Both structures are hidden behind the penalised barrier, and the only reliable 
 way to reach them is via large hypermutation events.  
 The junction $J := \{x : \mathrm{LO}(x)=0.9n-1\}$ acts as a central gateway: 
@@ -32,7 +32,7 @@ each ageing epoch that restarts the search will, with high probability, ascend
 the LeadingOnes slope back to $J$ before any off-slope structure is encountered.  
 From $J$, the \oneoneOPTIA~using \IPHfcm{}~with \linHD~can perform jumps of the 
 appropriate magnitude to reach either the entrance of the block-jump slope or 
-the plateau $\mathcal{D}_\rho$. \textcolor{purple}{On the other hand, algorithms with lower mutation rates, such as those using SBM...}
+the plateau $\mathcal{D}_\rho$. \textcolor{purple}{On the other hand, algorithms with lower mutation rates, such as those using SBM will with high probability not be able to flip the logarithmic number of bits required to reach the global optimum, thus have a runtime of $n^{\Omega(\log n)}$ with high probability.}
 
 \begin{theorem} \label{thm:main-tau-final}
 The  $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$~with ageing threshold $\tau=\Omega(n^{1+\epsilon})$ using  \linHD~ optimises $\mathrm{LTJ}_{k,\rho}$ in
@@ -67,12 +67,12 @@ Thus the slope is climbed to $J$ with high probability.
 The suffix of the individual at $J$ is essentially random relative to the best individual stored from the 
 previous epoch. 
 With high probability their Hamming distance is at least $n/20$, guaranteeing 
-$M(x)\ge n/60$ \textcolor{purple}{(Why?)} throughout the epoch.  
+\textcolor{purple}{$M(x)= cn/20 \ge n/60$} throughout the epoch.  
 Under this event, the probability that the first $r+1$ flips of the hypermutation hit exactly the positions defining the prefix $0^{r}1^{(0.9n-r)} *$ is $\Theta(n^{-(r+1)})$.
 Evaluating this over $\tau$ iterations yields the stated bound.
 
 \begin{lemma} \label{lem:DPO-epoch}
-	Let an ageing epoch begin at the junction.
+	Let an ageing epoch begin at the junction \textcolor{purple}{and let $c >??$}.
 	Then, with probability $\new{p_D}=\Omega(\min\{1,\,\tau\,n^{-\beta}\})$, the epoch performs a jump placing the individual onto the deep-prefix plateau.
 \end{lemma}
 
