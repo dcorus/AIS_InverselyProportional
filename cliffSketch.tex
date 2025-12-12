@@ -107,7 +107,7 @@ entire phases.
 \end{lemma}
 
 To track the safety of mutation potential across phases, we introduce a 
-linear \emph{buffer} capturing the invariant $c\,\mathrm{HD}(r)\le r$.
+linear \emph{buffer} \new{$B_r = \theta r - s_0 - E_r$} capturing the invariant $c\,\mathrm{HD}(r)\le r$.
 
 \begin{lemma}[Buffer Process and Safety Criterion] \label{lem:buffer}
 	Let successful phases be indexed by $r=r_0,r_0+1,\dots$ and define
@@ -129,7 +129,7 @@ linear \emph{buffer} capturing the invariant $c\,\mathrm{HD}(r)\le r$.
 \end{lemma}
 
 Combining the phase MGF with the buffer update yields an exponential drift 
-envelope suitable for applying \textcolor{purple}{Ville's inequality for non-negative supermartingales (where is it?)}.
+envelope suitable for applying \textcolor{purple}{Ville's inequality for non-negative supermartingales (Theorem~\ref{})}.
 
 \begin{lemma}[Exponential Drift Envelope] \label{lem:drift-envelope-global}
 	Let $\rho=2d/n$.  
@@ -145,8 +145,7 @@ envelope suitable for applying \textcolor{purple}{Ville's inequality for non-neg
 	\]
 \end{lemma}
 
-Ville's inequality for nonnegative supermartingales provides the standard tool 
-for turning such a drift envelope into a bound on barrier crossing.
+\new{We now apply Ville's inequality to turn such a drift envelope into a bound on barrier crossing.}
 
 
 \begin{corollary}[Buffer Barrier Bound] \label{cor:ville-exponential}
@@ -161,7 +160,7 @@ for turning such a drift envelope into a bound on barrier crossing.
 	\]
 \end{corollary}
 
-To guarantee the \textcolor{purple}{drift negativity} required above, we identify the admissible 
+To guarantee the drift negativity required above, we identify the admissible 
 range of the mutation-potential factor~$c$.
 
 \begin{lemma}[Per-Instance $c$-Threshold] \label{lem:c-threshold-instance}
