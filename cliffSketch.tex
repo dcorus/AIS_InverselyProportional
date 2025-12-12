@@ -27,8 +27,7 @@ structured ``canonical'' state shortly after ageing at the cliff-top.
 At the cliff-top the algorithm cannot improve except by sampling the global 
 optimum, and so ageing will eventually be triggered.  The key insight is that 
 the iteration of ageing followed by two additional \textcolor{blue}{fitness improvements} can place the 
-algorithm into a configuration \textcolor{purple}{two extra 1-bits and u}with low Hamming distance to the locked 
-reference and with mutation potential~$1$.  The following lemma formalises this.
+algorithm into a configuration with \textcolor{purple}{$n-d+2$ 1-bits and the minimal Hamming distance of two to the $best$ solution which had $n+d$ 1-bits.}  The following lemma formalises this.
 
 \begin{lemma}[Canonical Start After Cliff-Top Ageing]\label{lem:can-start-omega-d3}
 	Suppose ageing is triggered at the cliff-top (zero-count~$d$).  
