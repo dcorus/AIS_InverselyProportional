@@ -63,3 +63,13 @@ Fix fig 2 expo should start from sqrt n
 add for any c in the previous statements
 
 add SBM has expo runtime
+
+The plateau is always found for any c the slope might be missed for large c
+
+Last best has better cliff runtime
+
+Name of the algorithm for the leading ones proof
+
+remove x^T ---> best
+
+put back ville next to ballot

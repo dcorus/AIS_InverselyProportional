@@ -378,6 +378,16 @@ In a ballot, suppose that candidate P receives $p$ votes and candidate Q receive
 
 {\color{blue}In the context of hypermutation operators, the vote counts are the initial number of $0$ and $1$-bits in the solutions, while counting the votes correspond to flipping them until the first constructive mutation. The probability that a constructive mutation is found is equivalent to the probability that the $q$ candidate having as many votes counted as the other during any time in the counting process.}
 
+\begin{theorem}[Ville’s inequality for nonnegative supermartingales]\label{thm:ville}
+	Let $(M_t)_{t\ge 0}$ be a nonnegative supermartingale adapted to $(\mathcal F_t)_{t\ge 0}$. 
+	Then for every $a>0$,
+	\[
+	\Pr\!\big(\sup_{t\ge 0} M_t \ge a\big)\ \le\ \frac{\EE[M_0]}{a}.
+	\]
+	\emph{(Ville, 1939; see also Doob, 1953, Ch.~VII.)}
+\end{theorem}
+
+
 \begin{table}[t!]
 \caption{Comparison of the expected runtimes obtained by different hypermutation schemes for \textsc{OneMax} and \textsc{LeadingOnes}. The original IPH operator of Opt-IA \cite{CutelloNicosiaPavoneTimmis2007}  has the same expected runtimes as the $(1+1)~$IA using static hypermutations \cite{JansenZarges2011}. \new{`$^*$' indicates that the result can be easily drawn from the analysis for \textsc{OneMax} \cite{Zarges2008}.}}
 %The same result as $(1+1)~IA^{hype}$ using static hypermutation ($M=n$) has been shown for the original IPM of Opt-IA \cite{JansenZarges2011}.}
