@@ -1,4 +1,4 @@
-We now present the proof sketch of our main result on the  $\mathrm{Cliff}_d$ function, together with 
+We now present the proof sketch of our main result on the  \cliff{} function, together with 
 all supporting lemmata.  All proofs are deferred to the appendix; the 
 statements here are mathematically identical to those in the full technical 
 development, but streamlined for readability.  The argument proceeds in two 
@@ -15,7 +15,7 @@ this configuration the algorithm reaches the optimum without dangerous increases
 	c < \frac{1+4\varepsilon}{3-4\varepsilon}.
 	\]
 	If the ageing threshold satisfies $\tau=\Omega(n^{1+\varepsilon'})$ for some 
-	$\varepsilon'>0$, then the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ optimises $\mathrm{Cliff}_d$ in expected
+	$\varepsilon'>0$, then the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ optimises \cliff{} in expected
 	\[
 	O\!\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)
 	\]
@@ -27,7 +27,7 @@ structured ``canonical'' state shortly after ageing at the cliff-top.
 At the cliff-top the algorithm cannot improve except by sampling the global 
 optimum, and so ageing will eventually be triggered.  The key insight is that 
 the iteration of ageing followed by two additional \textcolor{blue}{fitness improvements} can place the 
-algorithm into a configuration \textcolor{blue}{two extra 1-bits and u}with low Hamming distance to the locked 
+algorithm into a configuration \textcolor{purple}{two extra 1-bits and u}with low Hamming distance to the locked 
 reference and with mutation potential~$1$.  The following lemma formalises this.
 
 \begin{lemma}[Canonical Start After Cliff-Top Ageing]\label{lem:can-start-omega-d3}
@@ -47,7 +47,7 @@ reference and with mutation potential~$1$.  The following lemma formalises this.
 The canonical condition $(r_0,\mathrm{HD}(r_0)) =
 (2,2)$ means that we begin the drift analysis two successful improvements into
 the second slope, at a point differing from the reference in exactly two
-positions.
+\textcolor{purple}{(bit ?)} positions.
 
 Repeated ascents to the cliff-top therefore form a geometric waiting-time 
 process.  Since each ascent takes $\Theta(n^2\log(n/d))$ evaluations, the 
@@ -130,7 +130,7 @@ linear \emph{buffer} capturing the invariant $c\,\mathrm{HD}(r)\le r$.
 \end{lemma}
 
 Combining the phase MGF with the buffer update yields an exponential drift 
-envelope suitable for applying Ville's inequality.
+envelope suitable for applying \textcolor{purple}{Ville's inequality for non-negative supermartingales (where is it?)}.
 
 \begin{lemma}[Exponential Drift Envelope] \label{lem:drift-envelope-global}
 	Let $\rho=2d/n$.  
@@ -162,7 +162,7 @@ for turning such a drift envelope into a bound on barrier crossing.
 	\]
 \end{corollary}
 
-To guarantee the drift negativity required above, we identify the admissible 
+To guarantee the \textcolor{purple}{drift negativity} required above, we identify the admissible 
 range of the mutation-potential factor~$c$.
 
 \begin{lemma}[Per-Instance $c$-Threshold] \label{lem:c-threshold-instance}

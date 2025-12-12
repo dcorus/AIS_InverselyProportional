@@ -1190,10 +1190,10 @@ for this purpose where static hypermutations are inefficient~\cite{CorusOlivetoY
 		\sum_{i=1}^n x_i -d+ 1/2 & \text{otherwise.}
 	\end{cases}
 \end{equation}
-The class of \textsc{Cliff} functions, illustrated in Figure~\ref{fig:cliff}, is usually used to assess the performance of non-elitist algorithms. %is another widely used multimodal benchmark function which 
+The class of \cliff{} functions, illustrated in Figure~\ref{fig:cliff}, is usually used to assess the performance of non-elitist algorithms. %is another widely used multimodal benchmark function which 
 It was originally designed as a problem instance where non-elitist EAs outperform elitist EAs~\cite{JaegerskuepperStorch}. This function  has a \textsc{OneMax} slope with length $n-d$ which leads the algorithms towards the local optima. The local optima are followed by a second \textsc{OneMax} slope (of length $d$) of lower fitness which leads to the global optimum. While elitist algorithms need to make a jump of size $d$ to find the global optimum, non-elitist algorithms can easily find the second slope by accepting inferior solutions, %by a mutation size which is as small as 1, then 
 and then hillclimb up to the global optimum \cite{LissovoiOlivetoWarwicker2019AAAI,CorusOlivetoYazdani2019TCS,CorusOlivetoYazdani2021TEVC,HeviaSudholtAlgo24}. 
-Due to the high mutation rates of static hypermutations, even if they were to escape the local optima of \textsc{Cliff} (which is \new{very unlikely} due to FCM and linear mutation potentials), they would still jump back with high probability.  
+Due to the high mutation rates of static hypermutations, even if they were to escape the local optima of \cliff{} (which is \new{very unlikely} due to FCM and linear mutation potentials), they would still jump back with high probability.  
 
 Now we show that differently from static hypermutations, {\linHD }
 combined with ageing can escape from the local optima of \cliff, 
