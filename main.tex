@@ -138,7 +138,7 @@ A result of this first analysis is that a mutation potential that increases expo
 provides the larger speed-ups \new{for hillclimbing unimodal functions}. Furthermore, using the Hamming distance rather than the fitness as the measure to quantify proximity to the optimum
 makes the operator robust to fitness function scaling.
 %Hence we consider this operator, called  \expoHD, in the rest of the paper.
-\new{However, an exponential decay with the distance to the optimum also implies that high mutation rates would occur only when the current solution is prohibitively far away from the optimum. For instance a randomly generated solution with expected Hamming distance $n/2$ from the optimum flips $\sqrt{n}$ bits and this mutation will decrease exponentially fast with further improvements. For this reason we find that a linear decrease of the mutation rate is a better compromise in pratice as it allows allows for longer phases where large mutations occur} \textcolor{purple}{ and flips the number of bits that increase the probability of hitting the optimum in the next step.}
+\new{However, an exponential decay with the distance to the optimum also implies that high mutation rates would occur only when the current solution is prohibitively far away from the optimum. For instance a randomly generated solution with expected Hamming distance $n/2$ from the optimum flips $\sqrt{n}$ bits and this mutation will decrease exponentially fast with further improvements. For this reason we find that a linear decrease of the mutation rate is a better compromise in pratice as it allows allows for longer phases where large mutations occur} \textcolor{blue}{ and flips the number of bits that increase the probability of hitting the optimum in the next step.}
 
 
 
@@ -191,7 +191,7 @@ makes the operator robust to fitness function scaling.
 
 
 \begin{table*}[t!]
-	\caption{Expected runtimes of the different mutation operators when embedded in a (1+1) algorithmic framework for the benchmark functions considered in this paper. For all results the optimum in unknown to the algorithms.}
+	\caption{Expected runtimes of the different mutation operators when embedded in a (1+1) algorithmic framework for the benchmark functions considered in this paper. For all results the optimum in unknown to the algorithms. The $*$ indicates that we have not performed the analysis, yet although Static hypermutations may be faster the upper bound is still correct.}
 	%The same result as $(1+1)~IA^{hype}$ using static hypermutation ($M=n$) has been shown for the original IPM of Opt-IA \cite{JansenZarges2011}.}
 \begin{center}
 	\resizebox{2\columnwidth}{!}{
@@ -201,17 +201,17 @@ makes the operator robust to fitness function scaling.
 			(1+1) Algorithms & \textsc{OneMax} &  \textsc{LeadingOnes} & \textsc{Cliff}$_d$ &\textsc{LeadingTrapJump}$_k,\rho$
 			\T\B \\ \hline
 			
-			EA  (SBM) &$\Theta(n \log n)$ \cite{DrosteJansenWegener2002}& $\Theta(n^2)$ \cite{DrosteJansenWegener2002} & $\Theta(n^d)$ \cite{JaegerskuepperStorch} & \color{red}{$\Omega(n^{\log n})?$}
+			EA  (SBM) &$\Theta(n \log n)$ \cite{DrosteJansenWegener2002}& $\Theta(n^2)$ \cite{DrosteJansenWegener2002} & $\Theta(n^d)$ \cite{JaegerskuepperStorch} & \color{red}{$n^{\Omega(\log n)}$}
 			\T\B\\
 			
 			
-			Opt-IA$_{\textsc{static}}$ & $\Theta(n^2\log n)$ \cite{CorusOlivetoYazdani2019TCS} & $\Theta(n^3)$\cite{CorusOlivetoYazdani2019TCS} &$O(\frac{n^{d+1}\cdot e^d}{d^d})$ \cite{CorusOlivetoYazdani2019TCS} & \color{red}{$O(n\tau + n^{2k+3} + n^{6})$?}
+			Opt-IA$_{\textsc{static}}$ & $\Theta(n^2\log n)$ \cite{CorusOlivetoYazdani2019TCS} & $\Theta(n^3)$\cite{CorusOlivetoYazdani2019TCS} &$O(\frac{n^{d+1}\cdot e^d}{d^d})$ \cite{CorusOlivetoYazdani2019TCS} & \color{red}{$O(n\tau + n^{2k+3} + n^{7})^*$}
 			\T\B\\
 			
 			
 			
-			Opt-IA$_{\textsc{LastBest}}$ & $\Theta(n \log n) $ & $\Theta(n^2)$& \color{red}{$O\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)$?} & \color{red}{$\Omega(n^{\log n})$?}			\T\B \\
-			Opt-IA$_{\textsc{FirstBest}}$ & $\Theta(n \log n)$ & $\Theta(n^3)$ &$O\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)$&    $O(n\tau + n^{2k+3} + n^{6})$
+			Opt-IA$_{\textsc{LastBest}}$ & $\Theta(n \log n) $ & $\Theta(n^2)$& \color{red}{$O\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)$?} & \color{red}{$2^{\Omega(n)}$}			\T\B \\
+			Opt-IA$_{\textsc{FirstBest}}$ & $\Theta(n \log n)$ & $\Theta(n^3)$ &$O\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)$&    $O(n\tau + n^{2k+3} + n^{7})$
 			\T\B \\
 			% $(1+1)$~IA using \bexpo & $\Theta(n \log n)$ & $\Theta(n^2)$
 			%\T\B \\
@@ -906,11 +906,11 @@ in realistic applications where the optimum is unknown.
  
  Ageing has been shown to enable algorithms to escape from local optima either by identifying a gradient leading away from it or by restarting the whole optimisation process. Our aim behind the algorithm design is that by escaping local optima via ageing, the number of local optima that are identified by the algorithm increases over time. Thus as time goes the IPH should approximate its ideal behaviour better and better.
  
- \textcolor{purple}{Concerning the IPH operator for practical applications we  reintroduce the parameter $c\leq 1$ for determining the mutation potential when it grows linearly with the Hamming distance as in the original Opt-IA~\cite{JansenZarges2011}:}  
- \textcolor{purple}{
- $$M_\textsc{linHD} =\textcolor{blue}{\max}\left(\lfloor c \cdot H(x,\text{best}) \rfloor, 1 \right) $$
+ \textcolor{blue}{Concerning the IPH operator for practical applications we  reintroduce the parameter $c\leq 1$ for determining the mutation potential when it grows linearly with the Hamming distance as in the original Opt-IA~\cite{JansenZarges2011}:}  
+ \textcolor{blue}{
+ $$M_\textsc{linHD} = \max\left(\lfloor c \cdot H(x,\text{best}) \rfloor, 1 \right) $$
  }
-\textcolor{purple}{The parameter will be useful to avoid jumping back to previously seen local optima when escaping them by accepting solutions of lower fitness. TO BE DISCUSSED: which will hinder exploration that is the main goal of the high mutation rates??.}
+\textcolor{blue}{The parameter will be useful to avoid always ending up in the same basins of attraction as we will see in the analyses of both multimodal function classes we consider in this paper.} %TO BE DISCUSSED: which will hinder exploration that is the main goal of the high mutation rates??.}
 
  
 {\color{blue} We also have  a design choice regarding the IPH operator  of whether to update the {\it best} seen solution only when a strictly better solution is identified or whether to update it when the algorithm finds a new solution that is as good as the previous best one. 
@@ -919,7 +919,7 @@ This design choice leads to considerably different algorithmic behaviours.}
 
 \textcolor{blue}{
 The other choice, that of only updating the {\it best} when a strictly better solution is encountered, allows individuals trapped on a large plateau of local optima to increase their hamming distance to the best solution, thus increases the chances of escaping via higher mutation rates. This version, which we call $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$, allows to use high mutation rates more often at the expense of being slower on some unimodal functions like \textsc{LeadingOnes} as we will see. With this operator we remember to update the {\it best} to the last seen individual of highest fitness (i.e. the current solution) when ageing is triggered because this limits the hamming distance between the new solution and the current best when a local optima is escaped by accepting solutions of lower fitness, thus decreases the chances of jumping back to the previous local optimum.}
-	\textcolor{purple}{(TO BE DISCUSSED: In the conclusion?)While this new update mechanism allows the algorithm to escape the local optimum of CLIFF, this behaviour is closely tied to the idiosyncrasies of that landscape. In particular the fact that even moderately large mutations yield an offspring in the basin of attraction of the local optimum while any efficient algorithm must follow the second gradient towards the global optimum. Thus the reason why small mutations near the previous best seen are beneficial in CLIFF is because we want to avoid going near the local optima over and over again rather than investing in a thorough exploitation in its vicinity, which is the intuitive reasoning behind IPH. As a solution in the second gradient goes higher and higher in fitness levels it can tolerate larger and larger mutations without going back to the first slope.  }
+%	\textcolor{purple}{(TO BE DISCUSSED: In the conclusion?)While this new update mechanism allows the algorithm to escape the local optimum of CLIFF, this behaviour is closely tied to the idiosyncrasies of that landscape. In particular the fact that even moderately large mutations yield an offspring in the basin of attraction of the local optimum while any efficient algorithm must follow the second gradient towards the global optimum. Thus the reason why small mutations near the previous best seen are beneficial in CLIFF is because we want to avoid going near the local optima over and over again rather than investing in a thorough exploitation in its vicinity, which is the intuitive reasoning behind IPH. As a solution in the second gradient goes higher and higher in fitness levels it can tolerate larger and larger mutations without going back to the first slope.  }
 	
 	
 
@@ -1050,7 +1050,7 @@ For the lower bound, it is sufficient to prove that the {\color{blue}expectation
 \end{proof}
 
 \begin{theorem} \label{thm:leadingonesexpo}
-The expected runtime of the \oneoneOPTIA~using \IPHfcm{}  %with {\expoHD } 
+The expected runtime of the \new{$(1+1)$~Opt-IA$_{\textsc{FirstBest}}$}  %with {\expoHD } 
 \textcolor{purple}{with {\linHD }} for optimising
 \textsc{LeadingOnes} is $\Theta(n^3)$ with $\tau=\Omega(n^{1+\epsilon})$ {\color{blue}for any arbitrary} 
 constant $\epsilon>0$.
