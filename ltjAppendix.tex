@@ -1,7 +1,7 @@
 
 \RestateCounter{theorem}{thm:main-tau-final}
 
-\begin{theorem}[Expected fitness–evaluation cost in terms of \(\tau\)]
+\begin{theorem}
 	%\label{thm:main-tau-final}
 	The  $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$~with ageing threshold $\tau=\Omega(n^{1+\epsilon})$ using  \linHD~ with $c<1/3$ optimises $\mathrm{LTJ}_{k,\rho}$ in
 	$O(n\tau + n^{2k+3} + n^{\beta+1})$ fitness function evaluations	where $\beta := \log_2 60 < 6$.
@@ -10,7 +10,7 @@
 We first need to bound from below the probability that the algorithm visits the junction point after restarts in order to later argue that from the junction point both sets of optima will be accessed.
 
 \RestateCounter{lemma}{lem:junction-first-density-Bk}
-\begin{lemma}[Junction precedes DPO and $\mathcal{B}_k$ with probability $1-o(1)$]
+\begin{lemma}%[Junction precedes DPO and $\mathcal{B}_k$ with probability $1-o(1)$]
 		Starting from any random individual, the \oneoneOPTIA~using \IPHfcm{}~with \linHD~reaches the junction $J = \{x : \mathrm{LO}(x)=0.9n-1\}$ before accepting any individual in $\mathcal{B}_k$ or $\mathcal{D}_\rho$ with probability $1-o(1)$.
 %	
 %	
@@ -35,11 +35,11 @@ We first need to bound from below the probability that the algorithm visits the 
 	\[
 	\Pr\bigl(X<(9/10)n\bigr)\ \le\ e^{-a n}
 	\]
-	for some constant $a>0$. Hence $J$ is reached within $T$ iterations with probability $1-e^{-a n}$ if we condition on that neither $\mathcal{B}_k$ nor $\mathcal{D}_\rho$ is sampled first.
+	for some constant $a>0$. Hence $J$ is reached within $T=n^2$ iterations with probability $1-e^{-a n}$ if we condition on that neither $\mathcal{B}_k$ nor $\mathcal{D}_\rho$ is sampled first.
 	
 	\medskip\noindent
 	\textbf{(B) $\mathcal{D}_\rho$ before $J$ is $o(1)$.}
-	Let $\alpha:=|x|_1/n$ and $\alpha^\top:=|x^\top|_1/n$.
+	Let $\alpha:=|x|_1/n$ and \textcolor{purple}{$\alpha^\top:=|x^\top|_1/n$.}
 	Choose any $\rho\in(0.8,0.9)$ and any $\xi\in(0,\rho-\tfrac12]$ such that
 	\[
 	q^\star \;:=\; 2c\,\bigl(1-\rho+\xi\bigr) \;<\; e^{-2}.
