@@ -152,17 +152,17 @@
 	\[
 	\frac{z}{\,n-t\,}\ \le\ \frac{z}{\,n-(2k-1)\,}\ \le\ \frac{z}{(1/2+2\varepsilon)n}\ \le\ 2p,
 	\]
-	because $2k\le 2d<(\tfrac12-2\varepsilon)n$. In other words, throughout any run that lasts up to $2k$ flips, a zero-flip is never more likely than $2p$.
+	because $2k\le 2d<(\tfrac12-2\varepsilon)n$. In other words, throughout any hypermutation that lasts up to $2k$ flips, a zero-flip is never more likely than $2p$.
 	
 	\smallskip
 	\emph{Step 2 (Decompose a catch-up of length $\ge 2k$ into $k$ gated \textcolor{purple}{?} zero-flips).}
-	If the first catch-up occurs at some time $\ge 2k$, then along the way the trajectory must realize \emph{at least $k$} distinct $0\!\to 1$ flips while $D>0$ (each such flip reduces the deficit by $1$ but, by assumption, does not yet hit $0$ before the $k$-th such zero\new{-flip}). Expose these $k$ zero-flips in order and ignore everything else (the interspersed $1\!\to 0$ flips only make catch-up \emph{harder} and so can be dropped for an upper bound). By Step~1, each of these $k$ zero\new{-flips} occurs with conditional probability at most $2p$, uniformly over the entire run while $D>0$. Therefore, by the chain rule\textcolor{purple}{?},
+	If the first catch-up occurs at some time $\ge 2k$, then along the way the trajectory must realize \emph{at least $k$} distinct $0\!\to 1$ flips while $D>0$ (each such flip reduces the deficit by $1$ but, by assumption, does not yet hit $0$ before the $k$-th such zero\new{-flip}). Expose these $k$ zero-flips in order and ignore everything else (the interspersed $1\!\to 0$ flips only make catch-up \emph{harder} and so can be dropped for an upper bound). By Step~1, each of these $k$ zero\new{-flips} occurs with conditional probability at most $2p$, uniformly over the entire run while $D>0$. Therefore, by the chain rule,
 	\[
 	\Pr(\text{first catch-up occurs at time }\ge 2k)\ \le\ (2p)^k.
 	\]
 	
 	
-	Since the left-hand side is exactly $\Pr(\xi_z\ge k)$\textcolor{purple}{?}, the claim follows.
+	Since the left-hand side is exactly $\Pr(\xi_z\ge k)$, the claim follows.
 \end{proof}
 
 
@@ -217,9 +217,9 @@
 	Let a phase be the time spent at zero-count $z$ on the second slope until the next strict improvement to $z-1$.
 	Write $p:=z/n$ and $\rho:=2d/n$ (so $2p\le \rho \le \tfrac12-2\varepsilon$).
 	Let $S_z$ be the total HD added by all \emph{failed} attempts in the phase.
-	Since the improving attempt must flip a zero at the first flip\textcolor{purple}{?}, we have $\Delta^{\mathrm{succ}}_z=1$\textcolor{purple}{?}. Hence
+	Since the improving attempt must flip a zero at the first flip  we have $\Delta^{\mathrm{succ}}_z=1$. Hence
 	\[
-	Y_z\ :=\ S_z\textcolor{purple}{?}+(\Delta^{\mathrm{succ}}_z-1)\ =\ S_z\ \ge 0.
+	Y_z\ :=\ \textcolor{purple} {S_z +(\Delta^{\mathrm{succ}}_z-1)}\ =\ S_z\ \ge 0.
 	\]
 	Then, for every $0<\lambda<\tfrac12\ln\frac{1}{2\rho}$,
 	\[
@@ -228,27 +228,27 @@
 \end{lemma}
 
 \begin{proof}
-	For a single \emph{failed} attempt at zero-count $z$, let $\xi$ count the number of $1\!\to 0$ flips \textcolor{purple}{while below the parent} before the first catch-up.
-	By Lemma~\ref{lem:xi-tail} and the envelope $\Delta_{\mathrm{fail}}\le 2\xi$ with $\xi\ge 1$,
+	For a single \emph{failed} attempt starting the hypermutation with $z$ zeroes, let $\xi$ count the number of $1\!\to 0$ flips while below the parent's fitness before the first catch-up.
+	By Lemma~\ref{lem:xi-tail} and the change in Hamming distance $\Delta_{\mathrm{fail}}\le 2\xi$ with $\xi\ge 1$,
 	\begin{align*}
 		\EE\!\left[e^{\lambda \Delta_{\mathrm{fail}}}\right]
-		&\le \sum_{k\ge 1} e^{2\lambda k}\,\Pr(\xi=k)
-		\\ &\le\ \sum_{k\ge 1} \big(2p\,e^{2\lambda}\big)^{k}
+		&\le \sum_{k\ge 1}^{\infty} e^{2\lambda k}\,\Pr(\xi=k)
+		\\ &\le\ \sum_{k\ge 1}^{\infty} \big(2p\,e^{2\lambda}\big)^{k}
 		\\ &\textcolor{purple}{=}\ \frac{2p\,e^{2\lambda}}{\,1-2p\,e^{2\lambda}\,}:=:\ t.
 	\end{align*}
-	Let $F$ be the number of failed attempts before the first success in the phase, with the convention
-	$\Pr(F=f)=(1-p_z)^f p_z$ for $f\in\{0,1,\ldots\}$ and $p_z\ge p=z/n$.
+	Let $F$ be the number of failed attempts before the first success in the phase. %with the convention
+	%$\Pr(F=f)=(1-p_z)^f p_z$ for $f\in\{0,1,\ldots\}$ and $p_z\ge p=z/n$.
 	Since $Y_z$ is the sum over failed attempts only (the success contributes $0$), conditioning stepwise on the phase history gives
 	\begin{align*}
 		\EE\!\big[e^{\lambda Y_z}\big]
 		&=\EE\!\Big[\ \prod_{i=1}^{F} e^{\lambda \Delta_{\mathrm{fail}}^{(i)}}\ \Big]
-		\ \le\ \EE\!\big[\textcolor{purple}{t^{F}}\big].
+		\ \le\ \EE\!\big[t^{F}\big].
 	\end{align*}
-	Using $p_z\ge p$ and the geometric MGF for $t\in[0,1)$,
+	Using the geometric MGF for $t\in[0,1)$,
 	\begin{align*}
 		\EE\!\big[t^{F}\big]
-		&= \sum_{f\ge 0} (1-p_z)^f p_z\, t^f
-		\ \le\ \sum_{f\ge 0} (1-p)^f p\, t^f
+		&=
+		 \sum_{f\ge 0} (1-p)^f p\, t^f
 		\ =\ \frac{p}{\,1-(1-p)t\,}.
 	\end{align*}
 	Substituting $t=\dfrac{2p\,e^{2\lambda}}{1-2p\,e^{2\lambda}}$ and simplifying,
