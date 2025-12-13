@@ -25,14 +25,72 @@
 	with probability at least $\displaystyle \frac{3}{256}\,\bigl(\tfrac{d}{n}\bigr)^{3}=\Omega\!\bigl((d/n)^3\bigr)$.
 \end{lemma}
 
+%\begin{proof}
+%	We exhibit a three-step event whose occurrence yields the stated start and whose probability is $\Omega((d/n)^3)$.
+%	
+%	\emph{(A) Equal-fitness lock at the ageing boundary.} In the ageing iteration, require the first two flips to be $1\!\to 0$ then $0\!\to 1$ (without replacement); this has probability $\frac{n-d}{n}\cdot\frac{d}{n-1}$ and produces an \emph{equal-fitness} offspring accepted by FCM (first return to $\ge$ parent). The offspring inherits the parent’s age (no improvement), so both parent and offspring face the ageing coin and die independently with probability $1/2$. Requiring “parent dies, offspring survives’’ contributes a factor $1/4$, and by the update rule the reference locks to the last cliff-top (the parent that died). The surviving equal-fitness offspring differs from this locked reference in exactly two bits, hence $\HD=2$ and, since $c<1$, the next iteration has $M=1$.
+%	
+%	\emph{(B) Create the cliff-bottom by $M{=}1$ exhaustion and kill the current cliff-top.} With $M=1$, exactly one flip is performed and FCM does not accept worse-than-parent, so the algorithm returns the single-flip string after potential exhaustion. Requiring a $0\!\to 1$ flip occurs with probability at least $d/n$ and returns the \emph{cliff-bottom} ($n-d+1$ ones), at Hamming distance $1$ from the locked reference. Ageing does not reset (no improvement), so both current parent (equal-fitness cliff-top) and the returned offspring face the coin; requiring “parent dies, offspring survives’’ contributes another factor $1/4$ and preserves the locked reference at the last cliff-top.
+%	
+%	\emph{(C) One accepted improvement on the second slope.} In the following iteration, require the first flip to be $0\!\to 1$; this occurs with probability at least $(d-1)/n$ and is \emph{accepted} by FCM (strict improvement from the cliff-bottom), producing a point with $n-d+2$ ones. Relative to the locked cliff-top reference, the Hamming distance is now $2$, and exactly two successful phases have completed: $r_0=2$, $\HD(r_0)=2$.
+%	
+%	Multiplying the lower bounds yields
+%	\[
+%	\Big(\tfrac{n-d}{n}\cdot\tfrac{d}{n-1}\cdot\tfrac14\Big)\cdot
+%	\Big(\tfrac{d}{n}\cdot\tfrac14\Big)\cdot
+%	\Big(\tfrac{d-1}{n}\Big).
+%	\]
+%	For $d\le(\tfrac14-\varepsilon)n$ we have $(n-d)/n\ge 3/4$, and for $d\ge 2$ we have $\tfrac{d}{n-1}\ge\tfrac{d}{n}$ and $\tfrac{d-1}{n}\ge \tfrac12\cdot\tfrac{d}{n}$. Hence the product is at least
+%	\[
+%	\frac{3}{256}\,\Big(\frac{d}{n}\Big)^{\!3},
+%	\]
+%	which proves the claim.
+%\end{proof}
+%
+%\setcounter{lemma}{\getrefnumber{lem:xi-tail}-1\relax}
+%
+%\begin{lemma}[Exponential tail for catch-up length]
+%	Fix a state on the second slope with $z$ zero-bits (so $z\le d<(\tfrac14-\varepsilon)n$) and let $p:=z/n$.
+%	During one hypermutation, let $\xi_z$ be the number of $1\!\to 0$ flips that occur \emph{before} the process first returns to fitness $\ge$ parent (i.e., before the first ``catch-up'' to deficit $0$). Then for every $k\ge 1$,
+%	\[
+%	\Pr(\xi_z\ge k)\ \le\ \Big(\tfrac{2z}{n}\Big)^k.
+%	\]
+%	In particular, the event that the Hamming distance increases by at least $2k$ before stopping (equivalently, the first catch-up occurs at time $\ge 2k$) has probability at most $(2z/n)^k$.
+%\end{lemma}
+%
+%\begin{proof}
+%	If the first flip is a $0\!\to 1$ move, the offspring is strictly better and the hypermutation stops immediately, yielding $\xi_z=0$. Hence the event $\{\xi_z\ge 1\}$ implies the first flip was a $1\!\to 0$ move. From that point on the process carries a \emph{deficit} $D_t:=\#(1\!\to 0)-\#(0\!\to 1)$ that starts at $D_1=1$ and decreases by $1$ on each $0\!\to 1$ flip and increases by $1$ on each $1\!\to 0$ flip. The hypermutation stops at the \emph{first} time $t$ with $D_t=0$ (a catch-up). Thus the event $\{\xi_z\ge k\}$ is exactly the event that the first return to $0$ happens no earlier than time $2k$.
+%	
+%	We upper bound this probability by a simple ``coarse blocking’’ argument that uses only that $z$ is small and flips are without replacement.
+%	
+%	\smallskip
+%	\emph{Step 1 (Each required zero is never more likely than $2p$).}
+%	Condition on any history of length $t\le 2k-1$ that keeps $D_t\ge 1$ (so no catch-up yet) and in which at most $t$ distinct positions have been flipped. Among the $n-t$ remaining positions there are at most $z$ zeros. Hence the conditional probability that the \emph{next} flip is a $0\!\to 1$ move is at most
+%	\[
+%	\frac{z}{\,n-t\,}\ \le\ \frac{z}{\,n-(2k-1)\,}\ \le\ \frac{z}{(1/2+2\varepsilon)n}\ \le\ 2p,
+%	\]
+%	because $2k\le 2d<(\tfrac12-2\varepsilon)n$. In words: throughout any run that lasts up to $2k$ flips, a zero-flip is never more likely than $2p$.
+%	
+%	\smallskip
+%	\emph{Step 2 (Decompose a catch-up of length $\ge 2k$ into $k$ gated zero-flips).}
+%	If the first catch-up occurs at some time $\ge 2k$, then along the way the trajectory must realize \emph{at least $k$} distinct $0\!\to 1$ flips while $D>0$ (each such flip reduces the deficit by $1$ but, by assumption, does not yet hit $0$ before the $k$-th such zero). Expose these $k$ zero-flips in order and ignore everything else (the interspersed $1\!\to 0$ flips only make catch-up \emph{harder} and so can be dropped for an upper bound). By Step~1, each of these $k$ zeros occurs with conditional probability at most $2p$, uniformly over the entire run while $D>0$. Therefore, by the chain rule,
+%	\[
+%	\Pr(\text{first catch-up occurs at time }\ge 2k)\ \le\ (2p)^k.
+%	\]
+%	
+%	
+%	Since the left-hand side is exactly $\Pr(\xi_z\ge k)$, the claim follows.
+%\end{proof}
+
 \begin{proof}
-	We exhibit a three-step event whose occurrence yields the stated start and whose probability is $\Omega((d/n)^3)$.
+	We exhibit a consecutive three-step event which happens with probability $\Omega((d/n)^3)$ and yields the stated starting 
+	position on the second slope.
 	
-	\emph{(A) Equal-fitness lock at the ageing boundary.} In the ageing iteration, require the first two flips to be $1\!\to 0$ then $0\!\to 1$ (without replacement); this has probability $\frac{n-d}{n}\cdot\frac{d}{n-1}$ and produces an \emph{equal-fitness} offspring accepted by FCM (first return to $\ge$ parent). The offspring inherits the parent’s age (no improvement), so both parent and offspring face the ageing coin and die independently with probability $1/2$. Requiring “parent dies, offspring survives’’ contributes a factor $1/4$, and by the update rule the reference locks to the last cliff-top (the parent that died). The surviving equal-fitness offspring differs from this locked reference in exactly two bits, hence $\HD=2$ and, since $c<1$, the next iteration has $M=1$.
+	\emph{(A) $M=1$ at the ageing boundary.} In the ageing iteration we require that the first two flips are $1\!\to 0$ then $0\!\to 1$ without replacement. This has probability $\frac{n-d}{n}\cdot\frac{d}{n-1}$ and produces an \emph{equal-fitness} offspring accepted by FCM (first return to $\ge$ parent). The offspring inherits the parent’s age (no improvement), so both parent and offspring face the ageing coin and die independently with probability $1/2$. Requiring “parent dies, offspring survives’’ contributes a factor $1/4$, and by the update rule the reference locks to the last cliff-top (the parent that died). The surviving equal-fitness offspring differs from this locked reference in exactly two bits, hence $\HD=2$ and, since $c<1$, the next iteration has $M=1$.
+		
+	\emph{(B) Create the cliff-bottom individual and kill the current cliff-top.} With $M=1$, exactly one flip is performed and FCM does not accept worse-than-parent, so the algorithm returns the single-flip string after potential exhaustion. A $0\!\to 1$ flip occurs with probability at least $d/n$ and returns the \emph{cliff-bottom} ($n-d+1$ ones), at Hamming distance $1$ from the locked reference. Ageing does not reset (no improvement), so both current parent (equal-fitness cliff-top) and the returned offspring face the coin; requiring “parent dies, offspring survives’’ contributes another factor $1/4$ and preserves the locked reference at the last cliff-top.
 	
-	\emph{(B) Create the cliff-bottom by $M{=}1$ exhaustion and kill the current cliff-top.} With $M=1$, exactly one flip is performed and FCM does not accept worse-than-parent, so the algorithm returns the single-flip string after potential exhaustion. Requiring a $0\!\to 1$ flip occurs with probability at least $d/n$ and returns the \emph{cliff-bottom} ($n-d+1$ ones), at Hamming distance $1$ from the locked reference. Ageing does not reset (no improvement), so both current parent (equal-fitness cliff-top) and the returned offspring face the coin; requiring “parent dies, offspring survives’’ contributes another factor $1/4$ and preserves the locked reference at the last cliff-top.
-	
-	\emph{(C) One accepted improvement on the second slope.} In the following iteration, require the first flip to be $0\!\to 1$; this occurs with probability at least $(d-1)/n$ and is \emph{accepted} by FCM (strict improvement from the cliff-bottom), producing a point with $n-d+2$ ones. Relative to the locked cliff-top reference, the Hamming distance is now $2$, and exactly two successful phases have completed: $r_0=2$, $\HD(r_0)=2$.
+	\emph{(C) One accepted improvement on the second slope.} In the following iteration with probability at least $(d-1)/n$ the first bit flip iss a $0\!\to 1$ flip, and the offspring is \emph{accepted} by FCM (strict improvement from the cliff-bottom), producing a point with $n-d+2$ ones. Relative to the locked cliff-top reference, the Hamming distance is now $2$, and exactly two successful phases have completed: $r_0=2$, $\HD(r_0)=2$.
 	
 	Multiplying the lower bounds yields
 	\[
@@ -58,29 +116,57 @@
 	In particular, the event that the Hamming distance increases by at least $2k$ before stopping (equivalently, the first catch-up occurs at time $\ge 2k$) has probability at most $(2z/n)^k$.
 \end{lemma}
 
+%\begin{proof}
+%	If the first flip is a $0\!\to 1$ move, the offspring is strictly better and the hypermutation stops immediately, yielding $\xi_z=0$. Hence the event $\{\xi_z\ge 1\}$ implies the first flip was a $1\!\to 0$ move. From that point on the process carries a \emph{deficit} $D_t:=\#(1\!\to 0)-\#(0\!\to 1)$ that starts at $D_1=1$ and decreases by $1$ on each $0\!\to 1$ flip and increases by $1$ on each $1\!\to 0$ flip. The hypermutation stops at the \emph{first} time $t$ with $D_t=0$ (a catch-up). Thus the event $\{\xi_z\ge k\}$ is exactly the event that the first return to $0$ happens no earlier than time $2k$.
+%	
+%	We upper bound this probability by a simple ``coarse blocking’’ argument that uses only that $z$ is small and flips are without replacement.
+%	
+%	\smallskip
+%	\emph{Step 1 (Each required zero is never more likely than $2p$).}
+%	Condition on any history of length $t\le 2k-1$ that keeps $D_t\ge 1$ (so no catch-up yet) and in which at most $t$ distinct positions have been flipped. Among the $n-t$ remaining positions there are at most $z$ zeros. Hence the conditional probability that the \emph{next} flip is a $0\!\to 1$ move is at most
+%	\[
+%	\frac{z}{\,n-t\,}\ \le\ \frac{z}{\,n-(2k-1)\,}\ \le\ \frac{z}{(1/2+2\varepsilon)n}\ \le\ 2p,
+%	\]
+%	because $2k\le 2d<(\tfrac12-2\varepsilon)n$. In words: throughout any run that lasts up to $2k$ flips, a zero-flip is never more likely than $2p$.
+%	
+%	\smallskip
+%	\emph{Step 2 (Decompose a catch-up of length $\ge 2k$ into $k$ gated zero-flips).}
+%	If the first catch-up occurs at some time $\ge 2k$, then along the way the trajectory must realize \emph{at least $k$} distinct $0\!\to 1$ flips while $D>0$ (each such flip reduces the deficit by $1$ but, by assumption, does not yet hit $0$ before the $k$-th such zero). Expose these $k$ zero-flips in order and ignore everything else (the interspersed $1\!\to 0$ flips only make catch-up \emph{harder} and so can be dropped for an upper bound). By Step~1, each of these $k$ zeros occurs with conditional probability at most $2p$, uniformly over the entire run while $D>0$. Therefore, by the chain rule,
+%	\[
+%	\Pr(\text{first catch-up occurs at time }\ge 2k)\ \le\ (2p)^k.
+%	\]
+%	
+%	
+%	Since the left-hand side is exactly $\Pr(\xi_z\ge k)$, the claim follows.
+%\end{proof}
+%
+
 \begin{proof}
-	If the first flip is a $0\!\to 1$ move, the offspring is strictly better and the hypermutation stops immediately, yielding $\xi_z=0$. Hence the event $\{\xi_z\ge 1\}$ implies the first flip was a $1\!\to 0$ move. From that point on the process carries a \emph{deficit} $D_t:=\#(1\!\to 0)-\#(0\!\to 1)$ that starts at $D_1=1$ and decreases by $1$ on each $0\!\to 1$ flip and increases by $1$ on each $1\!\to 0$ flip. The hypermutation stops at the \emph{first} time $t$ with $D_t=0$ (a catch-up). Thus the event $\{\xi_z\ge k\}$ is exactly the event that the first return to $0$ happens no earlier than time $2k$.
+	If the first flip is a $0\!\to 1$ move, the offspring is strictly better and the hypermutation stops immediately, yielding $\xi_z=0$. Hence the event $\{\xi_z\ge 1\}$ implies that the first flip was a $1\!\to 0$ move. From that point on the process carries a \emph{deficit} of one-bits $D_t:=\#(1\!\to 0)-\#(0\!\to 1)$ that starts at $D_1=1$ and decreases by $1$ on each $0\!\to 1$ flip and increases by $1$ on each $1\!\to 0$ flip. The hypermutation stops at the \emph{first} time $t$ with $D_t=0$ (a catch-up). Thus the event $\{\xi_z\ge k\}$ is exactly the event that the first return to $0$ happens no earlier than time $2k$.
 	
-	We upper bound this probability by a simple ``coarse blocking’’ argument that uses only that $z$ is small and flips are without replacement.
+	We bound this probability from above by a simple ``coarse blocking’’ argument that uses only that $z$ is small and that flips occur are without replacement.
 	
 	\smallskip
-	\emph{Step 1 (Each required zero is never more likely than $2p$).}
+	\emph{Step 1 (Each required zero-flip is never more likely than $2p$).}
 	Condition on any history of length $t\le 2k-1$ that keeps $D_t\ge 1$ (so no catch-up yet) and in which at most $t$ distinct positions have been flipped. Among the $n-t$ remaining positions there are at most $z$ zeros. Hence the conditional probability that the \emph{next} flip is a $0\!\to 1$ move is at most
 	\[
 	\frac{z}{\,n-t\,}\ \le\ \frac{z}{\,n-(2k-1)\,}\ \le\ \frac{z}{(1/2+2\varepsilon)n}\ \le\ 2p,
 	\]
-	because $2k\le 2d<(\tfrac12-2\varepsilon)n$. In words: throughout any run that lasts up to $2k$ flips, a zero-flip is never more likely than $2p$.
+	because $2k\le 2d<(\tfrac12-2\varepsilon)n$. In other words, throughout any run that lasts up to $2k$ flips, a zero-flip is never more likely than $2p$.
 	
 	\smallskip
-	\emph{Step 2 (Decompose a catch-up of length $\ge 2k$ into $k$ gated zero-flips).}
-	If the first catch-up occurs at some time $\ge 2k$, then along the way the trajectory must realize \emph{at least $k$} distinct $0\!\to 1$ flips while $D>0$ (each such flip reduces the deficit by $1$ but, by assumption, does not yet hit $0$ before the $k$-th such zero). Expose these $k$ zero-flips in order and ignore everything else (the interspersed $1\!\to 0$ flips only make catch-up \emph{harder} and so can be dropped for an upper bound). By Step~1, each of these $k$ zeros occurs with conditional probability at most $2p$, uniformly over the entire run while $D>0$. Therefore, by the chain rule,
+	\emph{Step 2 (Decompose a catch-up of length $\ge 2k$ into $k$ gated \textcolor{purple}{?} zero-flips).}
+	If the first catch-up occurs at some time $\ge 2k$, then along the way the trajectory must realize \emph{at least $k$} distinct $0\!\to 1$ flips while $D>0$ (each such flip reduces the deficit by $1$ but, by assumption, does not yet hit $0$ before the $k$-th such zero\new{-flip}). Expose these $k$ zero-flips in order and ignore everything else (the interspersed $1\!\to 0$ flips only make catch-up \emph{harder} and so can be dropped for an upper bound). By Step~1, each of these $k$ zero\new{-flips} occurs with conditional probability at most $2p$, uniformly over the entire run while $D>0$. Therefore, by the chain rule\textcolor{purple}{?},
 	\[
 	\Pr(\text{first catch-up occurs at time }\ge 2k)\ \le\ (2p)^k.
 	\]
 	
 	
-	Since the left-hand side is exactly $\Pr(\xi_z\ge k)$, the claim follows.
+	Since the left-hand side is exactly $\Pr(\xi_z\ge k)$\textcolor{purple}{?}, the claim follows.
 \end{proof}
+
+
+
 
 %\begin{lemma}[Per-attempt MGF]\label{lem:attempt-mgf}
 %	Fix a state on the second slope with $z$ zero-bits and write $p:=z/n$.
@@ -131,9 +217,9 @@
 	Let a phase be the time spent at zero-count $z$ on the second slope until the next strict improvement to $z-1$.
 	Write $p:=z/n$ and $\rho:=2d/n$ (so $2p\le \rho \le \tfrac12-2\varepsilon$).
 	Let $S_z$ be the total HD added by all \emph{failed} attempts in the phase.
-	Since the improving attempt must flip a zero at the first flip, we have $\Delta^{\mathrm{succ}}_z=1$, hence
+	Since the improving attempt must flip a zero at the first flip\textcolor{purple}{?}, we have $\Delta^{\mathrm{succ}}_z=1$\textcolor{purple}{?}. Hence
 	\[
-	Y_z\ :=\ S_z+(\Delta^{\mathrm{succ}}_z-1)\ =\ S_z\ \ge 0.
+	Y_z\ :=\ S_z\textcolor{purple}{?}+(\Delta^{\mathrm{succ}}_z-1)\ =\ S_z\ \ge 0.
 	\]
 	Then, for every $0<\lambda<\tfrac12\ln\frac{1}{2\rho}$,
 	\[
@@ -142,13 +228,13 @@
 \end{lemma}
 
 \begin{proof}
-	For a single \emph{failed} attempt at zero-count $z$, let $\xi$ count the number of $1\!\to 0$ flips while below the parent before the first catch-up.
+	For a single \emph{failed} attempt at zero-count $z$, let $\xi$ count the number of $1\!\to 0$ flips \textcolor{purple}{while below the parent} before the first catch-up.
 	By Lemma~\ref{lem:xi-tail} and the envelope $\Delta_{\mathrm{fail}}\le 2\xi$ with $\xi\ge 1$,
 	\begin{align*}
 		\EE\!\left[e^{\lambda \Delta_{\mathrm{fail}}}\right]
 		&\le \sum_{k\ge 1} e^{2\lambda k}\,\Pr(\xi=k)
 		\\ &\le\ \sum_{k\ge 1} \big(2p\,e^{2\lambda}\big)^{k}
-		\\ &=\ \frac{2p\,e^{2\lambda}}{\,1-2p\,e^{2\lambda}\,}:=:\ t.
+		\\ &\textcolor{purple}{=}\ \frac{2p\,e^{2\lambda}}{\,1-2p\,e^{2\lambda}\,}:=:\ t.
 	\end{align*}
 	Let $F$ be the number of failed attempts before the first success in the phase, with the convention
 	$\Pr(F=f)=(1-p_z)^f p_z$ for $f\in\{0,1,\ldots\}$ and $p_z\ge p=z/n$.
@@ -156,7 +242,7 @@
 	\begin{align*}
 		\EE\!\big[e^{\lambda Y_z}\big]
 		&=\EE\!\Big[\ \prod_{i=1}^{F} e^{\lambda \Delta_{\mathrm{fail}}^{(i)}}\ \Big]
-		\ \le\ \EE\!\big[t^{F}\big].
+		\ \le\ \EE\!\big[\textcolor{purple}{t^{F}}\big].
 	\end{align*}
 	Using $p_z\ge p$ and the geometric MGF for $t\in[0,1)$,
 	\begin{align*}
