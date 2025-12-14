@@ -25,26 +25,25 @@ We first need to bound from below the probability that the algorithm visits the 
 \end{lemma}
 
 \begin{proof}
-	Let $T:=n^2$.
+	Let $T:=n^2$. \textcolor{blue}{We will first show that unless we sample a solution from $\mathcal{B}_k$ or $\mathcal{D}_\rho$ , we will sample a solution from $J$ in $T$ iteration with overwhelming probability.}
 	
-	\medskip\noindent
-	\textbf{(A) Reaching $J$ quickly.}
-	Before $J$, $\mathcal{B}_k$ or $\mathcal{D}_\rho$ is hit, the first flip equals the leftmost zero with probability $1/n$ and is accepted
-	immediately by FCM($\ge$).  If $X\sim\mathrm{Bin}(T,1/n)$ counts such increases then
+	Before $J$, $\mathcal{B}_k$ or $\mathcal{D}_\rho$ is sampled from, we flip the leftmost zero-bit with probability $1/n$ and accept
+	immediately by FCM($\ge$).  If $X\sim\mathrm{Bin}(T,1/n)$ counts such improvements then
 	$\mathbb{E}[X]=n$ and a Chernoff bound gives
-	\[
+	$
 	\Pr\bigl(X<(9/10)n\bigr)\ \le\ e^{-a n}
-	\]
-	for some constant $a>0$. Hence $J$ is reached within $T=n^2$ iterations with probability $1-e^{-a n}$ if we condition on that neither $\mathcal{B}_k$ nor $\mathcal{D}_\rho$ is sampled first.
+
+	$
+	for some constant $a>0$. Hence $J$ is reached within $T$ iterations with probability $1-e^{-a n}$ if we condition on that neither $\mathcal{B}_k$ nor $\mathcal{D}_\rho$ is sampled first.
 	
-	\medskip\noindent
-	\textbf{(B) $\mathcal{D}_\rho$ before $J$ is $o(1)$.}
-	Let $\alpha:=|x|_1/n$ and \textcolor{purple}{$\alpha^\top:=|x^\top|_1/n$.}
-	Choose any $\rho\in(0.8,0.9)$ and any $\xi\in(0,\rho-\tfrac12]$ such that
-	\[
-	q^\star \;:=\; 2c\,\bigl(1-\rho+\xi\bigr) \;<\; e^{-2}.
-	\]
-	\emph{Case B.1 (near threshold): $\alpha\ge \rho-\xi$ and $\alpha^\top\ge \rho-\xi$.}
+	\textcolor{blue}{
+		Next, we will show that the probability of sampling a $\mathcal{B}_k$ or a $\mathcal{D}_\rho$ solution in $T$ iterations is $o(1)$, starting our argument with $\mathcal{D}_\rho$. 
+		}
+	
+	Let $\alpha:=|x|_1/n$ and $\alpha^\top:=|\text{best}|_1/n$. Since the probability of improvement is at least $1/n$ in the initial leading-ones slope the ageing does not trigger with overwhelming probability unless the current solution is in $J$, $\mathcal{D}_\rho$ or $\mathcal{B}_k$, all of which lead to $\alpha^\top\ge\rho$ after the restart. We make a case distinction according to $\alpha\ge \rho-\xi$ for some constant $\xi\in(0,\rho-\tfrac12]$  such that	$q^\star \;:=\; 2c\,\bigl(1-\rho+\xi\bigr) \;<\; e^{-2}.
+	$
+	
+	\emph{Case 1: $\alpha\ge \rho-\xi$.}
 	Using $|x\wedge x^\top|\ge |x|+|x^\top|-n$,
 	\[
 	\mathrm{HD}(x,x^\top)\ \le\ (2-\alpha-\alpha^\top)\,n\ \le\ 2(1-\rho+\xi)\,n,
@@ -65,7 +64,7 @@ We first need to bound from below the probability that the algorithm visits the 
 	\]
 	Because $q^\star<e^{-2}$, we have $\log_{2}(1/q^\star)>2$, so $T\cdot n^{-\log_{2}(1/q^\star)}=o(1)$.
 	
-	\emph{Case B.2 (far from threshold): $\alpha\le \rho-\xi$.}
+	\emph{Case 2 : $\alpha\le \rho-\xi$.}
 	Since all $\mathcal{D}_\rho$ solutions have $|x|_1\ge \rho n$, at least $\xi n$ net $0\!\to\!1$ flips ($Z-O$) are required within at most
 	$cn$ bit-flips. With initial zero/one fractions giving negative drift,
 	a Serfling (hypergeometric) tail bound yields
@@ -75,11 +74,7 @@ We first need to bound from below the probability that the algorithm visits the 
 	for some $\gamma>0$. Including the necessity to flip all $L$ prefix bits only decreases the probability.
 	Summing over at most $T$ iterations remains $e^{-\gamma n}$. Therefore $\Pr(\text{$\mathcal{D}_\rho$ before }J)=o(1)$.
 	
-	
-	\medskip\noindent
-	\medskip\noindent
-	\textbf{(C) Entering $\mathcal{B}_k$ before $J$ is $o(1)$ (using $k$ constant).}
-	Let $r:=2k{+}1$, let $S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$, and fix any constant
+	Similarly we will next establish that sampling from $\mathcal{B}_k$ in $T$ iterations  has probability $o(1)$.	Let $r:=2k{+}1$, $S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$, and fix any constant
 	$\delta\in(0,\tfrac{9}{10})$.  Consider any iteration with parent
 	$x\notin\mathcal{B}_k$ and write $\ell:=\mathrm{LO}(x)$ and
 	$v:=|\{i\in S:x_i=0\}|$.  We distinguish two cases depending on $\ell$.
@@ -116,16 +111,15 @@ We first need to bound from below the probability that the algorithm visits the 
 	\Pr\bigl(\mathcal{B}_k \text{ in this iteration}\bigr)
 	\le
 	\binom{|F|+r+1}{r+1}^{-1}
-	\le
-	\Bigl(\tfrac{r+1}{|F|}\Bigr)^{r+1}
+%	\le
+%	\Bigl(\tfrac{r+1}{|F|}\Bigr)^{r+1}
 	=
 	O\!\bigl(n^{-(r+1)}\bigr).
 	\]
 	Union-bounding over at most $T\le n^2$ iterations yields a total contribution
 	$O(n^{-(r-1)})=O(n^{-2k})=o(1)$.
 	
-	Combining the two cases, the probability to enter $\mathcal{B}_k$ at any time
-	before reaching $J$ is $o(1)$.
+
 %	
 %	\textbf{(C) Entering $\mathcal{B}_k$ before $J$ is $o(1)$ (using $k$ constant).}
 %	Let $r:=2k{+}1$, let $S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$, and fix any constant
@@ -225,19 +219,6 @@ We first need to bound from below the probability that the algorithm visits the 
 %	$\binom{n}{s}^{-1}=e^{-a'' n}$ for some $a''>0$.  Union over $T_0=O(n\log n)$ iterations remains
 %	$e^{-a''' n}$.
 %	
-	Combining (C.1) and (C.2), the probability to enter $\mathcal{B}_k$ at any time before $J$ is $o(1)$.
-	
-	\medskip\noindent
-	\textbf{(D) Combine.}
-	With probability $1-e^{-a n}$ we reach $J$ within $T$ steps by (A).  Subtracting the $o(1)$
-	contributions from (B) and (C) yields
-	\[
-	\Pr\bigl(\mathcal{E}_{\mathrm{junction}}\bigr)
-	\ \ge\
-	\bigl(1-e^{-a n}\bigr)\ -\ o(1)\ -\ o(1)
-	\ =\
-	1-o(1).
-	\]
 \end{proof}
 
 
@@ -408,7 +389,9 @@ We first need to bound from below the probability that the algorithm visits the 
 	completing the proof.
 \end{proof}
 
-\textcolor{blue}{Now that the lemmata are established we can prove Theorem~\ref{thm:main-tau-final}.}
+\textcolor{blue}{
+	Now that the lemmata are established we can prove Theorem~\ref{thm:main-tau-final}.
+	}
 \begin{proof}
 	\textbf{1.  Evaluation cost of one epoch.}
 	Each iteration evaluates at most \(M(x)\le c\,n\;(=n/3)\) offspring, so an

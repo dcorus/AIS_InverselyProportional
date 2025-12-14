@@ -73,3 +73,13 @@ Name of the algorithm for the leading ones proof
 remove x^T ---> best
 
 put back ville next to ballot
+
+why the -1
+
+for a single failed attempt starting with z zeroes
+
+put upper bound on infinite sum over k \chi lemma
+
+Remove Pr(F=f) the definition of geometric variables
+
+s_0 is not defined for B_r
