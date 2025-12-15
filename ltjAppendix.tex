@@ -257,19 +257,19 @@ We first need to bound from below the probability that the algorithm visits the 
 	Then the mutation potential in every subsequent
 	iteration of the epoch satisfies
 	\(
-	M\ge c\,\tfrac{n}{20} \geq n/60.
+	M\ge c\,\tfrac{n}{20} \geq n/60 \geq r+1.
 	\)
 	
-	\paragraph*{Per-iteration success probability (revised, $M\ge r{+}1$).}
-	Conditioned on $\mathrm{HD}(x,x^\top)\ge n/20$ we certainly have
-	$M=\lfloor c\,\mathrm{HD}\rfloor\ge r+1$.
-	Accepting $y^\star$ happens as soon as the \emph{first} $r{+}1$ distinct flips
+	%\paragraph*{Per-iteration success probability (revised, $M\ge r{+}1$).}
+	%Conditioned on $\mathrm{HD}(x,x^\top)\ge n/20$ we certainly have
+	%$M=\lfloor c\,\mathrm{HD}\rfloor\ge r+1$.
+	A solution in $\mathcal{B}_k$ is accepted as soon as the \emph{first} $r{+}1$ distinct flips
 	include \emph{exactly} the set
 	\(\{1,\dots,r,\;0.9n\}\)
 	in any order; if this occurs, FCM stops immediately and no other
 	leading-one bit can be destroyed.
-	
-	Because flips are sampled uniformly without replacement, the probability of
+	%
+	Since bits are sampled uniformly without replacement, the probability of
 	this event is
 	\[
 	p_{\text{iter}}
@@ -281,9 +281,9 @@ We first need to bound from below the probability that the algorithm visits the 
 	independent of the exact value of~$M$ (we only need $M\ge r{+}1$ to allow that
 	many flips).
 	
-	\medskip\noindent
-	\emph{Per-epoch success probability.}
-	An epoch supplies \(\tau\) independent iterations, so a union bound yields
+	%\medskip\noindent
+	%\emph{Per-epoch success probability.}
+	Since an epoch lasts for \(\tau\) independent iterations, a union bound yields
 	\[
 	p_B
 	\;\ge\;
@@ -293,34 +293,39 @@ We first need to bound from below the probability that the algorithm visits the 
 	\]
 	
 	\noindent
-	The hidden constant depends only on the fixed block size \(k\).
+	%The hidden constant depends only on the fixed block size \(k\).
 \end{proof}
 \RestateCounter{lemma}{lem:DPO-epoch}
-\begin{lemma}[Per-epoch probability of accepting a DPO]
-%	\label{lem:DPO-epoch}
-	Fix the IPH constant \(c=\tfrac13\) and any density parameter \(\rho\in(0.8,0.9)\).  
-	Let an ageing epoch have length \(\tau\ge n\) and begin with the parent in the
-	junction set \(J\).  
-	Then the probability that this epoch accepts \emph{some}
-	deep-prefix optimum in \(\mathcal{D}_\rho\) satisfies
-	\begin{align*}
-		p_D
-		\;&:=\;
-		\Pr\!\bigl(\text{a string in }\mathcal{D}_\rho\text{ is accepted during the epoch}\bigr)
-		\;\\&=\;
-		\Omega\!\Bigl(\min\!\bigl\{\,1,\;
-		\tau\,n^{-\,\beta}\bigr\}\Bigr),
-	\end{align*}
-	where \(\beta=\log_{2}60<6\). 
+%\begin{lemma}[Per-epoch probability of accepting a DPO]
+%%	\label{lem:DPO-epoch}
+%	Fix the IPH constant \(c=\tfrac13\) and any density parameter \(\rho\in(0.8,0.9)\).  
+%	Let an ageing epoch have length \(\tau\ge n\) and begin with the parent in the
+%	junction set \(J\).  
+%	Then the probability that this epoch accepts \emph{some}
+%	deep-prefix optimum in \(\mathcal{D}_\rho\) satisfies
+%	\begin{align*}
+%		p_D
+%		\;&:=\;
+%		\Pr\!\bigl(\text{a string in }\mathcal{D}_\rho\text{ is accepted during the epoch}\bigr)
+%		\;\\&=\;
+%		\Omega\!\Bigl(\min\!\bigl\{\,1,\;
+%		\tau\,n^{-\,\beta}\bigr\}\Bigr),
+%	\end{align*}
+%	where \(\beta=\log_{2}60<6\). 
+%\end{lemma}
+\begin{lemma} \label{lem:DPO-epoch}
+	Let an ageing epoch begin at the junction \textcolor{purple}{and let $c <1/3$}.
+	Then, with probability $\new{p_D}=\Omega(\min\{1,\,\tau\,n^{-\beta}\})$, the epoch performs a jump placing the individual onto the deep-prefix plateau.
 \end{lemma}
+
 \begin{proof}[Proof of Lemma \ref{lem:DPO-epoch} (revised)]
-	At epoch start the reference $x^\top$ is the best string from the previous
+	At the beginning of the epoch the reference is the best string from the previous
 	epoch (from $J$ or $\mathcal{B}_k$), and the new parent $x$ itself lies in~$J$.
-	Hence
+	Hence,
 	\[
 	|x|_1\;=\;0.9n-1 \;+\; |x_{\text{suffix}}|_1.
 	\]
-	The suffix has length $0.1n+1$ and is uniform; its ones count is
+	The suffix has length $0.1n+1$ and is uniform; its number of ones is
 	$\mathrm{Bin}(0.1n+1,\tfrac12)$ with expectation $0.05n+O(1)$.
 	By a Chernoff bound
 	\(
@@ -337,46 +342,47 @@ We first need to bound from below the probability that the algorithm visits the 
 	\;>\;
 	\rho n
 	\qquad(\rho<0.9).
-	\tag{A}
+	\tag{1}
 	\]
 	
-	\textbf{Step 1 – Linear mutation potential.}
+	%\textbf{Step 1 – Linear mutation potential.}
 	As in the block-jump argument we have
 	\(
-	\Pr\!\bigl(\mathrm{HD}(x,x^\top)\ge n/20\bigr)\ge\tfrac12
+	\Pr\!\bigl(\mathrm{HD}(x,best)\ge n/20\bigr)\ge\tfrac12
 	\)
-	(owing to the uniform suffix); condition on this event.
-	Then \(M\ge n/60\) throughout the epoch.
+	(owing to the uniform suffix). We condition on this event, so we have
+	 \(M\ge n/60\) throughout the epoch.
 	
-	\textbf{Step 2 – Per-iteration flip of the \(L\) prefix bits.}
-	Let \(L=\lfloor\log_2 n\rfloor\).
-	A necessary part of generating a deep-prefix optimum is to flip the prescribed
-	\(L\) prefix positions $\{1,\dots,L\}$ from $1$ to $0$ before FCM stops.
+	%\textbf{Step 2 – Per-iteration flip of the \(L\) prefix bits.}
+	%Let \(L=\lfloor\log_2 n\rfloor\).
+	To  generate a $\mathcal{D}_\rho$ optimum it is necessary to flip the 
+	\(L\) leading ones to from $1$ to $0$ before FCM stops.
 	Sampling without replacement,
 	\begin{align*}
 		p_{\text{prefix}}
-		&=\Pr\bigl(\{1,\dots,L\}\subseteq\text{ first }L\text{ flips}\bigr)
-		=\frac{(M)_{L}}{(n)_{L}}
+		%&=\Pr\bigl(\{1,\dots,L\}\subseteq\text{ first }L\text{ flips}\bigr)
+		&=\frac{(M \cdot (M-1)\cdot  ... \cdot (M-L))}{(n \cdot (n-1)\cdot  ... \cdot (n-L))}
 		\;\ge\;
 		(M/n)^{L}
 		\;\\&\ge\;
 		(1/60)^{L}
-		=n^{-\beta},\qquad
-		\beta:=\log_{2}60<6.
+		=n^{-\beta}.
 	\end{align*}
+	where $\beta:=\log_{2}60<6$.
 	
-	\textbf{Step 3 – Density constraint is automatic.}
-	When those $L$ flips occur, the total ones count in the string drops by
-	\(\le L\le\log_2 n\).
-	Using (A) and \(L=o(n)\),
-	\[
-	|x|_1-L\;\ge\;0.94n-\log_2 n
-	\;\ge\;\rho n
-	\quad\text{for all sufficiently large }n.
-	\]
-	Hence the density requirement \(|x|_1\ge\rho n\) is \emph{already satisfied}
-	once the prefix flips have happened; no additional tail flips are needed, and
-	FCM immediately accepts a DPO.
+	%\textbf{Step 3 – Density constraint is automatic.}
+	When those $L$ flips occur, the total number of  ones in the string drops by at most
+	\( L\le\log_2 n\).
+	Thus using (1) and \(L=o(n)\) we get,
+	%\[
+	$|x|_1-L\;\ge\;0.94n-\log_2 n
+	\;\ge\;\rho n$
+	%\quad\text{
+	for all sufficiently large $n$.
+	%\]
+	Hence the density requirement \(|x|_1\ge\rho n\) is already satisfied
+	once the prefix flips have happened. Thus no additional tail flips are needed, and
+	FCM immediately accepts a $\mathcal{D}_\rho$ search point.
 	
 	\textbf{Step 4 – Per-epoch probability.}
 	Each iteration satisfies \(p_{\text{iter}}\ge n^{-\beta}\).
