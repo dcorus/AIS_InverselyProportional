@@ -70,7 +70,7 @@ We first need to bound from below the probability that the algorithm visits the 
 	\[
 	\Pr\bigl(Z-O\ge \xi n\bigr)\ \le\ e^{-\gamma n}
 	\]
-	for some $\gamma>0$. Including the necessity to flip all $L$ prefix bits only decreases the probability.
+	for some constant $\gamma>0$. Including the necessity to flip all $L$ prefix bits only decreases the probability.
 	Summing over at most $T$ iterations remains $e^{-\gamma n}$. Therefore $\Pr(\text{$\mathcal{D}_\rho$ before }J)=o(1)$.
 	
 	Similarly we will next establish that sampling from $\mathcal{B}_k$ in $T$ iterations  has probability $o(1)$.	Let $r:=2k{+}1$, $S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$, and fix any constant

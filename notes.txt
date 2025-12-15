@@ -83,3 +83,6 @@ put upper bound on infinite sum over k \chi lemma
 Remove Pr(F=f) the definition of geometric variables
 
 s_0 is not defined for B_r
+
+define ageing epoch
+
