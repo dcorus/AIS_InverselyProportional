@@ -222,37 +222,42 @@ We first need to bound from below the probability that the algorithm visits the 
 
 
 \RestateCounter{lemma}{lem:BJO-epoch}
-\begin{lemma}[Per-epoch probability of accepting the block-jump optimum]
-%	\label{lem:BJO-epoch}
-	Fix a constant block length \(k\ge 1\) and write \(r:=2k+1\).
-	Let the IPH constant be \(c=\tfrac13\) and let an ageing epoch have length
-	\(\tau\ge n\).  
-	If the epoch begins with the parent in the junction set
-	\(J=\bigl\{x:\mathrm{LO}(x)=0.9n-1\bigr\}\),
-	then the probability that the epoch accepts the unique block-jump optimum $y^{\star}=0^{\,2k+1}\,1^{\,n-2k-1}$ satisfies
-	\begin{align*}
-		p_B
-		\;&:=\;
-		\Pr\!\bigl(\text{$y^{\star}$ accepted during the epoch}\bigr)
-		\;\\&=\;
-		\Omega\!\Bigl(\min\!\bigl\{\,1,\;
-		\tau\,n^{-(2k+2)}\bigr\}\Bigr),
-	\end{align*}
+%\begin{lemma}[Per-epoch probability of accepting the block-jump optimum]
+%%	\label{lem:BJO-epoch}
+%	Fix a constant block length \(k\ge 1\) and write \(r:=2k+1\).
+%	Let the IPH constant be \(c=\tfrac13\) and let an ageing epoch have length
+%	\(\tau\ge n\).  
+%	If the epoch begins with the parent in the junction set
+%	\(J=\bigl\{x:\mathrm{LO}(x)=0.9n-1\bigr\}\),
+%	then the probability that the epoch accepts the unique block-jump optimum $y^{\star}=0^{\,2k+1}\,1^{\,n-2k-1}$ satisfies
+%	\begin{align*}
+%		p_B
+%		\;&:=\;
+%		\Pr\!\bigl(\text{$y^{\star}$ accepted during the epoch}\bigr)
+%		\;\\&=\;
+%		\Omega\!\Bigl(\min\!\bigl\{\,1,\;
+%		\tau\,n^{-(2k+2)}\bigr\}\Bigr),
+%	\end{align*}
+%\end{lemma}
+\begin{lemma} \label{lem:BJO-epoch}
+	Let an ageing epoch begin at the junction.
+	Then, with probability $\new{p_B}=\Omega(\min\{1,\,\tau\,n^{-(2k+2)}\})$, the epoch performs a jump placing the individual at the beginning of the block-jump slope.
 \end{lemma}
 
+
 \begin{proof}
-	At the epoch start the reference \(x^\top\) is the best individual from the
-	previous epoch.  
-	The length-\(0.1n+1\) suffix of the new parent \(x\) is still uniformly random,
+	At the beginning of the epoch %start %the reference best is the best individual from the
+	%previous epoch.  
+	the length-\(0.1n+1\) suffix of the new parent \(x\) is still uniformly random,
 	so with probability at least \(\tfrac12\)
 	\[
 	\mathrm{HD}(x,x^\top)\;\ge\;\frac{n}{20}.
 	\]
-	Condition on this event, losing only a factor \(2\).
+	Conditioning on this event we lose only a factor \(2\).
 	Then the mutation potential in every subsequent
 	iteration of the epoch satisfies
 	\(
-	M\ge c\,\tfrac{n}{20} = n/60.
+	M\ge c\,\tfrac{n}{20} \geq n/60.
 	\)
 	
 	\paragraph*{Per-iteration success probability (revised, $M\ge r{+}1$).}
