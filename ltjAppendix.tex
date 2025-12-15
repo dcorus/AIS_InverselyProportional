@@ -384,15 +384,16 @@ We first need to bound from below the probability that the algorithm visits the 
 	once the prefix flips have happened. Thus no additional tail flips are needed, and
 	FCM immediately accepts a $\mathcal{D}_\rho$ search point.
 	
-	\textbf{Step 4 – Per-epoch probability.}
-	Each iteration satisfies \(p_{\text{iter}}\ge n^{-\beta}\).
+	%\textbf{Step 4 – Per-epoch probability.}
+	Since each iteration satisfies \(p_{\text{iter}}\ge n^{-\beta}\).
 	Across the \(\tau\ge n\) iterations of the epoch,
 	\[
 	p_D
 	\;\ge\;
 	1-(1-p_{\text{iter}})^{\tau}
 	\;\ge\;
-	\min\!\bigl\{1,\;\tau\,p_{\text{iter}}\bigr\}
+	%\min\!\bigl\{1,\;\tau\,p_{\text{iter}}\bigr\}
+	1-(1-n^{-\beta})^n 
 	\;=\;
 	\Omega\!\bigl(\min\{1,\;\tau\,n^{-\beta}\}\bigr),
 	\]
@@ -402,7 +403,7 @@ We first need to bound from below the probability that the algorithm visits the 
 \textcolor{blue}{
 	Now that the lemmata are established we can prove Theorem~\ref{thm:main-tau-final}.
 	}
-\begin{proof}
+\begin{proof}[of Theorem
 	\textbf{1.  Evaluation cost of one epoch.}
 	Each iteration evaluates at most \(M(x)\le c\,n\;(=n/3)\) offspring, so an
 	epoch of length \(\tau\) uses
