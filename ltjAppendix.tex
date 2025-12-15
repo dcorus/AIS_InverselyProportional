@@ -43,9 +43,9 @@ We first need to bound from below the probability that the algorithm visits the 
 	$
 	
 	\emph{Case 1: $\alpha\ge \rho-\xi$.}
-	Using $|x\wedge x^\top|\ge |x|+|x^\top|-n$,
+	Using $|x\wedge best|_1\ge |x|_1+|best|_1-n$,
 	\[
-	\mathrm{HD}(x,x^\top)\ \le\ (2-\alpha-\alpha^\top)\,n\ \le\ 2(1-\rho+\xi)\,n,
+	\mathrm{HD}(x,best)\ \le\ (2-\alpha-\alpha^\top)\,n\ \le\ 2(1-\rho+\xi)\,n,
 	\]
 	\[
 	M(x)\ \le\ q^\star n\ <e^{-2}n
@@ -65,7 +65,7 @@ We first need to bound from below the probability that the algorithm visits the 
 	
 	\emph{Case 2 : $\alpha\le \rho-\xi$.}
 	Since all $\mathcal{D}_\rho$ solutions have $|x|_1\ge \rho n$, at least $\xi n$ net $0\!\to\!1$ flips ($Z-O$) are required within at most
-	$cn$ bit-flips. With initial zero/one fractions giving negative drift,
+	$cn$ bit-flips. With initial zero/one ratio giving negative drift,
 	a Serfling (hypergeometric) tail bound yields
 	\[
 	\Pr\bigl(Z-O\ge \xi n\bigr)\ \le\ e^{-\gamma n}
