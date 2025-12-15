@@ -393,7 +393,7 @@ We first need to bound from below the probability that the algorithm visits the 
 	1-(1-p_{\text{iter}})^{\tau}
 	\;\ge\;
 	%\min\!\bigl\{1,\;\tau\,p_{\text{iter}}\bigr\}
-	1-(1-n^{-\beta})^n 
+	1-(1-n^{-\beta})^\tau 
 	\;=\;
 	\Omega\!\bigl(\min\{1,\;\tau\,n^{-\beta}\}\bigr),
 	\]
@@ -403,38 +403,39 @@ We first need to bound from below the probability that the algorithm visits the 
 \textcolor{blue}{
 	Now that the lemmata are established we can prove Theorem~\ref{thm:main-tau-final}.
 	}
-\begin{proof}[Proof of Theorem~\ref{thm:main-tau-final}]
-	\textbf{1.  Evaluation cost of one epoch.}
-	Each iteration evaluates at most \(M(x)\le c\,n\;(=n/3)\) offspring, so an
-	epoch of length \(\tau\) uses
-	\[
-	\text{eval}_{\text{epoch}}\le c\,n\,\tau=\Theta(n\,\tau).
-	\]
+\begin{proof}[Proof [of Theorem~\ref{thm:main-tau-final}]]
+	%\textbf{1.  Evaluation cost of one epoch.}
+	%Each iteration evaluates at most \(M(x)\le c\,n\;(=n/3)\) offspring, so an
+	%epoch of length \(\tau\) uses
+	%\[
+	%\text{eval}_{\text{epoch}}\le c\,n\,\tau=\Theta(n\,\tau).
+	%\]
 	
-	\textbf{2.  Per–epoch success probabilities.}
-	Starting an epoch in the junction set \(J\) (prob.\ \(1-o(1)\)), the two
-	lemmas give
-	\[
-	p_B=\Omega\!\bigl(\min\{1,\tau\,n^{-(2k+2)}\}\bigr),\quad
-	p_D=\Omega\!\bigl(\min\{1,\tau\,n^{-\beta}\}\bigr),
-	\]
-	and \(B\) and \(D\) are mutually exclusive within one epoch.
+	%\textbf{2.  Per–epoch success probabilities.}
+	By Lemma~\ref{lem:junction-first-density-Bk} we reach the junction $J$ with probability \ \(1-o(1)\).
+	Starting an epoch in the junction, %\(J\) (prob.\ \(1-o(1)\)), 
+	the two lemmata give
+	%\[
+	$p_B=\Omega\!\bigl(\min\{1,\tau\,n^{-(2k+2)}\}\bigr)$ and
+	$p_D=\Omega\!\bigl(\min\{1,\tau\,n^{-\beta}\}\bigr)$,
+	%\]
+	and \(B\) and \(D\) are mutually exclusive within one epoch. Thus the expected number of epochs to sample from both sets of optima is:
 	
-	\textbf{3.  Expected number of epochs to see both optima.}
-	A coupon–collector bound yields
+	%\textbf{3.  Expected number of epochs to see both optima.}
+	%A coupon–collector bound yields
 	\[
-	\mathbb{E}[T_{\mathrm{both}}]
-	\;\le\;
-	\frac1{p_B}+\frac1{p_D}
-	\;=\;
+	%\mathbb{E}[T_{\mathrm{both}}]
+	%\;\le\;
+	%\frac1{p_B}+\frac1{p_D}
+	%\;=\;
 	O\!\Bigl(
 	\max\{1,n^{2k+2}/\tau\}
 	+\max\{1,n^{\beta}/\tau\}
 	\Bigr).
 	\]
 	
-	\textbf{4.  Total expected evaluations.}
-	Multiplying by the epoch cost,
+	%\textbf{4.  Total expected evaluations.}
+	Multiplying by the cost of each epoch we get,
 	\begin{align*}
 		\mathbb{E}[\text{evals}]
 		&\le
@@ -452,9 +453,9 @@ We first need to bound from below the probability that the algorithm visits the 
 	\end{align*}
 \end{proof}
 
-Thus the runtime is polynomial in \(n\) for every fixed \(k\) and for any
-\(\tau=\mathrm{poly}(n)\).  If \(\tau\le n^{2k+2}\) and
-\(\tau\le n^{\beta}\) the leading term becomes
-\(O\!\bigl(n^{2k+3}+n^{\beta+1}\bigr)\);  
-if \(\tau\) is larger than both thresholds, the waiting cost \(n\,\tau\)
-dominates.
+%Thus the runtime is polynomial in \(n\) for every fixed \(k\) and for any
+%\(\tau=\mathrm{poly}(n)\).  If \(\tau\le n^{2k+2}\) and
+%\(\tau\le n^{\beta}\) the leading term becomes
+%\(O\!\bigl(n^{2k+3}+n^{\beta+1}\bigr)\);  
+%if \(\tau\) is larger than both thresholds, the waiting cost \(n\,\tau\)
+%dominates.
