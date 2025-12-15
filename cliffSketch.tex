@@ -1,3 +1,27 @@
+%\begin{theorem}[Main Runtime Bound] \label{th:expoHD-cliff}
+%	Let $d < n(\tfrac14-\varepsilon)$ for fixed $\varepsilon>0$, and let the parameter $c$ of the IPH 
+%	with linear mutation potential  $M(x)=\max\{1,\lfloor c\,\mathrm{HD}(x,\text{best})\rfloor\}$ 
+%	for some 
+%	\[
+%	c < \frac{1+4\varepsilon}{3-4\varepsilon}.
+%	\]
+%	If the ageing threshold satisfies $\tau=\Omega(n^{1+\varepsilon'})$ for some 
+%	$\varepsilon'>0$, then the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ optimises \cliff{} in expected
+%	\[
+%	O\!\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)
+%	\]
+%	fitness evaluations.
+%\end{theorem}
+\begin{theorem}
+	The {\oneoneOPTIA} using \IPHfcm{} with \linHD\ (factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$) and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
+	optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected
+	\[
+	O\!\Big(\frac{n^{5}\log(n/d)}{d^{3}} \;+\; n^{2}\log d\Big)
+	\]
+	fitness function evaluations.
+\end{theorem}
+
+
 We now present the proof sketch of our main result on the  \cliff{} function, together with 
 all supporting lemmata.  All proofs are deferred to the appendix; the 
 statements here are mathematically identical to those in the full technical 
@@ -6,28 +30,24 @@ major stages: (i) obtaining a canonical entry point onto the second slope
 immediately after an ageing event at the cliff-top; and (ii) showing that from 
 this configuration the algorithm reaches the optimum without dangerous increases in mutation potential.
 
-
-\begin{theorem}[Main Runtime Bound] \label{th:expoHD-cliff}
-	Let $d < n(\tfrac14-\varepsilon)$ for fixed $\varepsilon>0$, and assume IPH 
-	with linear mutation potential  $M(x)=\max\{1,\lfloor c\,\mathrm{HD}(x,\textcolor{purple}{x^\top})\rfloor\}$ 
-	for some 
+For stage (ii) we will use the generalization of Markov's Inequality by Ville~\cite{Doob1953}(Ch.~VII) which will allows us to show that mutation potential stays bounded with constant probability.
+\begin{theorem}[Ville’s inequality for nonnegative supermartingales]\label{thm:ville}
+	Let $(M_t)_{t\ge 0}$ be a nonnegative supermartingale adapted to $(\mathcal F_t)_{t\ge 0}$. 
+	Then for every $a>0$,
 	\[
-	c < \frac{1+4\varepsilon}{3-4\varepsilon}.
+	\Pr\!\big(\sup_{t\ge 0} M_t \ge a\big)\ \le\ \frac{\EE[M_0]}{a}.
 	\]
-	If the ageing threshold satisfies $\tau=\Omega(n^{1+\varepsilon'})$ for some 
-	$\varepsilon'>0$, then the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ optimises \cliff{} in expected
-	\[
-	O\!\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)
-	\]
-	fitness evaluations.
+	%\emph{(Ville, 1939; see also Doob, 1953, Ch.~VII.)}
 \end{theorem}
 
-To establish this result, we first analyse how the algorithm reaches a highly 
+
+
+To establish the result, we first analyse how the algorithm reaches a highly 
 structured ``canonical'' state shortly after ageing at the cliff-top.
 At the cliff-top the algorithm cannot improve except by sampling the global 
 optimum, and so ageing will eventually be triggered.  The key insight is that 
 the iteration of ageing followed by two additional \textcolor{blue}{fitness improvements} can place the 
-algorithm into a configuration with \textcolor{purple}{$n-d+2$ 1-bits and the minimal Hamming distance of two to the $best$ solution which had $n+d$ 1-bits.}  The following lemma formalises this.
+algorithm into a configuration with \textcolor{purple}{$n-d+2$ 1-bits i.e., ($r_0=2$) and the minimal Hamming distance of $HD(r_0)=2$ to the $best$ solution which had $n+d$ 1-bits.}  The following lemma formalises this.
 
 \begin{lemma}[Canonical Start After Cliff-Top Ageing]\label{lem:can-start-omega-d3}
 	Suppose ageing is triggered at the cliff-top (zero-count~$d$).  
