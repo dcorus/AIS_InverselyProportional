@@ -112,7 +112,7 @@ Using the tail bound above, we obtain uniform exponential moment bounds for
 entire phases.
 
 \begin{lemma}[Phase Moment-Generating Bound] \label{lem:phase-mgf}
-	Consider a phase at zero-count $z$ and let $Y_z$ denote the total 
+	Consider a phase at zero-bit count $z$ and let $Y_z$ denote the total 
 	Hamming-distance increase from all failed attempts in the phase.  
 	Let $\rho = 2d/n$.  
 	For all $0<\lambda<\tfrac12\ln\frac{1}{2\rho}$,
@@ -125,7 +125,7 @@ entire phases.
 	\]
 \end{lemma}
 
-To track the safety of mutation potential across phases, we introduce a 
+To track the safety of the mutation potential across phases, we introduce a 
 linear \emph{buffer} \new{$B_r = \theta r - s_0 - E_r$} capturing the invariant $c\,\mathrm{HD}(r)\le r$.
 
 \begin{lemma}[Buffer Process and Safety Criterion] \label{lem:buffer}

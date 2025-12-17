@@ -92,9 +92,9 @@
 	
 	\emph{(A) $M=1$ at the ageing boundary.} In the ageing iteration we require that the first two flips are $1\!\to 0$ then $0\!\to 1$ without replacement. This has probability $\frac{n-d}{n}\cdot\frac{d}{n-1}$ and produces an \emph{equal-fitness} offspring accepted by FCM (first return to $\ge$ parent). The offspring inherits the parent’s age (no improvement), so both parent and offspring face the ageing coin and die independently with probability $1/2$. Requiring “parent dies, offspring survives’’ contributes a factor $1/4$, and by the update rule the reference locks to the last cliff-top (the parent that died). The surviving equal-fitness offspring differs from this locked reference in exactly two bits, hence $\HD=2$ and, since $c<1$, the next iteration has $M=1$.
 		
-	\emph{(B) Create the cliff-bottom individual and kill the current cliff-top.} With $M=1$, exactly one flip is performed and FCM does not accept worse-than-parent, so the algorithm returns the single-flip string after potential exhaustion. A $0\!\to 1$ flip occurs with probability at least $d/n$ and returns the \emph{cliff-bottom} ($n-d+1$ ones), at Hamming distance $1$ from the locked reference. Ageing does not reset (no improvement), so both current parent (equal-fitness cliff-top) and the returned offspring face the coin; requiring “parent dies, offspring survives’’ contributes another factor $1/4$ and preserves the locked reference at the last cliff-top.
+	\emph{(B) Create the cliff-bottom individual and kill the current cliff-top.} With $M=1$, exactly one flip is performed and FCM does not accept worse-than-parent, so the algorithm returns the single-flip string after the potential exhaustion. A $0\!\to 1$ flip occurs with probability at least $d/n$ and returns the \emph{cliff-bottom} ($n-d+1$ ones), at Hamming distance $1$ from the locked reference. Ageing does not reset (no improvement), so both the current parent (equal-fitness cliff-top) and the returned offspring face the coin; requiring “parent dies, offspring survives’’ contributes another factor $1/4$ and preserves the locked reference at the last cliff-top.
 	
-	\emph{(C) One accepted improvement on the second slope.} In the following iteration with probability at least $(d-1)/n$ the first bit flip iss a $0\!\to 1$ flip, and the offspring is \emph{accepted} by FCM (strict improvement from the cliff-bottom), producing a point with $n-d+2$ ones. Relative to the locked cliff-top reference, the Hamming distance is now $2$, and exactly two successful phases have completed: $r_0=2$, $\HD(r_0)=2$.
+	\emph{(C) One accepted improvement on the second slope.} In the following iteration with probability at least $(d-1)/n$ the first bit flip is a $0\!\to 1$ flip, and the offspring is \emph{accepted} by FCM (strict improvement from the cliff-bottom), producing a point with $n-d+2$ ones. Relative to the locked cliff-top reference, the Hamming distance is now $2$, and exactly two successful phases have completed: $r_0=2$, $\HD(r_0)=2$.
 	
 	Multiplying the lower bounds yields
 	\[
@@ -222,7 +222,7 @@
 %\end{proof}
 
 \begin{lemma}[Phase Moment-Generating Bound]\label{lem:phase-mgf}
-	Consider a phase at zero-count $z$ and let $Y_z$ denote the total 
+	Consider a phase at zero-bit count $z$ and let $Y_z$ denote the total 
 	Hamming-distance increase from all failed attempts in the phase.  
 	Let $\rho = 2d/n$.  
 	For all $0<\lambda<\tfrac12\ln\frac{1}{2\rho}$,
@@ -381,7 +381,7 @@
 	\[
 	e^{-\lambda(B_{t+1}-B_t)}\ =\ e^{-\lambda\theta}\,e^{\lambda Y_{z_{t+1}}}.
 	\]
-	By Lemma~\ref{lem:phase-mgf} (refined phase MGF), for $0<\lambda<\tfrac12\ln\!\tfrac{1}{2\rho}$ we have the uniform envelope
+	By Lemma~\ref{lem:phase-mgf}, for $0<\lambda<\tfrac12\ln\!\tfrac{1}{2\rho}$ we have %the uniform envelope
 	$\EE[e^{\lambda Y_{z_{t+1}}}\mid\mathcal F_t]\le K(\lambda)$ for all phases (all $z_{t+1}\le d$). Therefore
 	\begin{align*}
 		\EE\!\big[e^{-\lambda(B_{t+1}-B_t)}\mid \mathcal F_t\big]
@@ -501,8 +501,10 @@
 
 \textcolor{blue}{Now that the supporting lemmata are established.}
 
-\begin{proof}[Proof of Theorem~\ref{th:expoHD-cliff}]
-	\emph{Up to the second slope.}
+%[Proof [of Theorem~\ref{thm:main-tau-final}]]
+
+\begin{proof}[Proof [of Theorem~\ref{th:expoHD-cliff}]]
+	\textcolor{purple}{\emph{Up to the second slope.}}
 	From a uniformly random start, the expected iterations to reach the cliff-top ($n-d$ ones) are
 	$\sum_{i=d}^{n}\frac{n}{i}=\Theta\!\big(n\log\tfrac{n}{d}\big)$, which at $\Theta(n)$ evaluations/iteration costs
 	$\Theta\!\big(n^{2}\log\tfrac{n}{d}\big)$ evaluations per ascent to the cliff-top. At the cliff-top, the only fitter point is $1^n$, so ageing triggers unless the optimum is found within $\tau$ iterations.
@@ -522,7 +524,7 @@
 	\]
 	
 	\smallskip
-	\emph{Second–slope control (Ville route).}
+	\textcolor{purple}{\emph{Second–slope control (Ville route).}}
 	Under the reference-update rule the start on the second slope is $r_0=2$, $\HD(r_0)=2$, so $s_0=0$ and with $\theta=\tfrac1c-1$ define
 	\[
 	B_r\ :=\ \theta r - \sum_{j=r_0+1}^{r} Y_{z_j}\qquad(r\ge r_0),
@@ -537,7 +539,7 @@
 	\EE\!\big[e^{-\lambda(B_{t+1}-B_t)}\mid\mathcal F_t\big]\ \le\ e^{-\lambda\theta}\,K(\lambda)\qquad\text{for all }t\ge 0.
 	\]
 	
-	\emph{Safety bound (instantiating the per-instance lemma uniformly).}
+	\textcolor{purple}{\emph{Safety bound (instantiating the per-instance lemma uniformly).}}
 	Since $d\le(\tfrac14-\varepsilon)n$ and the theorem assumes
 	\[
 	c\ <\ \frac{1+4\varepsilon}{3-4\varepsilon}\ \le\ \frac{1-2d/n}{1+2d/n}\ =:\ c_\star(n,d),
@@ -554,7 +556,7 @@
 	Because $\lambda_\varepsilon$ depends only on $\varepsilon$ and $\theta=\tfrac1c-1$ depends only on $c$, this right-hand side is a constant in $(0,1)$, independent of $n$ and $d$.
 	
 	\smallskip
-	\emph{Time to finish once safe.}
+	\textcolor{purple}{\emph{Time to finish once safe.}}
 	On the event $\{\inf_{t\ge 0} B_t>0\}$ (no jump-back), the second-slope ascent is monotone and completes in expected
 	\[
 	\sum_{z=1}^{d}\frac{n}{z}\ =\ \Theta(n\log d)
@@ -562,7 +564,7 @@
 	iterations, which is $o(\tau)$ since $\tau=\Omega(n^{1+\epsilon'})$. With a pessimistic $\Theta(n)$ evaluations per iteration, one second-slope attempt costs $\Theta(n^{2}\log d)$ evaluations, and the constant no-jump-back probability implies a constant expected number of such attempts.
 	
 	\smallskip
-	\emph{Total.}
+	\textcolor{purple}{\emph{Total.}}
 	Summing the (restarted) approach to the canonical start and the second-slope cost gives
 	\[
 	\EE[\text{evaluations}]

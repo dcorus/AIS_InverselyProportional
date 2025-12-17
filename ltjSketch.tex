@@ -31,7 +31,7 @@ The junction $J := \{x : \mathrm{LO}(x)=0.9n-1\}$ acts as a central gateway:
 each ageing epoch that restarts the search will, with high probability, ascend 
 the LeadingOnes slope back to $J$ before any off-slope structure is encountered.  
 From $J$, the \oneoneOPTIA~using \IPHfcm{}~with \linHD~can perform jumps of the 
-appropriate magnitude to reach either the entrance of the block-jump slope or 
+appropriate magnitude to reach either the entrance of the block-jump slope $\mathcal{B}_k$ or 
 the plateau $\mathcal{D}_\rho$. \textcolor{purple}{On the other hand, algorithms with lower mutation rates, such as those using SBM will with high probability not be able to flip the logarithmic number of bits required to reach the global optimum, thus have a runtime of $n^{\Omega(\log n)}$ with high probability.}
 
 \begin{theorem} \label{thm:main-tau-final}
@@ -46,7 +46,7 @@ Third, an epoch beginning at $J$ performs a logarithmic jump onto the deep-prefi
 Since each event corresponds to reaching either the start of a short slope leading deterministically to its optimum (for $\mathcal{B}_k$) or directly a plateau of global optima (for $\mathcal{D}_\rho$), these per-epoch probabilities govern the entire runtime.
 
 \begin{lemma} \label{lem:junction-first-density-Bk}
-	Starting from any random individual, the \oneoneOPTIA~using \IPHfcm{}~with \linHD~reaches the junction $J = \{x : \mathrm{LO}(x)=0.9n-1\}$ before accepting any individual in $\mathcal{B}_k$ or $\mathcal{D}_\rho$ with high probability.
+	Starting from any random individual, the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$~using \IPHfcm{}~with \linHD~\textcolor{purple}{and $c???$}  reaches the junction $J = \{x : \mathrm{LO}(x)=0.9n-1\}$ before accepting any individual in $\mathcal{B}_k$ or $\mathcal{D}_\rho$ with high probability.
 \end{lemma}
 
 Within $n^2$ iterations, the algorithm performs at least $0.9n$ LeadingOnes 
@@ -60,7 +60,7 @@ yielding a total probability of $o(1)$ over $n^2$ iterations.
 Thus the slope is climbed to $J$ with high probability.
 
 \begin{lemma} \label{lem:BJO-epoch}
-	Let an ageing epoch begin at the junction.
+	Let an ageing epoch begin at the junction  \textcolor{purple}{and let $c >??$}.
 	Then, with probability $\new{p_B}=\Omega(\min\{1,\,\tau\,n^{-(2k+2)}\})$, the epoch performs a jump placing the individual at the beginning of the block-jump slope.
 \end{lemma}
 
@@ -72,7 +72,7 @@ Under this event, the probability that the first $r+1$ flips of the hypermutatio
 Evaluating this over $\tau$ iterations yields the stated bound.
 
 \begin{lemma} \label{lem:DPO-epoch}
-	Let an ageing epoch begin at the junction \textcolor{purple}{and let $c >??$}.
+	Let an ageing epoch begin at the junction \textcolor{purple}{and let $c <1/3$}.
 	Then, with probability $\new{p_D}=\Omega(\min\{1,\,\tau\,n^{-\beta}\})$, the epoch performs a jump placing the individual onto the deep-prefix plateau.
 \end{lemma}
 
@@ -82,6 +82,6 @@ Under the same high-Hamming-distance event ensuring $M(x)\ge n/60$, the probabil
 Evaluating over $\tau$ iterations gives the lemma.
 
 Each ageing epoch evaluates $\Theta(n\tau)$ individuals.
-By Lemma~\ref{lem:junction-first-density-Bk}, epochs reach $J$ with high probability, and by Lemmas~\ref{lem:BJO-epoch} and~\ref{lem:DPO-epoch}, an epoch discovers each off-slope structure with probabilities $p_B$ and $p_D$, respectively.
-A coupon-collector argument then implies that the expected number of epochs needed to reach both the block-jump basin and the deep-prefix plateau is $O(1/p_B + 1/p_D)$.
+By Lemma~\ref{lem:junction-first-density-Bk}, epochs reach $J$ with high probability, and by \textcolor{purple}{lemmata~\ref{lem:BJO-epoch} and~\ref{lem:DPO-epoch}}, an epoch discovers each off-slope structure with probabilities $p_B$ and $p_D$, respectively.
+\textcolor{purple}{A coupon-collector argument then implies} that the expected number of epochs needed to reach both the block-jump basin and the deep-prefix plateau is $O(1/p_B + 1/p_D)$.
 Multiplying by the cost per epoch yields the bound stated in Theorem~\ref{thm:main-tau-final}.
