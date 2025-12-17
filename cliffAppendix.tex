@@ -18,13 +18,17 @@
 
 
 \begin{lemma}[Canonical start from an ageing cliff-top]
-	Assume the process is at the cliff-top (zero-count $d$) when ageing is triggered, under \IPHfcm{} with mutation potential $M(x)=\max\{1,\lfloor c\,\HD(x,x^\top)\rfloor\}$ for some $c\in(0,1)$, the reference-update rule (“update when a strictly better solution is sampled or a best-fitness solution dies”), and the convention that \emph{ageing resets only on strict improvement}. Then, within at most three iterations, the process reaches the canonical second-slope start
+	Suppose ageing is triggered at the cliff-top ($d$~zero-bits).  
+	The {\oneoneOPTIA} using \IPHfcm{} with \linHD\ with $c\in(0,1)$ reaches within at most three steps the 
+	configuration
 	\[
-	r_0=2\qquad\text{and}\qquad \HD(r_0)=2
+	r_0=2, \qquad \mathrm{HD}(r_0)=2,
 	\]
-	with probability at least $\displaystyle \frac{3}{256}\,\bigl(\tfrac{d}{n}\bigr)^{3}=\Omega\!\bigl((d/n)^3\bigr)$.
+	with probability at least 
+	\[
+	\frac{3}{256}\left(\frac{d}{n}\right)^3.
+	\]
 \end{lemma}
-
 %\begin{proof}
 %	We exhibit a three-step event whose occurrence yields the stated start and whose probability is $\Omega((d/n)^3)$.
 %	
@@ -108,12 +112,16 @@
 \setcounter{lemma}{\getrefnumber{lem:xi-tail}-1\relax}
 
 \begin{lemma}[Exponential tail for catch-up length]
-	Fix a state on the second slope with $z$ zero-bits (so $z\le d<(\tfrac14-\varepsilon)n$) and let $p:=z/n$.
-	During one hypermutation, let $\xi_z$ be the number of $1\!\to 0$ flips that occur \emph{before} the process first returns to fitness $\ge$ parent (i.e., before the first ``catch-up'' to deficit $0$). Then for every $k\ge 1$,
+	Let the current solution on the second slope have $z\le d$ zero-bits and 
+	define $p=z/n$.  
+	Let $\xi_z$ be the number of $1\to0$ flips before fitness first returns to 
+	$\ge$ the parent's.  
+	Then for all $k\ge1$,
 	\[
-	\Pr(\xi_z\ge k)\ \le\ \Big(\tfrac{2z}{n}\Big)^k.
+	\Pr(\xi_z\ge k)\le (2p)^k.
 	\]
-	In particular, the event that the Hamming distance increases by at least $2k$ before stopping (equivalently, the first catch-up occurs at time $\ge 2k$) has probability at most $(2z/n)^k$.
+	Consequently, the probability that the Hamming distance increases by at least 
+	$2k$ in a single hypermutation is also at most $(2p)^k$.
 \end{lemma}
 
 %\begin{proof}
@@ -213,17 +221,17 @@
 %	for any $0<\lambda<\tfrac12\ln(1/\rho)$.
 %\end{proof}
 
-\begin{lemma}[Phase MGF, refined]\label{lem:phase-mgf}
-	Let a phase be the time spent at zero-count $z$ on the second slope until the next strict improvement to $z-1$.
-	Write $p:=z/n$ and $\rho:=2d/n$ (so $2p\le \rho \le \tfrac12-2\varepsilon$).
-	Let $S_z$ be the total HD added by all \emph{failed} attempts in the phase.
-	Since the improving attempt must flip a zero at the first flip  we have $\Delta^{\mathrm{succ}}_z=1$. Hence
+\begin{lemma}[Phase Moment-Generating Bound]\label{lem:phase-mgf}
+	Consider a phase at zero-count $z$ and let $Y_z$ denote the total 
+	Hamming-distance increase from all failed attempts in the phase.  
+	Let $\rho = 2d/n$.  
+	For all $0<\lambda<\tfrac12\ln\frac{1}{2\rho}$,
 	\[
-	Y_z\ :=\ \textcolor{purple} {S_z +(\Delta^{\mathrm{succ}}_z-1)}\ =\ S_z\ \ge 0.
-	\]
-	Then, for every $0<\lambda<\tfrac12\ln\frac{1}{2\rho}$,
-	\[
-	\EE\!\big[e^{\lambda Y_z}\big]\ \le\ K(\lambda)\ :=\ \frac{1-\rho}{\,1-\rho\,e^{2\lambda}\,}.
+	\mathbb{E}[e^{\lambda Y_z}] 
+	\;\le\; 
+	K(\lambda)
+	:= 
+	\frac{1-\rho}{1-\rho e^{2\lambda}}.
 	\]
 \end{lemma}
 
@@ -286,16 +294,25 @@
 
 
 
-\begin{lemma}[Buffer process and safety invariant]\label{lem:buffer}
-	Let successful phases be indexed by $r=r_0,r_0+1,\dots$ and write
-	$s_0:=\HD(r_0)-r_0$, $\theta:=\tfrac{1}{c}-1$, 
-	$E_r:=\sum_{j=r_0+1}^{r} Y_{z_j}$, and 
-	$B_r:=\theta r - s_0 - E_r$.
-	Then for all $r\ge r_0:$  \\
-	(i) $c\cdot\HD(r)\le r \iff B_r\ge 0$; \\
-	(ii) $B_{r+1}-B_r=\theta-Y_{z_{r+1}}$; \\
-	(iii) $B_{r_0}=\theta r_0 - s_0$. 
+\begin{lemma}[Buffer Process and Safety Criterion]\label{lem:buffer}
+	Let successful phases be indexed by $r=r_0,r_0+1,\dots$ and define
+	\[
+	s_0=\mathrm{HD}(r_0)-r_0, \qquad 
+	\theta=\frac{1}{c}-1, \qquad
+	E_r=\sum_{j=r_0+1}^{r} Y_{z_j},
+	\]
+	and $B_r = \theta r - s_0 - E_r$.
+	Then for all $r\ge r_0$:
+	\begin{enumerate}
+		\item 
+		$B_r\ge0$ if and only if $c\cdot\mathrm{HD}(r)\le r$;
+		\item 
+		$B_{r+1}-B_r=\theta-Y_{z_{r+1}}$;
+		\item 
+		$B_{r_0}=\theta r_0 - s_0$.
+	\end{enumerate}
 \end{lemma}
+
 
 \begin{proof}
 	For any $r\ge r_0$, the Hamming distance admits the exact decomposition
@@ -345,18 +362,17 @@
 % -------------------------------
 % Step 1: Exponential drift envelope
 % -------------------------------
-\begin{lemma}[Global exponential drift envelope]\label{lem:drift-envelope-global}
-	Let $\rho:=2d/n$ and let $B_t$ be the buffer from Lemma~\ref{lem:buffer}, so that
-	$B_{t+1}-B_t=\theta-Y_{z_{t+1}}$ with $\theta=\tfrac{1}{c}-1$ and $Y_{z_{t+1}}\ge 0$ the phase extra HD.
-	For any $0<\lambda<\tfrac12\ln\!\tfrac{1}{2\rho}$ define
+\begin{lemma}[Exponential Drift Envelope]\label{lem:drift-envelope-global}
+	Let $\rho=2d/n$.  
+	For any $0<\lambda<\tfrac12\ln\tfrac{1}{2\rho}$ define
 	\[
-	K(\lambda):=\frac{1-\rho}{1-\rho e^{2\lambda}}
-	\qquad\text{and}\qquad
-	\alpha:=e^{-\lambda\theta}\,K(\lambda).
+	K(\lambda)=\frac{1-\rho}{1-\rho e^{2\lambda}}, 
+	\qquad 
+	\alpha=e^{-\lambda\theta}K(\lambda).
 	\]
-	Then, uniformly for all $t\ge 0$,
+	Then for all $t\ge0$,
 	\[
-	\EE\!\big[e^{-\lambda(B_{t+1}-B_t)}\mid \mathcal F_t\big]\ \le\ \alpha.
+	\mathbb{E}[e^{-\lambda(B_{t+1}-B_t)}\mid\mathcal{F}_t]\le \alpha.
 	\]
 \end{lemma}
 
@@ -378,15 +394,14 @@
 
 \setcounter{corollary}{\numexpr\getrefnumber{cor:ville-exponential}-1\relax}
 
-\begin{corollary}[Ville barrier bound for a process with an exponential mgf drift]
-	Let $(B_t)_{t\ge 0}$ be adapted to $(\mathcal F_t)_{t\ge 0}$ with $B_0=b>0$.
-	Assume there exist $\lambda>0$ and $\alpha\in(0,1)$ such that, for all $t\ge 0$,
+\begin{corollary}[Buffer Barrier Bound]
+	If $B_0=b>0$ and there exist $\lambda>0$ and $\alpha<1$ with
 	\[
-	\EE\!\big[e^{-\lambda(B_{t+1}-B_t)}\mid \mathcal F_t\big]\ \le\ \alpha.
+	\mathbb{E}[e^{-\lambda(B_{t+1}-B_t)}\mid\mathcal{F}_t]\le\alpha,
 	\]
-	Then
+	then
 	\[
-	\Pr\!\big(\inf_{t\ge 0} B_t \le 0\big)\ \le\ e^{-\lambda b}.
+	\Pr\!\left(\inf_{t\ge0} B_t \le 0\right) \le e^{-\lambda b}.
 	\]
 \end{corollary}
 
@@ -412,17 +427,18 @@
 
 %\setcounter{lemma}{\numexpr\getrefnumber{}-1\relax}
 
-\begin{lemma}[Per-instance $c$-threshold for the Ville margin]
+\begin{lemma}[Per-instance $c$-threshold]
 	%\label{lem:c-threshold-instance}
-	Let $\rho:=\tfrac{2d}{n}\in(0,1)$ and $\theta=\tfrac{1}{c}-1$. Define
+	Let $\rho=2d/n$ and $\theta=\frac{1}{c}-1$.  
+	Define
 	\[
-	c_\star(n,d)\ :=\ \frac{1-\rho}{1+\rho}\ =\ \frac{1-\tfrac{2d}{n}}{1+\tfrac{2d}{n}}.
+	c_\star(n,d)=\frac{1-\rho}{1+\rho}.
 	\]
-	If $c<c_\star(n,d)$, then there exists $\lambda\in\!\big(0,\tfrac12\ln\tfrac{1}{2\rho}\big)$ such that
+	If $c<c_\star(n,d)$, then there exists $\lambda>0$ such that
 	\[
-	\alpha(\lambda)\ :=\ e^{-\lambda\theta}\,\frac{1-\rho}{\,1-\rho e^{2\lambda}\,}\ <\ 1,
+	e^{-\lambda\theta}K(\lambda) < 1,
 	\]
-	and hence the supermartingale/Ville bound applies (Cor.~\ref{cor:ville-exponential}).
+	and hence the buffer satisfies the Ville barrier bound.
 \end{lemma}
 
 \begin{proof}
@@ -431,16 +447,18 @@
 	If $\theta>\tfrac{2\rho}{1-\rho}$ (equivalently $c<\tfrac{1-\rho}{1+\rho}$), continuity gives $g(\lambda)<0$ for all sufficiently small $\lambda>0$, i.e., $\alpha(\lambda)<1$ in the admissible domain.
 \end{proof}
 
-
+\textcolor{purple}{THIS COMES LATER IN THE SKETCH!}
 \setcounter{lemma}{\numexpr\getrefnumber{prop:climb-time}-1\relax}
 
-\begin{lemma}[Monotone second-slope climb time]
-	On the event $\{\inf_{t\ge 0} B_t>0\}$ (no jump-back), the second-slope ascent completes in expected time
+\begin{lemma}[Second-Slope Climb Time]
+	If $B_t>0$ for all $t$, then the second-slope ascent completes in expected
 	\[
-	\EE[T_{\mathrm{climb}}]\ =\ \sum_{z=1}^{d}\frac{n}{z}\ =\ \Theta(n\log d),
+	\Theta(n\log d)
 	\]
-	and, for $\tau=\Omega(n^{1+\varepsilon})$ with fixed $\varepsilon>0$, one has $\EE[T_{\mathrm{climb}}]=o(\tau)$.
+	iterations.  
+	If $\tau=\Omega(n^{1+\varepsilon})$, then $\Theta(n\log d)=o(\tau)$.
 \end{lemma}
+
 
 \begin{proof}
 	At zero-count $z$, success probability per attempt is at least $z/n$, so the expected number of attempts for $z\!\to\! z-1$ is at most $n/z$.
@@ -451,29 +469,28 @@
 
 
 %\setcounter{corollary}{\numexpr\getrefnumber{cor:c-floor}-1\relax}
-\begin{corollary}[Uniform floor $\ge \tfrac13$ over the admissible $d$-range]
+\begin{corollary}[Uniform Lower Bound for $c$]
 	\label{cor:c-floor}
-	If $d\le (\tfrac14-\varepsilon)n$ with fixed $\varepsilon\in(0,1/4)$, then
+	If $d\le (\tfrac14-\varepsilon)n$, then
 	\[
-	c_\star(n,d)\ =\ \frac{1-\tfrac{2d}{n}}{1+\tfrac{2d}{n}}
-	\ \ge\  \frac{\tfrac12+2\varepsilon}{\tfrac32-2\varepsilon}
-	\ =\ \frac{1+4\varepsilon}{3-4\varepsilon}\ \ge\ \tfrac13.
+	c_\star(n,d) \;\ge\; \frac{1+4\varepsilon}{3-4\varepsilon} \;\ge\; \tfrac13.
 	\]
-	Thus the permitted constant $c$ can always be chosen at least $1/3$ (and strictly larger for any fixed $\varepsilon>0$).
 \end{corollary}
 
 
 \setcounter{lemma}{\numexpr\getrefnumber{lem:param-constant-c-general}-1\relax}
-\begin{lemma}[Constant safety probability from an arbitrary start (Ville route)]
-	
-	Assume $d\le(\tfrac14-\varepsilon)n$ and fix $c\in(0,c_\star(n,d))$ with 
-	$c_\star(n,d)=\frac{1-2d/n}{1+2d/n}$.
-	Let $r_0,\HD(r_0)\in\mathbb{N}$ and set $b:=B_{r_0}=\frac{r_0}{c}-\HD(r_0)>0$.
-	Then there exists $\lambda\in\big(0,\tfrac12\ln\frac{n}{4d}\big)$ such that
+\begin{lemma}[Constant Safety Probability]
+	If $c<c_\star(n,d)$ and 
+	$b=B_{r_0}=\frac{r_0}{c}-\mathrm{HD}(r_0)>0$, 
+	then 
 	\[
-	\Pr\!\big(\inf_{t\ge 0} B_t \le 0\big)\ \le\ e^{-\lambda\,b}.
+	\Pr\!\left(\inf B_t \le 0\right) \le e^{-\lambda b}
 	\]
+	for some $\lambda>0$ depending only on $c$ and $d/n$.  
+	For fixed~$\varepsilon$, this yields a uniform constant $<1$ independent of 
+	$n,d$.
 \end{lemma}
+
 \begin{proof}
 	By Lemma~\ref{lem:c-threshold-instance} (with $\rho=2d/n$), there exists
 	$\lambda\in\big(0,\tfrac12\ln\tfrac{1}{2\rho}\big)=\big(0,\tfrac12\ln\tfrac{n}{4d}\big)$

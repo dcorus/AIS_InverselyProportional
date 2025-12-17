@@ -30,7 +30,7 @@ major stages: (i) obtaining a canonical entry point onto the second slope
 immediately after an ageing event at the cliff-top; and (ii) showing that from 
 this configuration the algorithm reaches the optimum without dangerous increases in mutation potential.
 
-For stage (ii) we will use the generalization of Markov's Inequality by Ville~\cite{Doob1953}(Ch.~VII) which will allows us to show that mutation potential stays bounded with constant probability.
+For stage (ii) we will use the generalization of Markov's Inequality by Ville~\cite{Doob1953}(Ch.~VII) which will allows us to show that the mutation potential stays bounded with constant probability.
 \begin{theorem}[Ville’s inequality for nonnegative supermartingales]\label{thm:ville}
 	Let $(M_t)_{t\ge 0}$ be a nonnegative supermartingale adapted to $(\mathcal F_t)_{t\ge 0}$. 
 	Then for every $a>0$,
@@ -43,16 +43,15 @@ For stage (ii) we will use the generalization of Markov's Inequality by Ville~\c
 
 
 To establish the result, we first analyse how the algorithm reaches a highly 
-structured ``canonical'' state shortly after ageing at the cliff-top.
+structured ``canonical'' state shortly after ageing triggers at the cliff-top.
 At the cliff-top the algorithm cannot improve except by sampling the global 
 optimum, and so ageing will eventually be triggered.  The key insight is that 
 the iteration of ageing followed by two additional \textcolor{blue}{fitness improvements} can place the 
 algorithm into a configuration with \textcolor{purple}{$n-d+2$ 1-bits i.e., ($r_0=2$) and the minimal Hamming distance of $HD(r_0)=2$ to the $best$ solution which had $n+d$ 1-bits.}  The following lemma formalises this.
 
 \begin{lemma}[Canonical Start After Cliff-Top Ageing]\label{lem:can-start-omega-d3}
-	Suppose ageing is triggered at the cliff-top (zero-count~$d$).  
-	Under IPH with $c\in(0,1)$, the reference-update rule, and ageing resets only 
-	on strict improvements, the algorithm reaches within at most three steps the 
+	Suppose ageing is triggered at the cliff-top ($d$~zero-bits).  
+	The {\oneoneOPTIA} using \IPHfcm{} with \linHD\ with $c\in(0,1)$ reaches within at most three steps the 
 	configuration
 	\[
 	r_0=2, \qquad \mathrm{HD}(r_0)=2,
@@ -81,16 +80,16 @@ total time to obtain the canonical start is \new{provided by the following corol
 \end{corollary}
 
 
-From the canonical starting point, the key difficulty is preventing the mutation
-potential from increasing too much.  With only few zero-bits remaining, successful
+From the canonical starting point, the key difficulty is \new{showing that} the mutation
+potential \new{does not increase} too much.  With only few zero-bits remaining, successful
 steps on the second slope require flipping one of these rare zeros, whereas each
 $1\!\to0$ flip increases the Hamming distance and thus the mutation potential.
 If this potential grows too large, hypermutations become long enough that, under
 FCM$(\ge)$, they are increasingly likely to wander back to the cliff-top; once
 there, the stopping rule causes the process to lock onto the plateau and erase
-all progress.  Hence the analysis must show that, with constant probability, the
+all progress.  Hence the analysis must show that with constant probability the
 mutation potential stays small throughout the entire second-slope climb.  This
-requires tightly controlling how many detrimental flips a hypermutation can
+requires  controlling tightly how many detrimental flips a hypermutation can
 accumulate before recovering to parent-level fitness.  The next lemma provides
 the crucial starting point: an exponential tail bound for this damaging prefix.
 
@@ -103,11 +102,11 @@ the crucial starting point: an exponential tail bound for this damaging prefix.
 	\[
 	\Pr(\xi_z\ge k)\le (2p)^k.
 	\]
-	Consequently, the probability that Hamming distance increases by at least 
+	Consequently, the probability that the Hamming distance increases by at least 
 	$2k$ in a single hypermutation is also at most $(2p)^k$.
 \end{lemma}
 
-A whole \emph{phase} consists of all attempts at the same zero-count until the 
+A whole \emph{phase} consists of all attempts at the same zero-bit count until the 
 first success.  
 Using the tail bound above, we obtain uniform exponential moment bounds for 
 entire phases.
