@@ -86,3 +86,5 @@ s_0 is not defined for B_r
 
 define ageing epoch
 
+Check Theorem 8 for leading ones on linhd it used to be for expohd 
+

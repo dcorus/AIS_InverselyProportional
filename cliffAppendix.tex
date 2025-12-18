@@ -17,7 +17,7 @@
 \setcounter{lemma}{\getrefnumber{lem:can-start-omega-d3}-1\relax}
 
 
-\begin{lemma}[Canonical start from an ageing cliff-top]
+\begin{lemma}
 	Suppose ageing is triggered at the cliff-top ($d$~zero-bits).  
 	The {\oneoneOPTIA} using \IPHfcm{} with \linHD\ with $c\in(0,1)$ reaches within at most three steps the 
 	configuration
@@ -111,7 +111,7 @@
 
 \setcounter{lemma}{\getrefnumber{lem:xi-tail}-1\relax}
 
-\begin{lemma}[Exponential tail for catch-up length]
+\begin{lemma}
 	Let the current solution on the second slope have $z\le d$ zero-bits and 
 	define $p=z/n$.  
 	Let $\xi_z$ be the number of $1\to0$ flips before fitness first returns to 
@@ -220,8 +220,9 @@
 %	\)
 %	for any $0<\lambda<\tfrac12\ln(1/\rho)$.
 %\end{proof}
-
-\begin{lemma}[Phase Moment-Generating Bound]\label{lem:phase-mgf}
+\RestateCounter{lemma}{lem:phase-mgf}
+\begin{lemma}
+	%\label{lem:phase-mgf}
 	Consider a phase at zero-bit count $z$ and let $Y_z$ denote the total 
 	Hamming-distance increase from all failed attempts in the phase.  
 	Let $\rho = 2d/n$.  
@@ -292,9 +293,11 @@
 	
 \end{proof}
 
+\RestateCounter{lemma}{lem:buffer}
 
-
-\begin{lemma}[Buffer Process and Safety Criterion]\label{lem:buffer}
+\begin{lemma}
+	%[Buffer Process and Safety Criterion]
+	%\label{lem:buffer}
 	Let successful phases be indexed by $r=r_0,r_0+1,\dots$ and define
 	\[
 	s_0=\mathrm{HD}(r_0)-r_0, \qquad 
@@ -359,10 +362,12 @@
 	(iii) Trivial from the definition at $r=r_0$.
 \end{proof}
 
+\RestateCounter{lemma}{lem:drift-envelope-global}
 % -------------------------------
 % Step 1: Exponential drift envelope
 % -------------------------------
-\begin{lemma}[Exponential Drift Envelope]\label{lem:drift-envelope-global}
+\begin{lemma}
+	%[Exponential Drift Envelope]\label{lem:drift-envelope-global}
 	Let $\rho=2d/n$.  
 	For any $0<\lambda<\tfrac12\ln\tfrac{1}{2\rho}$ define
 	\[
@@ -394,7 +399,7 @@
 
 \setcounter{corollary}{\numexpr\getrefnumber{cor:ville-exponential}-1\relax}
 
-\begin{corollary}[Buffer Barrier Bound]
+\begin{corollary}%[Buffer Barrier Bound]
 	If $B_0=b>0$ and there exist $\lambda>0$ and $\alpha<1$ with
 	\[
 	\mathbb{E}[e^{-\lambda(B_{t+1}-B_t)}\mid\mathcal{F}_t]\le\alpha,
@@ -427,7 +432,8 @@
 
 %\setcounter{lemma}{\numexpr\getrefnumber{}-1\relax}
 
-\begin{lemma}[Per-instance $c$-threshold]
+\begin{lemma}
+	%[Per-instance $c$-threshold]
 	%\label{lem:c-threshold-instance}
 	Let $\rho=2d/n$ and $\theta=\frac{1}{c}-1$.  
 	Define
@@ -450,7 +456,7 @@
 \textcolor{purple}{THIS COMES LATER IN THE SKETCH!}
 \setcounter{lemma}{\numexpr\getrefnumber{prop:climb-time}-1\relax}
 
-\begin{lemma}[Second-Slope Climb Time]
+\begin{lemma}%[Second-Slope Climb Time]
 	If $B_t>0$ for all $t$, then the second-slope ascent completes in expected
 	\[
 	\Theta(n\log d)
@@ -469,7 +475,7 @@
 
 
 %\setcounter{corollary}{\numexpr\getrefnumber{cor:c-floor}-1\relax}
-\begin{corollary}[Uniform Lower Bound for $c$]
+\begin{corollary}%[Uniform Lower Bound for $c$]
 	\label{cor:c-floor}
 	If $d\le (\tfrac14-\varepsilon)n$, then
 	\[
@@ -479,7 +485,7 @@
 
 
 \setcounter{lemma}{\numexpr\getrefnumber{lem:param-constant-c-general}-1\relax}
-\begin{lemma}[Constant Safety Probability]
+\begin{lemma}%[Constant Safety Probability]
 	If $c<c_\star(n,d)$ and 
 	$b=B_{r_0}=\frac{r_0}{c}-\mathrm{HD}(r_0)>0$, 
 	then 

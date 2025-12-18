@@ -49,7 +49,8 @@ optimum, and so ageing will eventually be triggered.  The key insight is that
 the iteration of ageing followed by two additional \textcolor{blue}{fitness improvements} can place the 
 algorithm into a configuration with \textcolor{purple}{$n-d+2$ 1-bits i.e., ($r_0=2$) and the minimal Hamming distance of $HD(r_0)=2$ to the $best$ solution which had $n+d$ 1-bits.}  The following lemma formalises this.
 
-\begin{lemma}[Canonical Start After Cliff-Top Ageing]\label{lem:can-start-omega-d3}
+\begin{lemma}%[Canonical Start After Cliff-Top Ageing]
+	\label{lem:can-start-omega-d3}
 	Suppose ageing is triggered at the cliff-top ($d$~zero-bits).  
 	The {\oneoneOPTIA} using \IPHfcm{} with \linHD\ with $c\in(0,1)$ reaches within at most three steps the 
 	configuration
@@ -71,7 +72,8 @@ Repeated ascents to the cliff-top therefore form a geometric waiting-time
 process.  Since each ascent takes $\Theta(n^2\log(n/d))$ evaluations, the 
 total time to obtain the canonical start is \new{provided by the following corollary}.
 
-\begin{corollary}[Expected Time to Canonical Start]
+\begin{corollary}
+	%[Expected Time to Canonical Start]
 	The expected evaluation count until the first occurrence of 
 	$(r_0,\mathrm{HD}(r_0)) = (2,2)$ is 
 	\[
@@ -93,7 +95,8 @@ requires  controlling tightly how many detrimental flips a hypermutation can
 accumulate before recovering to parent-level fitness.  The next lemma provides
 the crucial starting point: an exponential tail bound for this damaging prefix.
 
-\begin{lemma}[Exponential Tail for Catch-Up Length] \label{lem:xi-tail}
+\begin{lemma}%[Exponential Tail for Catch-Up Length]
+	 \label{lem:xi-tail}
 	Let the current solution on the second slope have $z\le d$ zero-bits and 
 	define $p=z/n$.  
 	Let $\xi_z$ be the number of $1\to0$ flips before fitness first returns to 
@@ -111,7 +114,8 @@ first success.
 Using the tail bound above, we obtain uniform exponential moment bounds for 
 entire phases.
 
-\begin{lemma}[Phase Moment-Generating Bound] \label{lem:phase-mgf}
+\begin{lemma}%[Phase Moment-Generating Bound] 
+	\label{lem:phase-mgf}
 	Consider a phase at zero-bit count $z$ and let $Y_z$ denote the total 
 	Hamming-distance increase from all failed attempts in the phase.  
 	Let $\rho = 2d/n$.  
@@ -128,7 +132,8 @@ entire phases.
 To track the safety of the mutation potential across phases, we introduce a 
 linear \emph{buffer} \new{$B_r = \theta r - s_0 - E_r$} capturing the invariant $c\,\mathrm{HD}(r)\le r$.
 
-\begin{lemma}[Buffer Process and Safety Criterion] \label{lem:buffer}
+\begin{lemma}%[Buffer Process and Safety Criterion] 
+	\label{lem:buffer}
 	Let successful phases be indexed by $r=r_0,r_0+1,\dots$ and define
 	\[
 	s_0=\mathrm{HD}(r_0)-r_0, \qquad 
@@ -150,7 +155,9 @@ linear \emph{buffer} \new{$B_r = \theta r - s_0 - E_r$} capturing the invariant 
 Combining the phase MGF with the buffer update yields an exponential drift 
 envelope suitable for applying \textcolor{purple}{Ville's inequality for non-negative supermartingales (Theorem~\ref{thm:ville}).}
 
-\begin{lemma}[Exponential Drift Envelope] \label{lem:drift-envelope-global}
+\begin{lemma}
+	%[Exponential Drift Envelope] 
+	\label{lem:drift-envelope-global}
 	Let $\rho=2d/n$.  
 	For any $0<\lambda<\tfrac12\ln\tfrac{1}{2\rho}$ define
 	\[
@@ -167,7 +174,9 @@ envelope suitable for applying \textcolor{purple}{Ville's inequality for non-neg
 \new{We now apply Ville's inequality to turn such a drift envelope into a bound on barrier crossing.}
 
 
-\begin{corollary}[Buffer Barrier Bound] \label{cor:ville-exponential}
+\begin{corollary}
+	%[Buffer Barrier Bound] 
+	\label{cor:ville-exponential}
 	
 	If $B_0=b>0$ and there exist $\lambda>0$ and $\alpha<1$ with
 	\[
@@ -182,7 +191,8 @@ envelope suitable for applying \textcolor{purple}{Ville's inequality for non-neg
 To guarantee the drift negativity required above, we identify the admissible 
 range of the mutation-potential factor~$c$.
 
-\begin{lemma}[Per-Instance $c$-Threshold] \label{lem:c-threshold-instance}
+\begin{lemma}%[Per-Instance $c$-Threshold]
+	 \label{lem:c-threshold-instance}
 	
 	Let $\rho=2d/n$ and $\theta=\frac{1}{c}-1$.  
 	Define
@@ -199,7 +209,7 @@ range of the mutation-potential factor~$c$.
 A uniform instantiation over all permitted~$d$ shows that the feasible~$c$ 
 range has a nontrivial lower bound.
 
-\begin{corollary}[Uniform Lower Bound for $c$]
+\begin{corollary}%[Uniform Lower Bound for $c$]
 	If $d\le (\tfrac14-\varepsilon)n$, then
 	\[
 	c_\star(n,d) \;\ge\; \frac{1+4\varepsilon}{3-4\varepsilon} \;\ge\; \tfrac13.
@@ -212,7 +222,9 @@ Finally, combining the threshold on $c$ with the initial buffer value at
 $(r_0,\mathrm{HD}(r_0))=(2,2)$ yields a uniform constant bound on the 
 probability of avoiding a jump-back.
 
-\begin{lemma}[Constant Safety Probability] \label{lem:param-constant-c-general}
+\begin{lemma}
+	%[Constant Safety Probability] 
+	\label{lem:param-constant-c-general}
 	If $c<c_\star(n,d)$ and 
 	$b=B_{r_0}=\frac{r_0}{c}-\mathrm{HD}(r_0)>0$, 
 	then 
@@ -229,7 +241,8 @@ slope is monotone and its runtime is easily bounded.
 
 
 
-\begin{lemma}[Second-Slope Climb Time] \label{prop:climb-time}
+\begin{lemma}%[Second-Slope Climb Time] 
+	\label{prop:climb-time}
 	
 	If $B_t>0$ for all $t$, then the second-slope ascent completes in expected
 	\[
@@ -248,3 +261,6 @@ $O(n^{2}\log d)$ evaluations.
 Since the success probability is constant, this remains the unconditional 
 expectation.  
 Summing the two contributions establishes the main runtime bound.
+
+\textcolor{purple}{The analysis for \lastBest differs only in Lemma~\ref{lem:can-start-omega-d3} and actually yields a $d/n$ factor better probability bound since the mutation potential is $1$ at the cliff-top and thus creating a solution at the bottom of the cliff is immediately possible when any cliff top individual dies, whereas for \firstBest to work we have to first accept a neutral mutation to get the mutation potential to $1$ then mutate into a cliff bottom solution in the next iteration. Consequently the runtime for \lastBest is  
+$O\!\Big(\frac{n^{4}\log(n/d)}{d^{2}} \;+\; n^{2}\log d\Big)$.}
