@@ -191,7 +191,7 @@ makes the operator robust to fitness function scaling.
 
 
 \begin{table*}[t!]
-	\caption{Expected runtimes of the different mutation operators when embedded in a (1+1) algorithmic framework for the benchmark functions considered in this paper. For all results the optimum in unknown to the algorithms. The $*$ indicates that we have not performed the analysis, yet although Static hypermutations may be faster the upper bound is still correct. \textcolor{purple}{$\beta:= \log_2 \frac{20}{c}$
+	\caption{Expected runtimes of the different mutation operators when embedded in a (1+1) algorithmic framework for the benchmark functions considered in this paper. For all results the optimum in unknown to the algorithms. The $*$ indicates that we have not performed the analysis, yet although Static hypermutations may be faster, the upper bound is still correct. \textcolor{purple}{$\beta:= \log_2 \frac{20}{c}$
 	}}
 	%The same result as $(1+1)~IA^{hype}$ using static hypermutation ($M=n$) has been shown for the original IPM of Opt-IA \cite{JansenZarges2011}.}
 \begin{center}
@@ -224,7 +224,7 @@ makes the operator robust to fitness function scaling.
 	}
 	
 \end{center}
-\label{table:afl}
+\label{table:summary}
 \end{table*}
 
 
@@ -264,7 +264,7 @@ A different problem would occur if hypermutations inversely proportional to fitn
 %%during affinity maturation (What is this?) antibodies undergo hypermutations with a rate that is inversely 
 
 
-A summary of the results obtained in the paper is provided in Table \ref{table:afl} highlighting the speed-ups achieved by the two IPH operators compared to the standard bit mutations traditionally  used by evolutionary algorithms and to the static hypermutation operator with FCM.
+A summary of the results obtained in the paper is provided in Table \ref{table:summary} highlighting the speed-ups achieved by the two IPH operators compared to the standard bit mutations traditionally  used by evolutionary algorithms and to the static hypermutation operator with FCM.
 \new{It can be noticed how the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ is a better compromise to hillclimb faster and allow escaping local optima both by accepting solutions of inferior fitness {\it and} by performing large jumps in the search space making a difference between polynomial and super-polynomial runtimes.}
 
 \new{The original extended abstract~\cite{CorusOlivetoYazdaniIPH2019} of this paper analysed the advantages of using an exponential decay of the mutation rate since this provides the largest speed-ups for unimodal function in ideal conditions where the optimum is known (see Section \ref{sec:OptKnown}). However, a great disadvantage of the exponential decay is that large mutations hardly ever occur in practice. Indeed no superiority of IPH over a SBM operator was provided.  To this end, in this paper we analyse the use of the linear decay operator and  provide examples where the IPH indeed considerably outperforms SBM providing a difference between polynomial and superpolynomial expected runtimes.}
@@ -1053,7 +1053,7 @@ To prove the lower bound we make a case distinction with respect to whether the 
 \end{theorem}
 \begin{proof}
 	
-\textcolor{purple}{Argue $M=1$ always due to the way we used to define the \emph{best}.}\textcolor{purple}{Since we only accept equal and better individuals, we update the best seen after every acceptance, \emph{i.e.,}$x=best$ and $M=1$, until ageing is triggered for the first time.  }
+\textcolor{purple}{Since the algorithm only accepts equal or better individuals, we update the best seen after every acceptance, \emph{i.e.,} $x=best$ and $M=1$, until ageing is triggered for the first time.  }
 For any suboptimal $x\in\{0,1\}^n$ it is sufficient to flip the leftmost $0$-bit of $x$ to improve its \textsc{LeadingOnes} value. Thus, the same argument in Theorem~\ref{thm:onemaxexpo} which establishes that the ageing will not trigger with overwhelming probability also holds \textcolor{purple}{and allows us to assume $M=1$ until the optimum is found}. We can similarly continue with a fitness level argument, {\color{blue} with the only difference in that} the improvement probability for \textsc{LeadingOnes} is always $1/n$ regardless of the current function value and thus the sum yields $\sum\limits_{i=1}^{n}n = n^2$.
 
 For the lower bound, it is sufficient to prove that the {\color{blue}expectation conditional on ageing not triggering} is $\Omega(n^2)$, since ageing will not trigger with overwhelming probability. In that case we have to consider how much the objective function value will increase in expectation when the leftmost $0$-bit is flipped by the operator. The bits on the right of the leftmost $0$-bit does not contribute to the fitness value and thus each can be a $0$-bit or $1$-bit with equal probability. Therefore, the expected number of "free-riders", i.e., the sequence of consecutive $1$-bits that follow the leftmost $0$-bit is at most $\sum_{i=0}^{n}2^{-i}\leq 2$. Since the expected increase after every mutation is at most $2$, the expected number of necessary successful mutations where the leftmost $0$-bit is flipped is at least $n/2$ to find the optimal solution. The expected time for each such successful mutation is $(1/n)^{-1}=n$ iterations and consequently the expected time until the optimum is found given that the ageing operator does not trigger is $\Omega(n^2)$.  

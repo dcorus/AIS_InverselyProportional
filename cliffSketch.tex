@@ -13,7 +13,8 @@
 %	fitness evaluations.
 %\end{theorem}
 \begin{theorem}
-	The {\oneoneOPTIA} using \IPHfcm{} with \linHD\ (factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$) and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
+	The %{\oneoneOPTIA} using \IPHfcm{} 
+	\textcolor{purple}{\firstBest~with} \linHD\ (factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$) and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
 	optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected
 	\[
 	O\!\Big(\frac{n^{5}\log(n/d)}{d^{3}} \;+\; n^{2}\log d\Big)
@@ -262,5 +263,17 @@ Since the success probability is constant, this remains the unconditional
 expectation.  
 Summing the two contributions establishes the main runtime bound.
 
-\textcolor{purple}{The analysis for \lastBest differs only in Lemma~\ref{lem:can-start-omega-d3} and actually yields a $d/n$ factor better probability bound since the mutation potential is $1$ at the cliff-top and thus creating a solution at the bottom of the cliff is immediately possible when any cliff top individual dies, whereas for \firstBest to work we have to first accept a neutral mutation to get the mutation potential to $1$ then mutate into a cliff bottom solution in the next iteration. Consequently the runtime for \lastBest is  
+\textcolor{purple}{The analysis for \lastBest~differs only in Lemma~\ref{lem:can-start-omega-d3} and actually yields a $d/n$ factor better probability bound since the mutation potential is $1$ at the cliff-top and thus creating a solution at the bottom of the cliff is immediately possible when any cliff top individual dies, whereas for \firstBest~to work we have to first accept a neutral mutation to get the mutation potential to $1$ then mutate into a cliff bottom solution in the next iteration. Consequently the runtime for \lastBest~is  
 $O\!\Big(\frac{n^{4}\log(n/d)}{d^{2}} \;+\; n^{2}\log d\Big)$.}
+
+\textcolor{purple}{
+\begin{corollary}
+	The %{\oneoneOPTIA} using \IPHfcm{} 
+	\textcolor{purple}{\lastBest~with} \linHD\ \new{(factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$)} and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
+	optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected
+	\[
+	O\!\Big(\frac{n^{e}\log(n/d)}{d^{3}} \;+\; n^{2}\log d\Big)
+	\]
+	fitness function evaluations.
+\end{corollary}
+}
