@@ -206,13 +206,13 @@ makes the operator robust to fitness function scaling.
 			\T\B\\
 			
 			
-			Opt-IA$_{\textsc{static}}$ & $\Theta(n^2\log n)$ \cite{CorusOlivetoYazdani2019TCS} & $\Theta(n^3)$\cite{CorusOlivetoYazdani2019TCS} &$O(\frac{n^{d+1}\cdot e^d}{d^d})$ \cite{CorusOlivetoYazdani2019TCS} & \color{red}{$O(n\tau + n^{2k+3} + n^{\beta})^*$}
+			Opt-IA$_{\textsc{static}}$ & $\Theta(n^2\log n)$ \cite{CorusOlivetoYazdani2019TCS} & $\Theta(n^3)$\cite{CorusOlivetoYazdani2019TCS} &$O(\frac{n^{d+1}\cdot e^d}{d^d})$ \cite{CorusOlivetoYazdani2019TCS} & \color{red}{$O(n\tau + n^{2k+3} + n^{\beta+1})^*$}
 			\T\B\\
 			
 			
 			
 			Opt-IA$_{\textsc{LastBest}}$ & $\Theta(n \log n) $ & $\Theta(n^2)$& \color{red}{$O\left(\frac{n^{4}\log(n/d)}{d^{2}} + n^{2}\log d\right)$} & \color{red}{$2^{\Omega(n)}$}			\T\B \\
-			Opt-IA$_{\textsc{FirstBest}}$ & $\Theta(n \log n)$ & $\Theta(n^3)$ &$O\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)$&    $O(n\tau + n^{2k+3} + n^{\beta})$
+			Opt-IA$_{\textsc{FirstBest}}$ & $\Theta(n \log n)$ & $\Theta(n^3)$ &$O\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)$&    $O(n\tau + n^{2k+3} + n^{\beta+1})$
 			\T\B \\
 			% $(1+1)$~IA using \bexpo & $\Theta(n \log n)$ & $\Theta(n^2)$
 			%\T\B \\
@@ -1053,6 +1053,7 @@ To prove the lower bound we make a case distinction with respect to whether the 
 \end{theorem}
 \begin{proof}
 	
+
 \textcolor{purple}{Since the algorithm only accepts equal or better individuals, we update the best seen after every acceptance, \emph{i.e.,} $x=best$ and $M=1$, until ageing is triggered for the first time.  }
 For any suboptimal $x\in\{0,1\}^n$ it is sufficient to flip the leftmost $0$-bit of $x$ to improve its \textsc{LeadingOnes} value. Thus, the same argument in Theorem~\ref{thm:onemaxexpo} which establishes that the ageing will not trigger with overwhelming probability also holds \textcolor{purple}{and allows us to assume $M=1$ until the optimum is found}. We can similarly continue with a fitness level argument, {\color{blue} with the only difference in that} the improvement probability for \textsc{LeadingOnes} is always $1/n$ regardless of the current function value and thus the sum yields $\sum\limits_{i=1}^{n}n = n^2$.
 
@@ -1213,7 +1214,7 @@ combined with ageing can escape from the local optima of \cliff,
 hence optimises the function efficiently. The condition that $d$ is not prohibitively large is necessary to avoid
 that the reinitialised solutions due to ageing have larger fitness than a solution with $n-d+1$ $1$-bits, {\color{blue} which would cause the latter to be removed from the population}.
 We believe that this assumption is realistic for practical applications.
-\new{We consider the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ version as the other version would be even faster due to its lower mutation rates.}
+%\new{We consider the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ version as the other version would be even faster due to its lower mutation rates.}
 
 %\textcolor{purple}{TO BE MOVED EARLIER: We will introduce a new parameter $c\leq 1$ for determining our mutation potential when it grows linearly with the Hamming distance since we might prefer to avoid the jump back to previously seen local optimum which will hinder exploration that is the main goal of the high mutation rates.}
 % \textcolor{purple}{
@@ -1258,7 +1259,7 @@ In particular the Opt-IA with IPH can escape local optima in three different way
 In particular, compared to the conference version of this paper, we have now proposed an Opt-IA algorithm with IPH that has the capability to escape from local optima via large mutations, something that was not possible with the previous version since the mutation rate remained lowest on the local optima.
 }
 
-Although our analysis used standard benchmark functions with significant structures to practical optimisation, we point out that the Opt-IA AIS with our proposed IPH can be shown to efficiently find arbitrarily good approximations to the NP-Hard Number Partitioning problem by following the same proof strategy of \cite{CorusOlivetoYazdaniAIJ2019} that uses that local optima are escaped from thanks to the ageing operator \textcolor{purple}{WHAT ABOUT VIA HYPERMUTATIONS?}.
+Although our analysis used standard benchmark functions with significant structures to practical optimisation, we point out that the Opt-IA AIS with our proposed IPH can be shown to efficiently find arbitrarily good approximations to the NP-Hard Number Partitioning problem by following the same proof strategy of \cite{CorusOlivetoYazdaniAIJ2019} that uses that local optima are escaped from thanks to the ageing operator \textcolor{purple}{IPH would have an insufficient mutation potential to find an approximation in the first run until reinitialization however whether subsequent runs with higher mutation potential can approximate without relying on a good starting position  require further analysis of the problem landscape.} 
 
 Future work should evaluate the performance of the proposed algorithm both theoretically and experimentally for other combinatorial optimisation problems with practical applications. 
 

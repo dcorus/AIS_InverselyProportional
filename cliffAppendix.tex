@@ -91,9 +91,9 @@
 	We exhibit a consecutive three-step event which happens with probability $\Omega((d/n)^3)$ and yields the stated starting 
 	position on the second slope.
 	
-	\emph{(A) $M=1$ at the ageing boundary.} In the ageing iteration we require that the first two flips are $1\!\to 0$ then $0\!\to 1$ without replacement. This has probability $\frac{n-d}{n}\cdot\frac{d}{n-1}$ and produces an \emph{equal-fitness} offspring accepted by FCM (first return to $\ge$ parent). The offspring inherits the parent’s age (no improvement), so both parent and offspring face the ageing coin and die independently with probability $1/2$. Requiring “parent dies, offspring survives’’ contributes a factor $1/4$, and by the update rule the reference locks to the last cliff-top (the parent that died). The surviving equal-fitness offspring differs from this locked reference in exactly two bits, hence $\HD=2$ and, since $c<1$, the next iteration has $M=1$.
+	 In the ageing iteration we require that the first two flips are $1\!\to 0$ then $0\!\to 1$ without replacement. This has probability $\frac{n-d}{n}\cdot\frac{d}{n-1}$ and produces an \emph{equal-fitness} offspring accepted by FCM (first return to $\ge$ parent). The offspring inherits the parent’s age (no improvement), so both parent and offspring face the ageing coin and die independently with probability $1/2$. Requiring “parent dies, offspring survives’’ contributes a factor $1/4$, and by the update rule the reference locks to the last cliff-top (the parent that died). The surviving equal-fitness offspring differs from this locked reference in exactly two bits, hence $\HD=2$ and, since $c<1$, the next iteration has $M=1$.
 		
-	\emph{(B) Create the cliff-bottom individual and kill the current cliff-top.} With $M=1$, exactly one flip is performed and FCM does not accept worse-than-parent, so the algorithm returns the single-flip string after the potential exhaustion. A $0\!\to 1$ flip occurs with probability at least $d/n$ and returns the \emph{cliff-bottom} ($n-d+1$ ones), at Hamming distance $1$ from the locked reference. Ageing does not reset (no improvement), so both the current parent (equal-fitness cliff-top) and the returned offspring face the coin; requiring “parent dies, offspring survives’’ contributes another factor $1/4$ and preserves the locked reference at the last cliff-top.
+ With $M=1$, exactly one flip is performed and FCM does not accept worse-than-parent, so the algorithm returns the single-flip string after the potential exhaustion. A $0\!\to 1$ flip occurs with probability at least $d/n$ and returns the \emph{cliff-bottom} ($n-d+1$ ones), at Hamming distance $1$ from the locked reference. Ageing does not reset (no improvement), so both the current parent (equal-fitness cliff-top) and the returned offspring face the coin; requiring “parent dies, offspring survives’’ contributes another factor $1/4$ and preserves the locked reference at the last cliff-top.
 	
 	\emph{(C) One accepted improvement on the second slope.} In the following iteration with probability at least $(d-1)/n$ the first bit flip is a $0\!\to 1$ flip, and the offspring is \emph{accepted} by FCM (strict improvement from the cliff-bottom), producing a point with $n-d+2$ ones. Relative to the locked cliff-top reference, the Hamming distance is now $2$, and exactly two successful phases have completed: $r_0=2$, $\HD(r_0)=2$.
 	
@@ -156,7 +156,6 @@
 	We bound this probability from above by a simple ``coarse blocking’’ argument that uses only that $z$ is small and that flips occur are without replacement.
 	
 	\smallskip
-	\emph{Step 1 (Each required zero-flip is never more likely than $2p$).}
 	Condition on any history of length $t\le 2k-1$ that keeps $D_t\ge 1$ (so no catch-up yet) and in which at most $t$ distinct positions have been flipped. Among the $n-t$ remaining positions there are at most $z$ zeros. Hence the conditional probability that the \emph{next} flip is a $0\!\to 1$ move is at most
 	\[
 	\frac{z}{\,n-t\,}\ \le\ \frac{z}{\,n-(2k-1)\,}\ \le\ \frac{z}{(1/2+2\varepsilon)n}\ \le\ 2p,
@@ -164,7 +163,6 @@
 	because $2k\le 2d<(\tfrac12-2\varepsilon)n$. In other words, throughout any hypermutation that lasts up to $2k$ flips, a zero-flip is never more likely than $2p$.
 	
 	\smallskip
-	\emph{Step 2 (Decompose a catch-up of length $\ge 2k$ into $k$ gated \textcolor{purple}{?} zero-flips).}
 	If the first catch-up occurs at some time $\ge 2k$, then along the way the trajectory must realize \emph{at least $k$} distinct $0\!\to 1$ flips while $D>0$ (each such flip reduces the deficit by $1$ but, by assumption, does not yet hit $0$ before the $k$-th such zero\new{-flip}). Expose these $k$ zero-flips in order and ignore everything else (the interspersed $1\!\to 0$ flips only make catch-up \emph{harder} and so can be dropped for an upper bound). By Step~1, each of these $k$ zero\new{-flips} occurs with conditional probability at most $2p$, uniformly over the entire run while $D>0$. Therefore, by the chain rule,
 	\[
 	\Pr(\text{first catch-up occurs at time }\ge 2k)\ \le\ (2p)^k.
@@ -511,7 +509,7 @@
 %[Proof [of Theorem~\ref{thm:main-tau-final}]]
 
 \begin{proof}[Proof [of Theorem~\ref{th:expoHD-cliff}]]
-	\textcolor{purple}{\emph{Up to the second slope.}}
+	
 	From a uniformly random start, the expected iterations to reach the cliff-top ($n-d$ ones) are
 	$\sum_{i=d}^{n}\frac{n}{i}=\Theta\!\big(n\log\tfrac{n}{d}\big)$, which at $\Theta(n)$ evaluations/iteration costs
 	$\Theta\!\big(n^{2}\log\tfrac{n}{d}\big)$ evaluations per ascent to the cliff-top. At the cliff-top, the only fitter point is $1^n$, so ageing triggers unless the optimum is found within $\tau$ iterations.
@@ -531,7 +529,6 @@
 	\]
 	
 	\smallskip
-	\textcolor{purple}{\emph{Second–slope control (Ville route).}}
 	Under the reference-update rule the start on the second slope is $r_0=2$, $\HD(r_0)=2$, so $s_0=0$ and with $\theta=\tfrac1c-1$ define
 	\[
 	B_r\ :=\ \theta r - \sum_{j=r_0+1}^{r} Y_{z_j}\qquad(r\ge r_0),
@@ -546,7 +543,6 @@
 	\EE\!\big[e^{-\lambda(B_{t+1}-B_t)}\mid\mathcal F_t\big]\ \le\ e^{-\lambda\theta}\,K(\lambda)\qquad\text{for all }t\ge 0.
 	\]
 	
-	\textcolor{purple}{\emph{Safety bound (instantiating the per-instance lemma uniformly).}}
 	Since $d\le(\tfrac14-\varepsilon)n$ and the theorem assumes
 	\[
 	c\ <\ \frac{1+4\varepsilon}{3-4\varepsilon}\ \le\ \frac{1-2d/n}{1+2d/n}\ =:\ c_\star(n,d),
@@ -563,7 +559,6 @@
 	Because $\lambda_\varepsilon$ depends only on $\varepsilon$ and $\theta=\tfrac1c-1$ depends only on $c$, this right-hand side is a constant in $(0,1)$, independent of $n$ and $d$.
 	
 	\smallskip
-	\textcolor{purple}{\emph{Time to finish once safe.}}
 	On the event $\{\inf_{t\ge 0} B_t>0\}$ (no jump-back), the second-slope ascent is monotone and completes in expected
 	\[
 	\sum_{z=1}^{d}\frac{n}{z}\ =\ \Theta(n\log d)
@@ -571,7 +566,7 @@
 	iterations, which is $o(\tau)$ since $\tau=\Omega(n^{1+\epsilon'})$. With a pessimistic $\Theta(n)$ evaluations per iteration, one second-slope attempt costs $\Theta(n^{2}\log d)$ evaluations, and the constant no-jump-back probability implies a constant expected number of such attempts.
 	
 	\smallskip
-	\textcolor{purple}{\emph{Total.}}
+
 	Summing the (restarted) approach to the canonical start and the second-slope cost gives
 	\[
 	\EE[\text{evaluations}]
