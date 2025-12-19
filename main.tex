@@ -206,13 +206,13 @@ makes the operator robust to fitness function scaling.
 			\T\B\\
 			
 			
-			Opt-IA$_{\textsc{static}}$ & $\Theta(n^2\log n)$ \cite{CorusOlivetoYazdani2019TCS} & $\Theta(n^3)$\cite{CorusOlivetoYazdani2019TCS} &$O(\frac{n^{d+1}\cdot e^d}{d^d})$ \cite{CorusOlivetoYazdani2019TCS} & \color{red}{$O(n\tau + n^{2k+3} + n^{\beta})^*$}
+			Opt-IA$_{\textsc{static}}$ & $\Theta(n^2\log n)$ \cite{CorusOlivetoYazdani2019TCS} & $\Theta(n^3)$\cite{CorusOlivetoYazdani2019TCS} &$O(\frac{n^{d+1}\cdot e^d}{d^d})$ \cite{CorusOlivetoYazdani2019TCS} & \color{red}{$O(n\tau + n^{2k+3} + n^{\beta+1})^*$}
 			\T\B\\
 			
 			
 			
 			Opt-IA$_{\textsc{LastBest}}$ & $\Theta(n \log n) $ & $\Theta(n^2)$& \color{red}{$O\left(\frac{n^{4}\log(n/d)}{d^{2}} + n^{2}\log d\right)$} & \color{red}{$2^{\Omega(n)}$}			\T\B \\
-			Opt-IA$_{\textsc{FirstBest}}$ & $\Theta(n \log n)$ & $\Theta(n^3)$ &$O\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)$&    $O(n\tau + n^{2k+3} + n^{\beta})$
+			Opt-IA$_{\textsc{FirstBest}}$ & $\Theta(n \log n)$ & $\Theta(n^3)$ &$O\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)$&    $O(n\tau + n^{2k+3} + n^{\beta+1})$
 			\T\B \\
 			% $(1+1)$~IA using \bexpo & $\Theta(n \log n)$ & $\Theta(n^2)$
 			%\T\B \\
@@ -1053,7 +1053,8 @@ To prove the lower bound we make a case distinction with respect to whether the 
 \end{theorem}
 \begin{proof}
 	
-\textcolor{purple}{Argue $M=1$ always due to the way we used to define the \emph{best}.}\textcolor{purple}{Since we only accept equal and better individuals, we update the best seen after every acceptance, \emph{i.e.,}$x=best$ and $M=1$, until ageing is triggered for the first time.  }
+%\textcolor{purple}{Argue $M=1$ always due to the way we used to define the \emph{best}.}
+\textcolor{purple}{Since we only accept equal and better individuals, we update the best seen after every acceptance, \emph{i.e.,} $x=best$ and $M=1$, until ageing is triggered for the first time.  }
 For any suboptimal $x\in\{0,1\}^n$ it is sufficient to flip the leftmost $0$-bit of $x$ to improve its \textsc{LeadingOnes} value. Thus, the same argument in Theorem~\ref{thm:onemaxexpo} which establishes that the ageing will not trigger with overwhelming probability also holds \textcolor{purple}{and allows us to assume $M=1$ until the optimum is found}. We can similarly continue with a fitness level argument, {\color{blue} with the only difference in that} the improvement probability for \textsc{LeadingOnes} is always $1/n$ regardless of the current function value and thus the sum yields $\sum\limits_{i=1}^{n}n = n^2$.
 
 For the lower bound, it is sufficient to prove that the {\color{blue}expectation conditional on ageing not triggering} is $\Omega(n^2)$, since ageing will not trigger with overwhelming probability. In that case we have to consider how much the objective function value will increase in expectation when the leftmost $0$-bit is flipped by the operator. The bits on the right of the leftmost $0$-bit does not contribute to the fitness value and thus each can be a $0$-bit or $1$-bit with equal probability. Therefore, the expected number of "free-riders", i.e., the sequence of consecutive $1$-bits that follow the leftmost $0$-bit is at most $\sum_{i=0}^{n}2^{-i}\leq 2$. Since the expected increase after every mutation is at most $2$, the expected number of necessary successful mutations where the leftmost $0$-bit is flipped is at least $n/2$ to find the optimal solution. The expected time for each such successful mutation is $(1/n)^{-1}=n$ iterations and consequently the expected time until the optimum is found given that the ageing operator does not trigger is $\Omega(n^2)$.  
