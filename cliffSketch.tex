@@ -25,14 +25,15 @@
 
 
 We now present the proof sketch of our main result on the  \cliff{} function, together with 
-all supporting lemmata.  All proofs are deferred to the appendix; the 
-statements here are mathematically identical to those in the full technical 
-development, but streamlined for readability.  The argument proceeds in two 
+all supporting lemmata.  \textcolor{green}{All proofs are deferred to...} %the appendix; the 
+%statements here are mathematically identical to those in the full technical 
+%development, but streamlined for readability.  
+The argument proceeds in two 
 major stages: (i) obtaining a canonical entry point onto the second slope 
 immediately after an ageing event at the cliff-top; and (ii) showing that from 
 this configuration the algorithm reaches the optimum without dangerous increases in mutation potential.
 
-For stage (ii) we will use the generalization of Markov's Inequality by Ville~\cite{Doob1953}(Ch.~VII) which will allows us to show that the mutation potential stays bounded with constant probability.
+For stage (ii) we will use the generalization of Markov's Inequality by Ville~\cite{Doob1953}(Ch.~VII) which will allow us to show that the mutation potential stays bounded with constant probability.
 \begin{theorem}[Ville’s inequality for nonnegative supermartingales]\label{thm:ville}
 	Let $(M_t)_{t\ge 0}$ be a nonnegative supermartingale adapted to $(\mathcal F_t)_{t\ge 0}$. 
 	Then for every $a>0$,
@@ -278,3 +279,4 @@ $O\!\Big(\frac{n^{4}\log(n/d)}{d^{2}} \;+\; n^{2}\log d\Big)$.}
 	fitness function evaluations.
 \end{corollary}
 }
+The following section will highlight the advantages of using \textsc{First-Best} over using \textsc{Last-Best}.
