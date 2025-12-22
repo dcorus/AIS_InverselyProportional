@@ -223,7 +223,7 @@ range has a nontrivial lower bound.
 
 Finally, combining the threshold on $c$ with the initial buffer value at 
 $(r_0,\mathrm{HD}(r_0))=(2,2)$ yields a uniform constant bound on the 
-probability of avoiding a jump-back.
+probability of avoiding jumping back.
 
 \begin{lemma}
 	%[Constant Safety Probability] 
@@ -265,7 +265,7 @@ Since the success probability is constant, this remains the unconditional
 expectation.  
 Summing the two contributions establishes the main runtime bound.
 
-\textcolor{purple}{The analysis for \lastBest~differs only in Lemma~\ref{lem:can-start-omega-d3} and actually yields a $d/n$ factor better probability bound since the mutation potential is $1$ at the cliff-top and thus creating a solution at the bottom of the cliff is immediately possible when any cliff top individual dies, whereas for \firstBest~to work we have to first accept a neutral mutation to get the mutation potential to $1$ then mutate into a cliff bottom solution in the next iteration. Consequently the runtime for \lastBest~is  
+\textcolor{purple}{The analysis for \lastBest~differs only in Lemma~\ref{lem:can-start-omega-d3} and actually yields a $d/n$ factor better probability bound since the mutation potential is $1$ at the cliff-top and thus, creating a solution at the bottom of the cliff is immediately possible when any cliff top individual dies, whereas for \firstBest~to work we have to first accept a neutral mutation to get the mutation potential to $1$, and then mutate into a cliff bottom solution in the next iteration. Consequently the runtime for \lastBest~is  
 $O\!\Big(\frac{n^{4}\log(n/d)}{d^{2}} \;+\; n^{2}\log d\Big)$.}
 
 \textcolor{purple}{
