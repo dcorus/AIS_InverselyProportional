@@ -15,7 +15,7 @@
 
 \begin{theorem}\label{th:expoHD-cliff}
 	The %{\oneoneOPTIA} using \IPHfcm{} 
-	\textcolor{purple}{\firstBest~with} \linHD\ (factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$) and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
+	\textcolor{black}{\firstBest~with} \linHD\ (factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$) and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
 	optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected
 	\[
 	O\!\Big(\frac{n^{5}\log(n/d)}{d^{3}} \;+\; n^{2}\log d\Big)
@@ -25,7 +25,8 @@
 
 
 We now present the proof sketch of our main result on the  \cliff{} function, together with 
-all supporting lemmata.  \textcolor{green}{All proofs are deferred to...} %the appendix; the 
+all supporting lemmata.  All proofs are deferred to the supplementary materials. 
+%the 
 %statements here are mathematically identical to those in the full technical 
 %development, but streamlined for readability.  
 The argument proceeds in two 
@@ -49,8 +50,8 @@ To establish the result, we first analyse how the algorithm reaches a highly
 structured ``canonical'' state shortly after ageing triggers at the cliff-top.
 At the cliff-top the algorithm cannot improve except by sampling the global 
 optimum, and so ageing will eventually be triggered.  The key insight is that 
-the iteration of ageing followed by two additional \textcolor{blue}{fitness improvements} can place the 
-algorithm into a configuration with \textcolor{purple}{$n-d+2$ 1-bits i.e., ($r_0=2$) and the minimal Hamming distance of $HD(r_0)=2$ to the $best$ solution which had $n+d$ 1-bits.}  The following lemma formalises this.
+the iteration of ageing followed by two additional \textcolor{black}{fitness improvements} can place the 
+algorithm into a configuration with \textcolor{black}{$n-d+2$ 1-bits i.e., ($r_0=2$) and the minimal Hamming distance of $HD(r_0)=2$ to the $best$ solution which had $n+d$ 1-bits.}  The following lemma formalises this.
 
 \begin{lemma}%[Canonical Start After Cliff-Top Ageing]
 	\label{lem:can-start-omega-d3}
@@ -156,7 +157,7 @@ linear \emph{buffer} \new{$B_r = \theta r - s_0 - E_r$} capturing the invariant 
 \end{lemma}
 
 Combining the phase MGF with the buffer update yields an exponential drift 
-envelope suitable for applying \textcolor{purple}{Ville's inequality for non-negative supermartingales (Theorem~\ref{thm:ville}).}
+envelope suitable for applying \textcolor{black}{Ville's inequality for non-negative supermartingales (Theorem~\ref{thm:ville}).}
 
 \begin{lemma}
 	%[Exponential Drift Envelope] 
@@ -265,13 +266,13 @@ Since the success probability is constant, this remains the unconditional
 expectation.  
 Summing the two contributions establishes the main runtime bound.
 
-\textcolor{purple}{The analysis for \lastBest~differs only in Lemma~\ref{lem:can-start-omega-d3} and actually yields a $d/n$ factor better probability bound since the mutation potential is $1$ at the cliff-top and thus, creating a solution at the bottom of the cliff is immediately possible when any cliff top individual dies, whereas for \firstBest~to work we have to first accept a neutral mutation to get the mutation potential to $1$, and then mutate into a cliff bottom solution in the next iteration. Consequently the runtime for \lastBest~is  
+\textcolor{black}{The analysis for \lastBest~differs only in Lemma~\ref{lem:can-start-omega-d3} and actually yields a $d/n$ factor better probability bound since the mutation potential is $1$ at the cliff-top and thus, creating a solution at the bottom of the cliff is immediately possible when any cliff top individual dies, whereas for \firstBest~to work we have to first accept a neutral mutation to get the mutation potential to $1$, and then mutate into a cliff bottom solution in the next iteration. Consequently the runtime for \lastBest~is  
 $O\!\Big(\frac{n^{4}\log(n/d)}{d^{2}} \;+\; n^{2}\log d\Big)$.}
 
-\textcolor{purple}{
+\textcolor{black}{
 \begin{corollary}
 	The %{\oneoneOPTIA} using \IPHfcm{} 
-	\textcolor{purple}{\lastBest~with} \linHD\ \new{(factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$)} and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
+	\textcolor{black}{\lastBest~with} \linHD\ \new{(factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$)} and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
 	optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected
 	\[
 	O\!\Big(\frac{n^{e}\log(n/d)}{d^{3}} \;+\; n^{2}\log d\Big)
