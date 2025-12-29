@@ -115,7 +115,7 @@ Before adding files, create a `.gitignore` to exclude unwanted files:
 *.log
 *.out
 *.toc
-*.pdf
+# Note: Be careful with *.pdf - you may want to keep some PDFs like figures
 *.synctex.gz
 
 # Example for Python projects
@@ -222,9 +222,10 @@ git pull origin main
 - [GitHub CLI Documentation](https://cli.github.com/manual/)
 - [Atlassian Git Tutorial](https://www.atlassian.com/git/tutorials)
 
-## This Repository
+## Example: This Repository
 
-This repository (AIS_InverselyProportional) was created following these practices. You can see:
+This repository was created following these best practices:
 - `.gitignore` excludes LaTeX auxiliary files
-- `README.md` documents the project
+- `README.md` provides comprehensive documentation
 - Organized structure with clear file naming
+- Meaningful commit messages

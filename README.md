@@ -45,7 +45,7 @@ This paper presents research on Artificial Immune Systems (AIS) employing invers
 To compile this paper, you need:
 
 - **LaTeX Distribution**: TeX Live, MiKTeX, or MacTeX
-  - On Ubuntu/Debian: `sudo apt-get install texlive-full`
+  - On Ubuntu/Debian: `sudo apt install texlive-full`
   - On macOS: Install MacTeX from https://www.tug.org/mactex/
   - On Windows: Install MiKTeX from https://miktex.org/
 
@@ -106,7 +106,7 @@ Based on the paper content and notes, this work covers:
 3. **Algorithm variants**:
    - (1+1) Opt-IA with different selection strategies
    - Linear and exponential hypermutation schedules
-   - Ageing mechanisms
+   - Aging mechanisms
 
 4. **Theoretical analysis** including:
    - Runtime bounds
