@@ -1,0 +1,377 @@
+
+Formally, for constants $k\ge1$ and $\rho\in(0.8,0.9)$, let $r := 2k+1$, 
+$L := \lfloor\log_2 n\rfloor$, 
+$\mathcal{P} := \{\,x : \mathrm{LO}(x)\ge 0.9n\,\}$, 
+$\mathcal{B}_k := \{\,0^{r} 1^{(0.9n-r)} *\,\}$, 
+and $\mathcal{D}_\rho := \{\,0^{L} * : |x|_1 \ge \rho n\,\}$.
+The function $\mathrm{LTJ}_{k,\rho} : \{0,1\}^n \to \mathbb{R}$ is
+\[
+\mathrm{LTJ}_{k,\rho}(x)
+=
+\begin{cases}
+	0, & x \in \mathcal{P},\\[2pt]
+	\mathrm{LO}\bigl(x_{i>r}\bigr)+r, & x \in \mathcal{B}_k,\\[2pt]
+	\textcolor{black}{n+1}, & x \in \mathcal{D}_\rho,\\[2pt]
+	\mathrm{LO}(x), & \text{otherwise.}
+\end{cases}
+\]
+The landscape consists of a long LeadingOnes slope rising from fitness 
+$\mathrm{LO}(x)$ up to level $0.9n-1$, followed by a large penalised region.  
+Two off-slope structures contain the \textcolor{black}{two sets of optima} but are inaccessible to 
+standard hill-climbers.  
+The set $\mathcal{B}_k$ begins with the prefix $0^{r}1^{(0.9n-r)} *$ and forms a 
+short slope, \new{called block-jump slope,} that \textcolor{black}{deterministically increases toward its unique local optimum; reaching 
+this prefix is therefore equivalent to entering the leading ones path to the local optimum.}  
+In contrast, the set $\mathcal{D}_\rho$ consists of solutions with prefix 
+$0^{L} *$ \textcolor{black}{whose suffix has ones-density at least $\rho$} i.e., $\rho n$ ones, and forms a wide 
+plateau of globally optimal fitness, \new{which we call  deep-prefix plateau}.  
+Both structures are hidden behind the penalised barrier, and the only reliable 
+way to reach them is via large hypermutation events.  
+The junction $J := \{x : \mathrm{LO}(x)=0.9n-1\}$ acts as a central gateway: 
+each ageing epoch that restarts the search will, with high probability, ascend 
+the LeadingOnes slope back to $J$ before any off-slope structure is encountered.  
+From $J$, the \oneoneOPTIA~using \IPHfcm{}~with \linHD~can perform jumps of the 
+appropriate magnitude to reach either the entrance of the block-jump slope $\mathcal{B}_k$ or 
+the plateau $\mathcal{D}_\rho$. \textcolor{black}{On the other hand, algorithms with lower mutation rates, such as those using SBM will with high probability not be able to flip the logarithmic number of bits required to reach the global optimum, thus have a runtime of $n^{\Omega(\log n)}$ with high probability.}
+
+\begin{theorem} \label{thm:main-tau-final}
+The  $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$~with ageing threshold $\tau=\Omega(n^{1+\epsilon})$ using  \linHD~with $c<5/8$ optimises $\mathrm{LTJ}_{k,\rho}$ in
+	$O(n\tau + n^{2k+3} + n^{\beta+1})$ fitness function evaluations	where $\beta := \log_2 \frac{20}{c}$.
+\end{theorem}
+
+To establish Theorem~\ref{thm:main-tau-final} we rely on three ingredients.
+First, every ageing epoch returns to the junction $J$ with high probability.
+Second, an epoch beginning at $J$ performs sufficiently long jumps to reach the beginning of the block-jump slope with probability $\Theta(n^{-(2k+2)})$ per iteration.
+Third, an epoch beginning at $J$ performs a logarithmic jump onto the deep-prefix plateau with probability $\Theta(n^{-\beta})$ per iteration.
+
+Since each event corresponds to reaching either the start of a short slope leading deterministically to its optimum (for $\mathcal{B}_k$) or directly a plateau of global optima (for $\mathcal{D}_\rho$), these per-epoch probabilities govern the entire runtime.
+
+We first need to bound from below the probability that the algorithm visits the junction point after restarts in order to later argue that from the junction point both sets of optima will be accessed.
+
+\begin{lemma} \label{lem:junction-first-density-Bk}
+	Starting from any random individual, the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$~using \IPHfcm{}~with \linHD~\textcolor{black}{and $c<5/8$}  reaches the junction $J = \{x : \mathrm{LO}(x)=0.9n-1\}$ before accepting any individual in $\mathcal{B}_k$ or $\mathcal{D}_\rho$ with high probability.
+\end{lemma}
+
+Within $n^2$ iterations, the algorithm performs at least $0.9n$ LeadingOnes 
+improvements with high probability.  
+Before reaching $J$, deep-prefix entrances require flipping the $L$-bit prefix 
+to $0^L$, an event whose probability per iteration is at most $(M(x)/n)^L$.  
+Since under \linHD\ the mutation potential satisfies $M(x) \le q^\star n$ for 
+some constant $q^\star < 1$ (determined solely by $c$ and $\rho$), this becomes 
+$(q^\star)^L = n^{-\alpha^\star}$ for $\alpha^\star := \log_2(1/q^\star) > 2$, 
+yielding a total probability of $o(1)$ over $n^2$ iterations.
+Thus the slope is climbed to $J$ with high probability.
+
+
+\begin{proof}
+	Let $T:=n^2$. \textcolor{black}{We will first show that unless we sample a solution from $\mathcal{B}_k$ or $\mathcal{D}_\rho$ , we will sample a solution from $J$ in $T$ iteration with overwhelming probability.}
+	
+	Before $J$, $\mathcal{B}_k$ or $\mathcal{D}_\rho$ is sampled from, we flip the leftmost zero-bit with probability $1/n$ and accept
+	immediately by FCM($\ge$).  If $X\sim\mathrm{Bin}(T,1/n)$ counts such improvements then
+	$\mathbb{E}[X]=n$ and a Chernoff bound gives
+	$
+	\Pr\bigl(X<(9/10)n\bigr)\ \le\ e^{-a n}
+	$
+	for some constant $a>0$. Hence $J$ is reached within $T$ iterations with probability $1-e^{-a n}$ if we condition on that neither $\mathcal{B}_k$ nor $\mathcal{D}_\rho$ is sampled first.
+	
+	\textcolor{black}{
+		Next, we will show that the probability of sampling a $\mathcal{B}_k$ or a $\mathcal{D}_\rho$ solution in $T$ iterations is $o(1)$, starting our argument with $\mathcal{D}_\rho$. 
+		}
+	
+	Let $\alpha:=|x|_1/n$ and $\alpha^\top:=|\text{best}|_1/n$. Since the probability of improvement is at least $1/n$ in the initial leading-ones slope the ageing does not trigger with overwhelming probability unless the current solution is in $J$, $\mathcal{D}_\rho$ or $\mathcal{B}_k$, all of which lead to $\alpha^\top\ge\rho$ after the restart. We make a case distinction according to $\alpha\ge \rho-\xi$ for some constant $\xi\in(0,\rho-\tfrac12]$  such that	$q^\star \;:=\; 2c\,\bigl(1-\rho+\xi\bigr) \;<\; 1/4$ which is always possible since $c<5/8$. 
+	
+	\emph{Case 1: $\alpha\ge \rho-\xi$.}
+	Using $|x\wedge best|_1\ge |x|_1+|best|_1-n$,
+	\[
+	\mathrm{HD}(x,best)\ \le\ (2-\alpha-\alpha^\top)\,n\ \le\ 2(1-\rho+\xi)\,n,
+	\]
+	\[
+	M(x)\ \le\ q^\star n\ <n/4
+	.
+	\]
+	$\mathcal{D}_\rho$ definition requires all $L$ leading bits among the $M$ flips; hence
+	\[
+	\Pr(\text{$\mathcal{D}_\rho$ in this iteration})
+	\ \le\
+	\Bigl(\tfrac{M}{n}\Bigr)^{L}
+	\ \le\
+	(q^\star)^{L}
+	\ =\
+	n^{-\log_{2}(1/q^\star)}.
+	\]
+	Because $q^\star<1/4$, we have $\log_{2}(1/q^\star)>2$, so $T\cdot n^{-\log_{2}(1/q^\star)}=o(1)$.
+	
+	\emph{Case 2 : $\alpha\le \rho-\xi$.}
+	Since all $\mathcal{D}_\rho$ solutions have $|x|_1\ge \rho n$, at least $\xi n$ net $0\!\to\!1$ flips ($Z-O$) are required within at most
+	$cn$ bit-flips. With initial zero/one ratio giving negative drift,
+	a Serfling (hypergeometric) tail bound yields
+	\[
+	\Pr\bigl(Z-O\ge \xi n\bigr)\ \le\ e^{-\gamma n}
+	\]
+	for some constant $\gamma>0$. Including the necessity to flip all $L$ prefix bits only decreases the probability.
+	Summing over at most $T$ iterations remains $e^{-\gamma n}$. Therefore $\Pr(\text{$\mathcal{D}_\rho$ before }J)=o(1)$.
+	
+	Similarly we will next establish that sampling from $\mathcal{B}_k$ in $T$ iterations  has probability $o(1)$.	Let $r:=2k{+}1$, $S:=\{r{+}1,\dots,\tfrac{9}{10}n\}$, and fix any constant
+	$\delta\in(0,\tfrac{9}{10})$.  Consider any iteration with parent
+	$x\notin\mathcal{B}_k$ and write $\ell:=\mathrm{LO}(x)$ and
+	$v:=|\{i\in S:x_i=0\}|$.  We distinguish two cases depending on $\ell$.
+	
+	\emph{Case 1: $\ell < (\tfrac{9}{10}-\delta)n$.}
+	Then the unconstrained segment
+	$S\cap\{\ell{+}1,\dots,\tfrac{9}{10}n\}$ has size at least $\delta n$.
+	Conditioned on the history up to the current iteration, the bits in this segment
+	are unbiased and independent, hence by Chernoff $v=\Omega(n)$ with probability
+	$1-e^{-\Theta(n)}$.  On this event, to enter
+	$\mathcal{B}_k=\{0^{r}1^{(0.9n-r)}*\}$ and be accepted under FCM($\ge$), the
+	offspring at acceptance must flip all $r$ positions $\{1,\dots,r\}$ and must flip
+	all $v=\Omega(n)$ zeros in $S$ to $1$, i.e., it must flip $\Omega(n)$ specified
+	positions.  Therefore, regardless of the mutation potential, the per-iteration
+	probability of entering $\mathcal{B}_k$ is at most
+	$\binom{n}{\Omega(n)}^{-1}=e^{-\Theta(n)}$.  Union-bounding over at most
+	$T\le n^2$ iterations yields a total contribution $e^{-\Theta(n)}$.
+	The exceptional event $v=o(n)$ itself has probability $e^{-\Theta(n)}$ per
+	iteration and is negligible under the same union bound.
+	
+	\emph{Case 2: $\ell \ge (\tfrac{9}{10}-\delta)n$.}
+	Then the set
+	$F:=\{r{+}1,\dots,\ell\}$ of leading-one positions that must not be flipped before
+	acceptance has size $|F|=\ell-r=\Omega(n)$.  Since $x\notin\mathcal{B}_k$, at
+	least one bit in $S$ is $0$, so entering $\mathcal{B}_k$ and being accepted
+	requires flipping the $r$ positions $\{1,\dots,r\}$ and at least one further
+	specified position in $S$ before any position in $F$ is flipped (otherwise
+	$\mathrm{LO}$ decreases and FCM($\ge$) rejects).  Let $R$ denote any fixed choice
+	of such $r{+}1$ required positions.  A necessary condition for acceptance into
+	$\mathcal{B}_k$ is that all positions in $R$ appear before all positions in $F$ in
+	the random order in which the hypermutation flips bit positions.  Since the
+	relative order of the $|F|+|R|$ positions in $F\cup R$ is uniform, we obtain
+	\[
+	\Pr\bigl(\mathcal{B}_k \text{ in this iteration}\bigr)
+	\le
+	\binom{|F|+r+1}{r+1}^{-1}
+%	\le
+%	\Bigl(\tfrac{r+1}{|F|}\Bigr)^{r+1}
+	=
+	O\!\bigl(n^{-(r+1)}\bigr).
+	\]
+	Union-bounding over at most $T\le n^2$ iterations yields a total contribution
+	$O(n^{-(r-1)})=O(n^{-2k})=o(1)$.
+	
+\end{proof}
+
+
+
+\begin{lemma} \label{lem:BJO-epoch}
+	Let an ageing epoch begin at the junction.
+	Then, with probability $\new{p_B}=\Omega(\min\{1,\,\tau\,n^{-(2k+2)}\})$, the epoch performs a jump placing the individual at the beginning of the block-jump slope.
+\end{lemma}
+
+The suffix of the individual at $J$ is essentially random relative to the best individual stored from the 
+previous epoch. 
+With high probability their Hamming distance is at least $n/20$, guaranteeing 
+\textcolor{black}{$M(x)= cn/20$} throughout the epoch.  
+Under this event, the probability that the first $r+1$ flips of the hypermutation hit exactly the positions defining the prefix $0^{r}1^{(0.9n-r)} *$ is $\Theta(n^{-(r+1)})$.
+Evaluating this over $\tau$ iterations yields the stated bound.
+
+
+\begin{proof}
+	At the beginning of the epoch %start %the reference best is the best individual from the
+	%previous epoch.  
+	the length-\(0.1n+1\) suffix of the new parent \(x\) is still uniformly random,
+	so with probability at least \(\tfrac12\)
+	\[
+	\mathrm{HD}(x,best)\;\ge\;\frac{n}{20}.
+	\]
+	Conditioning on this event we lose only a factor \(2\).
+	Then the mutation potential in every subsequent
+	iteration of the epoch satisfies
+	\(
+	M\ge \tfrac{cn}{20}  \geq r+1.
+	\) for large enough $n$.
+	
+	%\paragraph*{Per-iteration success probability (revised, $M\ge r{+}1$).}
+	%Conditioned on $\mathrm{HD}(x,x^\top)\ge n/20$ we certainly have
+	%$M=\lfloor c\,\mathrm{HD}\rfloor\ge r+1$.
+	A solution in $\mathcal{B}_k$ is accepted as soon as the \emph{first} $r{+}1$ distinct flips
+	include \emph{exactly} the set
+	\(\{1,\dots,r,\;0.9n\}\)
+	in any order; if this occurs, FCM stops immediately and no other
+	leading-one bit can be destroyed.
+	%
+	Since bits are sampled uniformly without replacement, the probability of
+	this event is
+	\[
+	p_{\text{iter}}
+	=\prod_{i=0}^{r}\frac{r+1-i}{n-i}
+	=\frac{(r+1)!}{(n)_{\,r+1}}
+	=\Theta\!\bigl(n^{-(r+1)}\bigr)
+	=\Theta\!\bigl(n^{-(2k+2)}\bigr),
+	\]
+	independent of the exact value of~$M$ (we only need $M\ge r{+}1$ to allow that
+	many flips).
+	
+	%\medskip\noindent
+	%\emph{Per-epoch success probability.}
+	Since an epoch lasts for \(\tau\) independent iterations, a union bound yields
+	\[
+	p_B
+	\;\ge\;
+	1-(1-p_{\text{iter}})^{\tau}
+	\;\ge\;
+	\Omega\!\bigl(\min\{1,\;\tau\,n^{-(2k+2)}\}\bigr).
+	\]
+	
+	\noindent
+	%The hidden constant depends only on the fixed block size \(k\).
+\end{proof}
+
+
+
+\begin{lemma} \label{lem:DPO-epoch}
+	Let an ageing epoch begin at the junction.
+	Then, with probability $\new{p_D}=\Omega(\min\{1,\,\tau\,n^{-\beta}\})$, the epoch performs a jump placing the individual onto the deep-prefix plateau.
+\end{lemma}
+
+At $J$, the \textcolor{black}{ones-density} of the suffix already exceeds $\rho$ with high probability.
+Thus it suffices to flip the prefix to $0^L *$.
+Under the same high-Hamming-distance event ensuring $M(x)\ge cn/20$, the probability that the first $L$ flips hit positions $\{1,\dots,L\}$ is at least $(c/20)^L = n^{-\beta}$.
+Evaluating over $\tau$ iterations gives the lemma.
+
+\begin{proof}[Proof of Lemma \ref{lem:DPO-epoch}]
+	At the beginning of the epoch the reference is the best string from the previous
+	epoch (from $J$ or $\mathcal{B}_k$), and the new parent $x$ itself lies in~$J$.
+	Hence,
+	\[
+	|x|_1\;=\;0.9n-1 \;+\; |x_{\text{suffix}}|_1.
+	\]
+	The suffix has length $0.1n+1$ and is uniform; its number of ones is
+	$\mathrm{Bin}(0.1n+1,\tfrac12)$ with expectation $0.05n+O(1)$.
+	By a Chernoff bound
+	\(
+	|x_{\text{suffix}}|_1\ge 0.04n
+	\)
+	with probability $1-e^{-\Omega(n)}$.
+	Thus, already before any mutation,
+	\[
+	|x|_1
+	\;\ge\;
+	0.9n-1 + 0.04n
+	\;>\;
+	0.94n
+	\;>\;
+	\rho n
+	\qquad(\rho<0.9).
+	\tag{1}
+	\]
+	
+	%\textbf{Step 1 – Linear mutation potential.}
+	As in the block-jump argument we have
+	\(
+	\Pr\!\bigl(\mathrm{HD}(x,best)\ge n/20\bigr)\ge\tfrac12
+	\)
+	(owing to the uniform suffix). We condition on this event, so we have
+	 \(M\ge cn/20\) throughout the epoch.
+	
+	%\textbf{Step 2 – Per-iteration flip of the \(L\) prefix bits.}
+	%Let \(L=\lfloor\log_2 n\rfloor\).
+	To generate a $\mathcal{D}_\rho$ optimum it is necessary to flip the 
+	\(L\) leading ones from $1$ to $0$ before FCM stops.
+	Sampling without replacement,
+	\begin{align*}
+		p_{\text{prefix}}
+		%&=\Pr\bigl(\{1,\dots,L\}\subseteq\text{ first }L\text{ flips}\bigr)
+		&=\frac{(M \cdot (M-1)\cdot  ... \cdot (M-L))}{(n \cdot (n-1)\cdot  ... \cdot (n-L))}
+		\;\ge\;
+		(M/n)^{L}
+		\;\\&\ge\;
+		(cn/20)^{L}
+		=n^{-\beta}.
+	\end{align*}
+	where $\beta:=\log_{2}\frac{20}{c}$.
+	
+	%\textbf{Step 3 – Density constraint is automatic.}
+	When those $L$ flips occur, the total number of  ones in the string drops by at most
+	\( L\le\log_2 n\).
+	Thus using (1) and \(L=o(n)\) we get,
+	%\[
+	$|x|_1-L\;\ge\;0.94n-\log_2 n
+	\;\ge\;\rho n$
+	%\quad\text{
+	for all sufficiently large $n$.
+	%\]
+	Hence the density requirement \(|x|_1\ge\rho n\) is already satisfied
+	once the prefix flips have happened. Thus no additional tail flips are needed, and
+	FCM immediately accepts a $\mathcal{D}_\rho$ search point.
+	
+	%\textbf{Step 4 – Per-epoch probability.}
+	Since each iteration satisfies \(p_{\text{iter}}\ge n^{-\beta}\).
+	Across the \(\tau\ge n\) iterations of the epoch,
+	\[
+	p_D
+	\;\ge\;
+	1-(1-p_{\text{iter}})^{\tau}
+	\;\ge\;
+	%\min\!\bigl\{1,\;\tau\,p_{\text{iter}}\bigr\}
+	1-(1-n^{-\beta})^\tau 
+	\;=\;
+	\Omega\!\bigl(\min\{1,\;\tau\,n^{-\beta}\}\bigr),
+	\]
+	completing the proof.
+\end{proof}
+
+
+Each ageing epoch evaluates $\Theta(n\tau)$ individuals.
+By Lemma~\ref{lem:junction-first-density-Bk}, epochs reach $J$ with high probability, and by \textcolor{black}{lemmata~\ref{lem:BJO-epoch} and~\ref{lem:DPO-epoch}}, an epoch discovers each off-slope structure with probabilities $p_B$ and $p_D$, respectively.
+\textcolor{black}{A coupon-collector argument then implies} that the expected number of epochs needed to reach both the block-jump basin and the deep-prefix plateau is $O(1/p_B + 1/p_D)$.
+Multiplying by the cost per epoch yields the bound stated in Theorem~\ref{thm:main-tau-final}.
+
+\begin{proof}[Proof [of Theorem~\ref{thm:main-tau-final}]]
+	%\textbf{1.  Evaluation cost of one epoch.}
+	%Each iteration evaluates at most \(M(x)\le c\,n\;(=n/3)\) offspring, so an
+	%epoch of length \(\tau\) uses
+	%\[
+	%\text{eval}_{\text{epoch}}\le c\,n\,\tau=\Theta(n\,\tau).
+	%\]
+	
+	%\textbf{2.  Per–epoch success probabilities.}
+	By Lemma~\ref{lem:junction-first-density-Bk} we reach the junction $J$ with probability \ \(1-o(1)\).
+	Starting an epoch in the junction, %\(J\) (prob.\ \(1-o(1)\)), 
+	the two lemmata give
+	%\[
+	$p_B=\Omega\!\bigl(\min\{1,\tau\,n^{-(2k+2)}\}\bigr)$ and
+	$p_D=\Omega\!\bigl(\min\{1,\tau\,n^{-\beta}\}\bigr)$,
+	%\]
+	and \(B\) and \(D\) are mutually exclusive within one epoch. Thus the expected number of epochs to sample from both sets of optima is:
+	
+	%\textbf{3.  Expected number of epochs to see both optima.}
+	%A coupon–collector bound yields
+	\[
+	%\mathbb{E}[T_{\mathrm{both}}]
+	%\;\le\;
+	%\frac1{p_B}+\frac1{p_D}
+	%\;=\;
+	O\!\Bigl(
+	\max\{1,n^{2k+2}/\tau\}
+	+\max\{1,n^{\beta}/\tau\}
+	\Bigr).
+	\]
+	
+	%\textbf{4.  Total expected evaluations.}
+	Multiplying by the cost of each epoch we get,
+	\begin{align*}
+		\mathbb{E}[\text{evals}]
+		&\le
+		\Theta(n\,\tau)\;
+		O\!\Bigl(
+		\max\{1,n^{2k+2}/\tau\}
+		+\max\{1,n^{\beta}/\tau\}
+		\Bigr)
+		\\&=
+		O\!\bigl(
+		n\,\tau
+		+n^{2k+3}
+		+n^{\beta+1}
+		\bigr).
+	\end{align*}
+\end{proof}
+
+\textcolor{black}{The static hypermutation would yield a same upper bound with a similar analysis except for the value of $\beta$ which would be smaller and for the range of $c$ which would be more restricted. Both modifications are necessary due to the larger mutation size of the static hypermutation compared to IPH for a given $c$ value. The \lastBest~IPH cannot make the jumps from the junction since any current junction solution would be the last best seen, yielding a mutation potential of one $1$. $\mathcal{B}_k$ and $\mathcal{D}_\rho$ sets cannot be accessed from the junction via mutation but can still be sampled at any reinitialization with $2^{-\Omega(n)}$ probability.}
