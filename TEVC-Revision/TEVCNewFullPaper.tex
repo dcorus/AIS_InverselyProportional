@@ -12,6 +12,7 @@
 \usepackage{cite}
 
 \newcommand{\new}[1]{\textcolor{black}{#1}}
+\newcommand{\rev}[1]{\textcolor{blue}{#1}}
 \newcommand{\EE}{\text{E}}
 \newcommand{\HD}{\text{HD}}
 
@@ -78,11 +79,11 @@ The ideal behaviour of the IPH operator is that the mutation rate is minimal in 
 and that of the candidate solution increases. However, achieving such behaviour in practice may be problematic because the fitness of the global optimum is usually unknown.
 As a result, in practical applications information about the problem is used to \new{find} bounds on (or estimates of)  the value of the global optimum\footnote{Alternatively, the fitness of the best candidate solution is sometimes used and 
 	the mutation rate of the rest of the population is inversely proportional to the best.}.
-Thus, the closer is the estimate to the actual value of the global optimum, the closer should the behaviour of the IPH operator be to the desired one.
+Thus, the closer the \rev{is} estimate to the actual value of the global optimum, the closer should the behaviour of the IPH operator be to the desired one.
 On the other hand,  if the bound is much higher (e.g., for a maximisation problem)  than the true value, then there is a risk that the mutation rate is too high in proximity of the global optimum 
 i.e., the algorithm will struggle to identify the optimum. 
 
-While decreasing the step size as the optimum is approached is common practice in continuous optimisation~\cite{AugerDoerrBook}, previous theoretical analyses for combinatorial optimisation, though, have highlighted various problems with %inversely proportional hypermutation 
+While decreasing the step size as the optimum is approached is \rev{a} common practice in continuous optimisation~\cite{AugerDoerrBook}, previous theoretical analyses for combinatorial optimisation, though, have highlighted various problems with %inversely proportional hypermutation 
 IPH operators from the literature even when the fitness value of the global optimum is known.
 Zarges~ \cite{Zarges2008} analysed the effects of mutating candidate solutions with a rate that is inversely proportional to their fitness for the \textsc{OneMax} problem.
 She considered two different rates for the decrease of the mutation rate as the fitness increases: a linear decay (i.e., each bit \new{is flipped} with probability $\frac{\textsc{{\color{black}\text{Opt}-}OneMax(x)}}{\textsc{Opt}}$, where \textsc{Opt} is the value of the optimum) 
@@ -100,7 +101,7 @@ Hence, the behaviour of the mutation operator leads to very inefficient performa
 On the other hand, the Opt-IA clonal selection algorithm, that \new{uses a mutation operator called 'hypermutations with mutation potential'} which also has very high mutation rates has been proven to be efficient by employing a selection strategy called {\it stop at first constructive mutation} (FCM). The strategy evaluates the fitness after each bit is flipped and interrupts the hypermutation immediately if an improvement is detected. \new {Otherwise it returns the bit-string obtained after it has flipped the maximum number of  bits it is allowed to flip i.e., the mutation potential.} 
 Indeed, the operator using a static mutation potential (i.e., a linear number of bits are flipped unless an improvement is found along the way) has been proven to be very effective at escaping local
 optima of standard multimodal benchmark functions \cite{CorusOlivetoYazdaniGECCO2017} and at finding arbitrarily good approximations for the Number Partitioning NP-Hard problem \cite{CorusOlivetoYazdaniPPSN2018Approx,CorusOlivetoYazdaniAIJ2019} at the expense
-of being slower at hillclimbing during the exploitation phases (it is up to a linear factor slower than the standard bit mutation (SBM) used by evolutionary algorithms for easy unimodal functions such as OneMax and LeadingOnes).
+of being slower at hillclimbing during the exploitation phases \rev{-} it is up to a linear factor slower than the standard bit mutation (SBM) used by evolutionary algorithms for easy unimodal functions such as OneMax and LeadingOnes.
 Hence, \new{the first insight we provide in this paper is that,} differently from other clonal selection algorithms (such as Clonalg and Opt-IA without FCM), hypermutations with mutation potential coupled with FCM can cope with the desired behaviour of inversely proportional mutation rates by being capable of making progress efficiently with high mutation rates. % thanks to FCM.
 
 In this paper we first consider whether Opt-IA may become faster during the exploitation phases if inversely proportional mutation potentials are applied rather than static ones.
@@ -115,21 +116,21 @@ A previous runtime analysis for OneMax of the inversely proportional hypermutati
 
 In this paper we first show that considerable speed-ups in \new{hillclimbing} phases may be achieved compared to static hypermutations, 
 if the mutation rates decrease appropriately with either the fitness or the distance to the optimum. 
-To show this we analyse the IPH operators for standard unimodal benchmark functions where the performance of static mutation potentials is well-understood~\cite{CorusOlivetoYazdaniGECCO2017}.
+To show this, we analyse the IPH operators for standard unimodal benchmark functions where the performance of static mutation potentials is well-understood~\cite{CorusOlivetoYazdaniGECCO2017}.
 We first identify what speed-ups may be hoped for by analysing the operators in the ideal situation where the location of the optimum is known.
 A result of this first analysis is that a mutation potential that increases exponentially with the Hamming distance to the optimum %is the most promising out of three considered 
 %inverse potentials since it 
 provides the larger speed-ups \new{for hillclimbing unimodal functions}. Furthermore, using the Hamming distance rather than the fitness as the measure to quantify proximity to the optimum
 makes the operator robust to fitness function scaling.
 %Hence we consider this operator, called  \expoHD, in the rest of the paper.
-\new{However, an exponential decay with the distance to the optimum also implies that high mutation rates would occur only when the current solution is prohibitively far away from the optimum. For instance a randomly generated solution with expected Hamming distance $n/2$ from the optimum flips $\sqrt{n}$ bits and this mutation will decrease exponentially fast with further improvements. For this reason we find that a linear decrease of the mutation rate is a better compromise in pratice as it allows allows for longer phases where large mutations occur} \textcolor{black}{ and it flips the number of bits that increase the probability of hitting the optimum in the next step.}
+\new{However, an exponential decay with the distance to the optimum also implies that high mutation rates would occur only when the current solution is prohibitively far away from the optimum. For instance, a randomly generated solution with expected Hamming distance $n/2$ from the optimum flips $\sqrt{n}$ bits and this mutation will decrease exponentially fast with further improvements. For this reason we find that a linear decrease of the mutation rate is a better compromise in \rev{practice} as it allows allows for longer phases where large mutations occur} \textcolor{black}{ and it flips the number of bits that increase the probability of hitting the optimum in the next step.}
 
 
 
 
 
 \begin{table*}[t!]
-	\caption{Expected runtimes of the different mutation operators when embedded in a (1+1) algorithmic framework for the benchmark functions considered in this paper. For all results the optimum in unknown to the algorithms. %The $*$ indicates that we have not performed the analysis, yet although Static hypermutations may be faster, the upper bound is still correct. 
+	\caption{Expected runtimes of the different mutation operators when embedded in a (1+1) algorithmic framework for the benchmark functions considered in this paper. For all results the optimum is unknown to the algorithms. %The $*$ indicates that we have not performed the analysis, yet although Static hypermutations may be faster, the upper bound is still correct. 
 	$\beta:= \log_2 \frac{20}{c}$
 	}
 	%The same result as $(1+1)~IA^{hype}$ using static hypermutation ($M=n$) has been shown for the original IPM of Opt-IA \cite{JansenZarges2011}.}
@@ -256,8 +257,8 @@ A summary of the results obtained in the paper is provided in Table \ref{table:s
 
 In this section, we evaluate the performance of the three different \IPHfcm{} operators, %(1), (2) and (3),
 assuming the optimum is known (i.e., best $=$ opt). Under this assumption, the operators exhibit their ideal behaviour (i.e., the mutation potential decreases with the desired rate as the optimum is approached).
-Our aim is to evaluate what speed-ups can be achieved in ideal conditions compared to the well-studied static mutation potentials. To achieve such comparisons we perform runtime analyses of the (1+1)~IA  using the \IPHfcm{} on the standard \textsc{OneMax} and \textsc{LeadingOnes} unimodal benchmark functions for which the performance of the same algorithm using static mutation potentials is known~\cite{CorusOlivetoYazdani2019TCS}. The simple to define \textsc{OneMax} function counts the number of 1-bits in \new{a} bit string and is normally used to evaluate the hill climbing ability of algorithms~\cite{LehrTEVC2018,CorusOlivetoTEVCsteadyGA2017,CorusOlivetoAlgo2020,DoerrDoerrEbel2015}. On the other hand, \textsc{LeadingOnes} is a slightly harder unimodal problem which counts the consecutive number of 1-bits at the beginning of the bit string before the first 0-bit. 
-Evolutionary algorithms using standard bit mutation (or k-bit flip local search mutation) optimise the functions respectively in $\Theta(n \log n)$ and $\Theta(n^2)$ expected fitness function evaluations \cite{DrosteJansenWegener2002,BoettcherEtAl2010,DoerrEtAl2016B,LissovoiOlivetoWarwicker2020,DLOW2018}, while static hypermutations are a linear factor slower\cite{CorusOlivetoYazdani2019TCS}.
+Our aim is to evaluate what speed-ups can be achieved in ideal conditions compared to the well-studied static mutation potentials. To achieve such comparisons we perform runtime analyses of the (1+1)~IA  using the \IPHfcm{} on the standard \textsc{OneMax} and \textsc{LeadingOnes} unimodal benchmark functions for which the performance of the same algorithm using static mutation potentials is known~\cite{CorusOlivetoYazdani2019TCS}. The \rev{simple-to-define} \textsc{OneMax} function counts the number of 1-bits in \new{a} bit string and is normally used to evaluate the hill climbing ability of algorithms~\cite{LehrTEVC2018,CorusOlivetoTEVCsteadyGA2017,CorusOlivetoAlgo2020,DoerrDoerrEbel2015}. On the other hand, \textsc{LeadingOnes} is a slightly harder unimodal problem which counts the consecutive number of 1-bits at the beginning of the bit string before the first 0-bit \rev{or the end of the string}. 
+Evolutionary algorithms using standard bit mutation (or bit flip local search mutation) optimise the functions respectively in $\Theta(n \log n)$ and $\Theta(n^2)$ expected fitness function evaluations \cite{DrosteJansenWegener2002,BoettcherEtAl2010,DoerrEtAl2016B,LissovoiOlivetoWarwicker2020,DLOW2018}, while static hypermutations are a linear factor slower\cite{CorusOlivetoYazdani2019TCS}.
 
 While in practice both evolutionary algorithms and artificial immune systems use a population of solutions, in this paper we consider single trajectory algorithms to better highlight the performance of all the considered hypermutation operators.
 The pseudo-code of a simple AIS,  the (1+1) Immune Algorithm (\oneoneIA{}), is given in Algorithm~\ref{alg:simple}. It simply uses one candidate solution in each iteration to which inversely proportional hypermutations are applied. For the function Hypermutate$(x)$, \IPHfcm{} performs two steps: 
@@ -272,7 +273,7 @@ Before stating the main results, we first introduce the following lemma (the Bal
 In a ballot, suppose that candidate P receives $p$ votes and candidate Q receives $q$ votes such that $p>q$. The probability that throughout the counting P is always ahead of Q is $(p-q)/(p+q)$. 
 \end{lemma}
 
-{\color{black}In the context of hypermutation operators, the vote counts are the initial number of $0$ and $1$-bits in the solutions, while counting the votes correspond to flipping them until the first constructive mutation. The probability that a constructive mutation is found is equivalent to the probability of the $q$ candidate having as many votes counted as the other during any time in the counting process.}
+{\color{black}In the context of hypermutation operators, the vote counts are the initial number of $0$ and $1$-bits in the solutions, while counting the votes correspond to flipping them until the first constructive mutation. The probability that a constructive mutation is found is equivalent to the probability of the $Q$ candidate having as many votes counted as the other during any time in the counting process.}
 
 
 
@@ -390,7 +391,7 @@ For the lower bound, we use the Ballot theorem (Lemma~\ref{lem:ballot}).
 
 By Chernoff bounds, the number of 0-bits in the initialised solution is at least $n/3$ w.o.p. Considering the number of 
 0-bits as $i=q$ and the number of 1-bits as $n-i=p$, the probability of 
-an improvement is at most $1-(p-q)/(p+q)=1-(n-2i)/n=\frac{2i}{n}$ by the Ballot theorem, where $i=H(x, opt)$. This means that we need to wait at least $\frac{n}{2i}$ iterations to see an improvement and each time the mutation operator fails to improve the fitness {(\color{black}$\frac{n}{2i} - 1$ times in expectation) }, $i$ fitness function evaluations will be wasted. Considering that at least $n/3$ improvements are needed, the expected time to optimise \textsc{OneMax} is larger than $\sum_{i=1}^{n/3} {\color{black}\left(\frac{n}{2i}-1\right)} \cdot i= \Omega(n^2)$.
+an improvement is at most $1-(p-q)/(p+q)=1-(n-2i)/n=\frac{2i}{n}$ by the Ballot theorem, where $i=H(x, opt)$. This means that we need to wait at least $\frac{n}{2i}$ iterations to see an improvement and each time the mutation operator fails to improve the fitness {(\color{black}$\frac{n}{2i} - 1$ times in expectation)}, $i$ fitness function evaluations will be wasted. Considering that at least $n/3$ improvements are needed, the expected time to optimise \textsc{OneMax} is larger than $\sum_{i=1}^{n/3} {\color{black}\left(\frac{n}{2i}-1\right)} \cdot i= \Omega(n^2)$ \rev{since the operator cannot improve the \textsc{OneMax} function value by more than one in each application due to FCM}.
 \end{proof}
 
 The following theorem shows that a greater speed up may be achieved if the potential decreases exponentially rather than linearly. Note that for \textsc{OneMax} the Hamming distance of a solution to the optimum and its difference in fitness are the same. %The proof is omitted due to lack of space.
@@ -448,13 +449,30 @@ The proof for the lower bound follows that of Theorem 3.6 in \cite{CorusOlivetoY
 using static hypermutation with potential $M:=cn$ with the exception that the amount of wasted fitness function evaluations in case of failure at finding an improvement within a hypermutation is now $H(x,\text{opt})$ instead of $cn$.
 
 
-Considering $i$ as the number of leading 1-bits, we denote the expected number of fitness function evaluations until an improvement happens by $E(f_i)$. Any such candidate solution has $i$ leading 1-bits with a 0-bit following, and then $n-i-1$ \emph{trailing bits}. The trailing bits stay uniformly distributed throughout the run since the hypermutation operation can only terminate with an accepted solution by immediately flipping the leftmost $0$-bit, which does not alter the trailing bits, or by immediately flipping a random trailing bit, which does not affect the probability of the flipped position being 1 or 0 after it is flipped\cite{DrosteJansenWegener2002}.   We take into account three possible events $E_1$, $E_2$ and $E_3$ that can happen in the first bit flip: $E_1$ is the event of flipping a leading 1-bit which happens with probability $i/n$ {\color{black} and allows the hypermutation to keep flipping $M-1$ more bits}, $E_2$ is the event of flipping the first 0-bit which happens with probability $1/n$, and $E_3$ is the event of flipping any other bit which happens with probability $(n-i-1)/n$. {\color{black}Since FCM stops the hypermutation operator as soon as an equally fit solution is sampled $E_2$ and $E_3$ each stops the hypermutation operation.} So we get $E(f_i|E_1)=H(x,opt)+ E(f_i)$, $E(f_i|E_2)=1$, and $E(f_i|E_3)=1+ E(f_i)$. Hence, by the law of total expectation, the expected number of fitness function evaluations for every improvement is $ E(f_i) = \frac{i}{n} \left( H(x,opt)+ E(f_i)\right) + \frac{1}{n} \cdot 1 +\frac{n-i-1}{n} \left( 1+ E(f_i)\right)$. Solving the equation for $E(f_i)$ gives us $E(f_i)=
+Considering $i$ as the number of leading 1-bits, we denote the expected number of fitness function evaluations until an improvement happens by $E(f_i)$. Any such candidate solution has $i$ leading 1-bits with a 0-bit following, and then $n-i-1$ \emph{trailing bits}. The trailing bits stay uniformly distributed throughout the run since the hypermutation operation can only terminate with an accepted solution by immediately flipping the leftmost $0$-bit, which does not alter the trailing bits, or by immediately flipping a random trailing bit, which does not affect the probability of the flipped position being 1 or 0 after it is flipped\cite{DrosteJansenWegener2002}.  
+
+ We take into account three possible events $E_1$, $E_2$ and $E_3$ that can happen in the first bit flip: 
+ \begin{itemize}
+\item $E_1$ is the event of flipping a leading 1-bit which happens with probability $i/n$ {\color{black} and allows the hypermutation to keep flipping $M-1$ more bits}, 
+\item $E_2$ is the event of flipping the first 0-bit which happens with probability $1/n$, and, 
+\item $E_3$ is the event of flipping any other bit which happens with probability $(n-i-1)/n$. 
+\end{itemize}
+{\color{black}Since FCM stops the hypermutation operator as soon as an equally fit solution is sampled, $E_2$ and $E_3$ each stop the hypermutation operation.} So we get $E(f_i|E_1)=H(x,opt)+ E(f_i)$, $E(f_i|E_2)=1$, and $E(f_i|E_3)=1+ E(f_i)$. 
+
+Hence, by the law of total expectation, the expected number of fitness function evaluations for every improvement is $ E(f_i) = \frac{i}{n} \left( H(x,opt)+ E(f_i)\right) + \frac{1}{n} \cdot 1 +\frac{n-i-1}{n} \left( 1+ E(f_i)\right)$. Solving the equation for $E(f_i)$ gives us $E(f_i)=
 %\frac{in-i^2-i-i\epsilon n}{2}
-i\cdot H(x,opt)+n-i\geq i\cdot H(x,opt) $. Since the bits after the leftmost 0-bit are distributed uniformly at random \cite{DrosteJansenWegener2002}, {\color{black} while there are still a linear number of trailing bits} the value of $H(x,opt)$ is not less than $1+ \frac{(n-i-1)}{2}- \frac{\epsilon }{2}n$ w.o.p. by Chernoff bounds. Thus, we conclude $E(f_i) \geq \frac{(1-\epsilon)in-i^2+i}{2}\cdot {\color{black}(1-o(1))}$. The right hand side of the inequality has a second derivative of $-2$ with respect to $i$, and therefore it is concave. For the interval $i\in [n/2-\epsilon^*n, n/2+\epsilon^*n]$ its value is of order $\Omega(n^2)$ for some   arbitrarily small $\epsilon^*>0$.
+i\cdot H(x,opt)+n-i\geq i\cdot H(x,opt) $. 
+
+Since the bits after the leftmost 0-bit are distributed uniformly at random \cite{DrosteJansenWegener2002}, {\color{black} while there are still a linear number of trailing bits} the value of $H(x,opt)$ is not less than $1+ \frac{(n-i-1)}{2}- \frac{\epsilon }{2}n$ w.o.p. by Chernoff bounds. 
+
+Thus, we conclude $E(f_i) \geq \frac{(1-\epsilon)in-i^2+i}{2}\cdot {\color{black}(1-o(1))}$. The right hand side of the inequality has a second derivative of $-2$ with respect to $i$, and therefore it is concave. For the interval $i\in [n/2-\epsilon^*n, n/2+\epsilon^*n]$ its value is of order $\Omega(n^2)$ for some   arbitrarily small $\epsilon^*>0$.
 
 
-As we are computing the lower bound, we have to take into account the probability of skipping any level $i$. To do this, we need to calculate the expected number of consecutive 1-bits that follow the leftmost 0-bit (called free riders \cite{DrosteJansenWegener2002}). The expected number of free riders is $\sum_{i=1}^{n-i-1} i \cdot 1/2^{i+1} < \frac{1}{2} \cdot \sum_{i=0}^{\infty} i \cdot (1/2)^i= \frac{1}{2} \cdot \frac{1/2}{(1-1/2)^2}=1$. This means that {\color{black}$p^{*}_{i}$}, the probability of not skipping a level $i$ is $\Omega(1)$.
+As we are computing the lower bound, we have to take into account the probability of skipping any level $i$. To do this, we need to calculate the expected number of consecutive 1-bits that follow the leftmost 0-bit (called free riders \cite{DrosteJansenWegener2002}). 
+
+The expected number of free riders is $\sum_{i=1}^{n-i-1} i \cdot 1/2^{i+1} < \frac{1}{2} \cdot \sum_{i=0}^{\infty} i \cdot (1/2)^i= \frac{1}{2} \cdot \frac{1/2}{(1-1/2)^2}=1$. This means that {\color{black}$p^{*}_{i}$}, the probability of not skipping a level $i$ is $\Omega(1)$.
 %We know that the expected number of consecutive 1-bits that follow the leftmost 0-bit is less than two \cite{DrosteJansenWegener2002} which means the probability of not skipping a level $i$ is $\Omega(1)$.
+
 On the other hand, with probability at least $1- 2^{-n/3}$, the initial solution does not have more than $n/3$ leading 1-bits. Thus, we obtain a lower 
 bound of  $(1-2^{-n/3}) \sum_{i=n/2-\epsilon^*n}^{n/2+\epsilon^*n} p^{*}_{i}\cdot E(f_i)=\Omega(1) \sum_{i=n/2-\epsilon^*n}^{n/2+\epsilon^*n} \frac{in-i^2+i-i\epsilon n}{2}=\Omega(n^3)$ on the expected number of fitness function evaluations.
 
@@ -475,6 +493,7 @@ $n^{1/n^{\epsilon}}= (1+\frac{\ln{n}}{n^{\epsilon}})(1 \pm o(1))$.
 	
 \end{proof}
 
+\rev{We now proceed with the analysis of the exponential-based potential.}
 
 \begin{theorem} \label{expohdOnLO}
 The {\oneoneIA } using \IPHfcm{} with {\expoF } optimises \textsc{LeadingOnes} in $O(n^3/\log n)$ and 
@@ -528,7 +547,7 @@ fitness function evaluations for any arbitrarily small constant $\epsilon>0$.
 
 \begin{proof}
 	
-	$$ n^{-1/(2n)} ;\ge; \bigl(1-\tfrac{\ln n}{2n}\bigr)\bigl(1-o(1)\bigr), $$ 
+	$$ n^{-1/(2n)} \ge \bigl(1-\tfrac{\ln n}{2n}\bigr)\bigl(1-o(1)\bigr), $$ 
 	
 The proof for the upper bound is similar to the proof of Theorem~\ref{th:linHD-LO}, however, each 
 failure in improvement yields $n^{H(x, \text{opt})/n}$ wasted fitness function evaluations. 
@@ -558,28 +577,28 @@ $E(f_i){\color{black}\ge} i \cdot n^{\frac{1}{n}+\frac{n-i-1}{2n}-\epsilon}+n-i$
 
 
 
-\new{Overall in this section we have shown that considerable speed-ups can be achieved in the ideal condition where the optimum is known by using inversely proportional hypermutations compared to static ones.
+\new{Overall, in this section we have shown that considerable speed-ups can be achieved in the ideal condition where the optimum is known by using inversely proportional hypermutations compared to static ones.
 We conclude} that {\expoHD } provides larger hill-climbing speed-ups compared to the other mutation potentials and is stable to the scaling of fitness functions.
 %we will use it in the remainder of the paper.
-\new{However, {\expoHD } only allows to flip at most $\sqrt{n}$ bits when far away from the optimum (eg., at initialisation for \textsc{OneMax}), which means that the algorithm hardly ever performs large mutations except at initialisation defeating the purpose of having a hypermutation operator at all. Thus, we believe that \linHD, while being slower during the hillclimbing phases, provides a better balance between high and low mutation rates for hard multimodal functions when the total runtime is reasonably dominated by the time required to escape from local optima. Notice from Table~\ref{table:afl} that using a linear decay operator with FCM  rather than in Clonalg still makes a difference between polynomial and exponential time for the functions when the optimum is known. In the following section we will highlight how being able to perform large mutations more often allows the algorithm to be effective in practice when the optimum is unknown for multimodal functions with very different characteristics.}
+\new{However, {\expoHD } only allows to flip at most $\sqrt{n}$ bits when far away from the optimum (e.g., at initialisation for \textsc{OneMax}), which means that the algorithm hardly ever performs large mutations except at initialisation defeating the purpose of having a hypermutation operator at all. Thus, we believe that \linHD, while being slower during the hillclimbing phases, provides a better balance between high and low mutation rates for hard multimodal functions when the total runtime is reasonably dominated by the time required to escape from local optima. Notice from Table~\ref{table:afl} that using a linear decay operator with FCM  rather than in Clonalg still makes a difference between polynomial and exponential time for the functions when the optimum is known. In the following section we will highlight how being able to perform large mutations more often allows the algorithm to be effective in practice when the optimum is unknown for multimodal functions with very different characteristics.}
 
  	
  	\section{Behaviour of IPH in Practice}
 
-In this section we consider the usage of IPH % {\expoHD } 
+In this section, we consider the usage of IPH % {\expoHD } 
 in realistic applications where the optimum is unknown.
  To this end, the mutation rate of the IPH operator will be inversely proportional to the best seen solution rather than to the unknown optimum. 
  
- We combine \IPHfcm{} using {\linHD } with hybrid ageing, as in the Opt-IA AIS \cite{CutelloNicosiaPavoneTimmis2007}, and embed it in a $(1+1)$~Opt-IA shown in Algorithms \ref{alg:alg1+ageing} and \ref{alg:alg2+ageing}. \new{To use the ageing operator an age, $\alpha(x)$, is assigned to the individual $x$ and is initially set to zero.} After the Hypermutate$(x)$ operator, %, our algorithm  
+ We combine \IPHfcm{} using {\linHD } with hybrid ageing, as in the Opt-IA AIS \cite{CutelloNicosiaPavoneTimmis2007}, and embed it in a $(1+1)$~Opt-IA shown in Algorithms \ref{alg:alg1+ageing} and \ref{alg:alg2+ageing}. \new{To use \rev{an} ageing operator, an age $\alpha(x)$, is assigned to the individual $x$.} After the Hypermutate$(x)$ operator, %, our algorithm  
  	%1) calculates $M:=$ \expoHD, and 2) creates $y$ by flipping at most $M$ distinct bits of $x$ selected uniformly at random one after another until constructive mutation happens.
  	the ageing operator is applied.
- 	Among the different variants of ageing, {\it hybrid} ageing has been shown to be very efficient at escaping local optima~\cite{OlivetoSudholt2014ageing,CorusOlivetoYazdaniGECCO2017,CorusOlivetoYazdaniPPSN2018Approx}. Using this operator,  individuals are assigned with initial age zero. During each iteration of the algorithm, the age  increases by 1 and is passed to the offspring if it does not improve over its parent's fitness. If the offspring is fitter than the parent, then its age is set to 0. At the end of each iteration, any individual with age larger than a threshold $\tau$ is removed with probability $1/2$. In case there is no other individual left, a new individual is initialised uniformly at random\footnote{When a population is used, the required number of individuals are re-initialised to reach the population size again after ageing is applied.}. 
+ 	Among the different variants of ageing, {\it hybrid} ageing has been shown to be very efficient at escaping local optima~\cite{OlivetoSudholt2014ageing,CorusOlivetoYazdaniGECCO2017,CorusOlivetoYazdaniPPSN2018Approx}. Using this operator,  individuals are assigned with initial age zero. During each iteration of the algorithm, the age  increases by 1 and is passed to the offspring if it does not improve over its parent's fitness. If the offspring is fitter than the parent, then its age is set to 0. At the end of each iteration, any individual with age larger than a threshold $\tau$ is removed with probability \rev{$p_{\text{die}}=1/2$}. In case there is no other individual left, a new individual is initialised uniformly at random\footnote{When a population is used, the required number of individuals are re-initialised to reach the population size again after ageing is applied.}. 
  
  Ageing has been shown to enable algorithms to escape from local optima either by identifying a gradient leading away from it or by restarting the whole optimisation process. Our aim behind the algorithm design is that by escaping local optima via ageing, the number of local optima that are identified by the algorithm increases over time. Thus as time goes by the IPH should approximate its ideal behaviour better and better.
  
  \textcolor{black}{Concerning the IPH operator for practical applications we  reintroduce the parameter $c\leq 1$ for determining the mutation potential when it grows linearly with the Hamming distance as in the original Opt-IA~\cite{JansenZarges2011}:}  
  \textcolor{black}{
- $$M_\textsc{linHD} = \max\left(\lfloor c \cdot H(x,\text{best}) \rfloor, 1 \right) $$
+ $$\text{\linHD} = \max\left(\lfloor c \cdot H(x,\text{best}) \rfloor, 1 \right) $$
  }
 \textcolor{black}{The parameter will be useful to avoid always ending up in the same basins of attraction as we will see in the analyses of both multimodal function classes we consider in this paper.} %TO BE DISCUSSED: which will hinder exploration that is the main goal of the high mutation rates??.}
 
@@ -589,7 +608,7 @@ This design choice leads to considerably different algorithmic behaviours.}
 \textcolor{black}{If the current {\it best} is updated to the new solution when individuals of equal fitness are encountered,  then the algorithm will be extremely fast on unimodal functions because the mutation rate will always be the smallest possible (i.e., 1-bit flips). So if the aim is to optimise easy unimodal functions then this version, which we call $(1+1)$~Opt-IA$_{\textsc{LastBest}}$ is the preferred choice, as it can be proved to run in optimal asymptotic runtime on benchmark functions such as \textsc{OneMax} (i.e., $\Theta(n \log n)$) and \textsc{LeadingOnes} (i.e., $\Theta(n^2)$). However, this choice would mean that the algorithm would keep low mutation rates when trapped in the best found local optima if they are encountered again and again with high probability after the algorithm is restarted.}
 
 \textcolor{black}{
-The other choice, that of only updating the {\it best} when a strictly better solution is encountered, allows individuals trapped on a large plateau of local optima to increase their hamming distance to the best solution, thus increases the chances of escaping via higher mutation rates. This version, which we call $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$, allows to use high mutation rates more often at the expense of being slower on some unimodal functions like \textsc{LeadingOnes} as we will see. With this operator we remember to update the {\it best} to the last seen individual of highest fitness (i.e. the current solution) when ageing is triggered because this limits the hamming distance between the new solution and the current best when a local optima is escaped by accepting solutions of lower fitness, thus decreases the chances of jumping back to the previous local optimum.}
+The other choice, that of only updating the {\it best} when a strictly better solution is encountered, allows individuals trapped on a large plateau of local optima to increase their \rev{Hamming} distance to the best solution, thus increases the chances of escaping via higher mutation rates. This version, which we call $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$, allows to use high mutation rates more often at the expense of being slower on some unimodal functions like \textsc{LeadingOnes} as we will see. With this operator we remember to update the {\it best} to the last seen \rev{(best)} individual of highest fitness (i.e. the current solution) when ageing is triggered because this limits the \rev{Hamming} distance between the new solution and the current best when a local optima is escaped by accepting solutions of lower fitness, thus decreases the chances of jumping back to the previous local optimum.}
  	
  	
  	\begin{algorithm}[t] 
@@ -616,7 +635,7 @@ The other choice, that of only updating the {\it best} when a strictly better so
  	            %\STATE{Add $y$ to $P$};
  	            \FOR{$w \in \{x,y\}$}
  				\IF{$\alpha(w) \geq \tau$}
- 				\STATE{with probability $1/2$, reinitialise $w$ uniformly at random with $\alpha(w)=0$}; 
+ 				\STATE{with probability \rev{$p_{\text{die}}=1/2$}, reinitialise $w$ uniformly at random with $\alpha(w)=0$}; 
  				%\STATE {Select the best individual in $P$ and remove the other};
  				\ENDIF
  				\ENDFOR
@@ -675,13 +694,13 @@ with {\linHD } \new{and any $c\leq 1$} for optimising
 \end{theorem}
 \begin{proof}
 Let $x_t$ be the current solution at the beginning of the iteration $t$. Immediately after the initialisation, the best seen solution is the current individual $x_1$ itself and the mutation potential \new{for both algorithms} is %$M=$ {\expoHD }$=n^{H(x_1,x_1)/n}=n^0=1$. \textcolor{black}{Similarly the linear mutation is also 
-\textcolor{black}{$1$ due $c\cdot H(x_1,x_1)$ being $0$ and stays $1$ since neutral mutations in \textsc{OneMax} require at least two bits to be flipped.} Note that  $x_t \neq x_{t+1}$ if and only if either $f(x_{t+1})\geq f(x_t)$ or $x_{t+1}$ is reinitialised after $x_t$ is removed from the population due to ageing. Thus, \new{for both algorithmic versions}, the mutation operator flips a single bit at every iteration until ageing is triggered for the first time.
+\textcolor{black}{$1$ due \rev{to} $c\cdot H(x_1,x_1)$ being $0$ and stays $1$ since neutral mutations in \textsc{OneMax} require at least two bits to be flipped.} Note that  $x_t \neq x_{t+1}$ if and only if either $f(x_{t+1})\geq f(x_t)$ or $x_{t+1}$ is reinitialised after $x_t$ is removed from the population due to ageing. Thus, \new{for both algorithmic versions}, the mutation operator flips a single bit at every iteration until ageing is triggered for the first time.
 The improvement probability will be at least $ 1/n $ until either $1^n$ or $0^n$ is sampled. 
 Given that the ageing threshold $\tau$  is at least $n^{1+\epsilon}$ for some constant $\epsilon >0 $, 
 the probability that the current solution will not improve $\tau$ times consecutively is at most 
 $(1-\frac{1}{n})^{n^{1+\epsilon}}=e^{-\Omega(n^\epsilon)}$. 
 Hence, the first optimum will be found before ageing is triggered w.o.p. Given that the ageing operator is not triggered, the expected time to find the first optimum can be shown with a fitness level argument. Let $k$ be the number of $0$-bits in $x_t$. The probability that a mutation improves $x_t$ is thus $k/n$ and the expected time for such an improvement is $n/k$. If we sum over all possible $k$, we obtain the expected runtime $\sum\limits_{k=1}^{n}n/k \leq n \ln n + {\color{black}O(n) } $, which is conditional on ageing not being triggered. If ageing triggers, \new{we pessimistically assume that the first instance that ageing is triggered happens at level $n-1$, and we get the maximum mutation potential which} can be at most $n$. Due to FCM the runtime would be at most $O(n^2 \log n)$ following the same line of argument while considering $n$ wasted fitness function evaluations for each mutation. %Since the reinitialised solutions are generated uniformly at random, if .  
-Since ageing does not trigger with overwhelming probability, the expected runtime is still $O(n \log{n})$.
+Since ageing does not trigger \rev{w.o.p.}, the expected runtime is still $O(n \log{n})$.
 
 To prove the lower bound we make a case distinction with respect to whether the ageing is triggered before the optimum is found or not. If the ageing mechanism is triggered early, then by our assumption $\tau=\Omega(n^{1+\epsilon})$ the runtime is $\Omega(n \log n)$. For the second case, the operator flips a single bit per mutation. Since the algorithm is initialised with a uniformly random solution, the number of $0$-bits in the initial solution is at least $n/3$ w.o.p. due to Chernoff bound on the binomial distribution. Similar to our argument for the upper bound, the expected time until the number of $0$-bits in the solution decreases from $k$ to $k-1$ is $k/n$ \new{and FCM will stop with probability 1 every time an extra one-bit is gained.}. Therefore, the expected runtime is  at least $(1-2^{-\Omega(n)}) \cdot \sum_{k=1}^{n/3} k/n = \Omega(n \log n)$. 
 \end{proof}
@@ -722,7 +741,7 @@ Fix a level~$\ell$ with $n/3\le \ell\le 2n/3$. For the current individual $x$ wi
 	
 \end{proof}
 
-\textcolor{black}{In this section we have proven the results for \linHD. Naturally the same results follow for the \expoHD~ operator which always has at most the same mutation rate or lower.}
+\textcolor{black}{In this section, we have proven the results for \linHD. Naturally the same results follow for the \expoHD~ operator which always has at most the same mutation rate or lower.}
 
 
 %{\color{black} This also cannot optimise Jump. We can mention this here maybe? Even with ageing.}
@@ -753,10 +772,10 @@ Now we show that differently from static hypermutations, {\linHD }
 combined with ageing can escape from the local optima of \cliff, 
 hence optimises the function efficiently. The condition that $d$ is not prohibitively large is necessary to avoid
 that the reinitialised solutions due to ageing have larger fitness than a solution with $n-d+1$ $1$-bits, {\color{black} which would cause the latter to be removed from the population}.
-We believe that this assumption is realistic for practical applications.
+We believe that this assumption is realistic for practical applications. 
 %\new{We consider the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ version as the other version would be even faster due to its lower mutation rates.}
 
- 
+
  
  %\textcolor{black}
  {\input{cliffSketchTEVC}}
@@ -765,7 +784,7 @@ We believe that this assumption is realistic for practical applications.
  
 \section{When IPH Outperforms Too Low Mutation Rates}
 \new{In this section we introduce a function class where inversely proportional hypermutations outperform the lower mutation rates of SBM, and the higher mutation rate on local optima of the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ will be essential.}
-The function class is inspired from one previously used to show the advantages and disadvantages of using high mutation rates in the context of rank-based mutation in population based algorithms~\cite{OlivetoLehreNeumann09}.
+The function class is inspired \rev{by the} one previously used to show the advantages and disadvantages of using high mutation rates in the context of rank-based mutation in population-based algorithms~\cite{OlivetoLehreNeumann09}.
 In rank-based mutation algorithms~\cite{RankBasedMutation} each individual has a different mutation rate based on their rank in the population i.e., the best individual has the lowest mutation rate while the worst individual has a very high one.
 The \textsc{LeadingTrapJump} function was introduced as an example where the use of high mutation rates is detrimental while low mutation rates are efficient. \new{However, if the locations of the local and global optima are swapped, then the opposite result can be shown (i.e. high mutation rates are effective while low ones are ineffective).}
 We have slightly modified the location of the trap compared to~\cite{OlivetoLehreNeumann09} for our objectives. 
@@ -785,14 +804,15 @@ In this paper we have
 %We have 
 shown their effectiveness in isolation for unimodal functions compared to static hypermutations in the ideal conditions when the optimum is known.
 Furthermore, we have provided an analysis of the operator embedded in the complete Opt-IA AIS to be used in practical applications where the optimum is usually unknown.
-\new{We have proved its effectiveness for two well-studied multimodal functions with considerably different characteristics showing how it harmonises together with the AIS operator better than static hypermutations.
-In particular the Opt-IA with IPH can escape local optima in three different ways: by mutating into far away solutions (see \textsc{LeadingTrapJump}), by accepting solutions of inferior quality (see \textsc{Cliff}) and naturally by automatically reinitialising the trapped solutions via ageing.
+We have proved its effectiveness for two well-studied multimodal functions with considerably different characteristics showing how it harmonises together with the AIS operator better than static hypermutations.
+In particular the Opt-IA with IPH can escape local optima in three different ways: by mutating into far away solutions (see \textsc{LeadingTrapJump}), by accepting solutions of inferior quality (see \textsc{Cliff}) and naturally by automatically reinitialising the trapped solutions via ageing \rev{as understood regarding ageing for a long time~\cite{HorobaJansenZarges09,JansenZarges2011differentageing,JansenZarges2010restart,OlivetoSudholt2014ageing}}.
 In particular, compared to the conference version of this paper, we have now proposed an Opt-IA algorithm with IPH that has the capability to escape from local optima via large mutations, something that was not possible with the previous version since the mutation rate remained lowest on the local optima.
-}
 
-Although our analysis used standard benchmark functions with significant structures to practical optimisation, we point out that the Opt-IA AIS with our proposed IPH can be shown to efficiently find arbitrarily good approximations to the NP-Hard Number Partitioning problem by following the same proof strategy of \cite{CorusOlivetoYazdaniAIJ2019} that uses that local optima are escaped from thanks to the ageing operator \textcolor{black}{concerning escaping local optima via hypermutation, IPH would have an insufficient mutation potential to find an approximation in the first run until reinitialisation. However whether subsequent runs with higher mutation potential can approximate arbitrarily well without relying on a good starting position  require further analysis of the problem landscape.} 
 
-Future work should evaluate the performance of the proposed algorithm both theoretically and experimentally for other combinatorial optimisation problems with practical applications. 
+Although our analysis used standard benchmark functions \rev{capturing specific structures that may appear in combinatorial optimisation problems,}
+ we point out that the Opt-IA AIS with our proposed IPH can be shown to efficiently find arbitrarily good approximations to the NP-Hard Number Partitioning problem by following the same proof strategy of \cite{CorusOlivetoYazdaniAIJ2019} that uses that local optima are escaped from thanks the ageing operator \rev{that simply restarts the algorithm once trapped on a local optimum.}  \textcolor{black}{Concerning escaping local optima via hypermutation, IPH would have an insufficient mutation potential to find an approximation in the first run until reinitialisation. However \rev{establishing} whether \rev{after restarts due to ageing triggering on local optima occur,} subsequent runs  with higher mutation potential can approximate arbitrarily well without relying on a good starting position require further analysis of the problem landscape.} 
+
+Future work should evaluate the performance of the proposed algorithms \rev{and inversely proportional mutation operators} both theoretically and experimentally for other combinatorial optimisation problems with practical applications. 
 
 %\section{Appendix}
 %\input{cliffAppendix}
