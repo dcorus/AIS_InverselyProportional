@@ -1,0 +1,15 @@
+\begin{theorem} \label{thm:leadingonesexpo}
+	The expected runtime of  the \new{$(1+1)$~Opt-IA$_{\textsc{LastBest}}$} using \IPHfcm{}  %with {\expoHD } 
+	\textcolor{black}{ with {\linHD }} \new{and any $c\leq 1$} for optimising
+	\textsc{LeadingOnes} is $\Theta(n^2)$ with $\tau=\Omega(n^{1+\epsilon})$ {\color{black}for any arbitrary} 
+	constant $\epsilon>0$.
+\end{theorem}
+\begin{proof}
+	
+	
+	\textcolor{black}{Since the algorithm only accepts equal or better individuals, we update the best seen after every acceptance, \emph{i.e.,} $x=best$ and $M=1$, until ageing is triggered for the first time.  }
+	For any suboptimal $x\in\{0,1\}^n$ it is sufficient to flip the leftmost $0$-bit of $x$ to improve its \textsc{LeadingOnes} value. Thus, the same argument as in Theorem~\ref{thm:onemaxexpo} which establishes that the ageing will not trigger with overwhelming probability also holds \textcolor{black}{and allows us to assume $M=1$ until the optimum is found}. We can similarly continue with a fitness level argument, {\color{black} with the only difference in that} the improvement probability for \textsc{LeadingOnes} is always $1/n$ regardless of the current function value and thus the sum yields $\sum\limits_{i=1}^{n}n = n^2$.
+	
+	For the lower bound, it is sufficient to prove that the {\color{black}expectation conditional on ageing not triggering} is $\Omega(n^2)$, since ageing will not trigger with overwhelming probability. In that case we have to consider how much the objective function value will increase in expectation when the leftmost $0$-bit is flipped by the operator. The bits on the right of the leftmost $0$-bit does not contribute to the fitness value and thus each can be a $0$-bit or $1$-bit with equal probability. Therefore, the expected number of "free-riders", i.e., the sequence of consecutive $1$-bits that follow the leftmost $0$-bit is at most $\sum_{i=0}^{n}2^{-i}\leq 2$. Since the expected increase after every mutation is at most $2$, the expected number of necessary successful mutations where the leftmost $0$-bit is flipped is at least $n/2$ to find the optimal solution. The expected time for each such successful mutation is $(1/n)^{-1}=n$ iterations and consequently the expected time until the optimum is found given that the ageing operator does not trigger is $\Omega(n^2)$.  
+	
+\end{proof}

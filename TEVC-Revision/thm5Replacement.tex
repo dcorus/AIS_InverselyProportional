@@ -1,0 +1,195 @@
+% ============================================================
+%  DROP-IN REPLACEMENT for Theorem \label{thm:expohdLO}
+%  (expoHD on LeadingOnes)
+%
+%  Replaces:  \begin{restatable}{theorem}{expohdLO}\label{thm:expohdLO} ...
+%             through the matching \end{proof}
+%
+%  WHAT TO DELETE from TEVCNewFullPaper.tex:
+%    - The old \begin{restatable}...\end{restatable} block for \label{thm:expohdLO}
+%    - The old \begin{proof}...\end{proof} block immediately after it
+%      (from the orphan line  $n^{-1/(2n)} \ge ...$  through \end{proof})
+%
+%  WHAT TO INSERT in its place: everything between the ===== markers below.
+%
+%  Also apply the DOWNSTREAM EDITS and TABLE 2 CHANGES noted at the
+%  bottom of this file.
+% ============================================================
+
+
+\begin{restatable}{theorem}{expohdLO}\label{thm:expohdLO}
+The {\oneoneIA } using \IPHfcm{} with {\expoHD } optimises
+\textsc{LeadingOnes} in $\Theta(n^{5/2}/\log^2 n)$ expected fitness function
+evaluations.
+\end{restatable}
+
+\begin{proof}
+At level~$i$ (i.e., with $i$ leading $1$-bits), the solution has the form
+$x = 1^{i}\,0\,b_{i+2}\cdots b_n$ where the tail bits $b_{i+2},\dots,b_n$
+are uniformly distributed.
+%~\cite{DJW02}.
+The Hamming distance to the optimum~$1^n$ is therefore
+$H(x,\text{opt}) = 1 + B$ where $B\sim\mathrm{Bin}(n-i-1,\,1/2)$.
+
+\medskip
+\noindent\textbf{Concentration of the mutation potential.}
+By a Chernoff bound,
+\begin{align*}
+&\Pr\!\left[\left|B - \tfrac{n-i-1}{2}\right| > n^{2/3}\right]
+\;\le\; 2\exp\!\left(-\frac{2n^{4/3}}{n-i-1}\right)
+\\\;&\le\; 2e^{-2n^{1/3}}
+\;=\; o(n^{-2}).
+\end{align*}
+
+A union bound over all $n$ levels and polynomially many iterations shows that,
+with overwhelming probability (w.o.p.), the Hamming distance satisfies
+\[
+H(x,\text{opt})
+\;=\; 1 + \tfrac{n-i-1}{2} \pm n^{2/3}
+\;=\; \tfrac{n-i+1}{2} \pm n^{2/3}
+\]
+throughout the entire run.
+Setting $h_i := (n-i+1)/(2n)$ and noting that
+$n^{\pm n^{-1/3}} = e^{\pm n^{-1/3}\ln n} = 1 \pm o(1)$,
+the mutation potential satisfies
+\begin{equation}\label{eq:M-expoHD-conc}
+M \;=\; n^{H/n}
+  \;=\; (1\pm o(1))\;n^{h_i}
+  \;=\; (1\pm o(1))\;n^{1/2-(i-1)/(2n)}.
+\end{equation}
+If the rare event that $|B - (n-i-1)/2| > n^{2/3}$ occurs, we
+pessimistically assume $M=n$, which yields polynomial expected runtime and
+contributes $o(1)$ to the total expectation.
+
+\medskip
+\noindent\textbf{Per-level cost.}
+The first bit flipped by the hypermutation is chosen uniformly from
+$\{1,\dots,n\}$.  With probability $i/n$ it hits a leading $1$-bit,
+destroying the prefix and consuming the full potential of~$M$ evaluations
+with no improvement; with probability $1/n$ it hits the leftmost $0$-bit,
+yielding an improvement at cost~$1$; with probability $(n-i-1)/n$ it hits
+a tail bit, costing $1$~evaluation with no improvement.
+By the law of total expectation,
+\[
+E(f_i)
+= \frac{i}{n}\bigl(M+E(f_i)\bigr)
+  +\frac{1}{n}\cdot 1
+  +\frac{n-i-1}{n}\bigl(1+E(f_i)\bigr),
+\]
+and solving gives
+\begin{equation}\label{eq:Efi-expoHD}
+E(f_i) \;=\; i\cdot M + n - i.
+\end{equation}
+By~\eqref{eq:M-expoHD-conc}, this equals
+$(1\pm o(1))\;i\cdot n^{1/2-(i-1)/(2n)} + n - i$ w.o.p.
+
+\medskip
+\noindent\textbf{Evaluating the sum.}
+We evaluate $S := \sum_{i=0}^{n-1} E(f_i)$, which governs both bounds.
+Factoring out $n^{1/2+1/(2n)}$ from the leading term and setting
+$y:=n^{-1/(2n)}<1$,
+\begin{align*}
+S
+&= (1\pm o(1))\sum_{i=0}^{n-1} i\cdot n^{1/2-(i-1)/(2n)}
+   \;+\;\underbrace{\sum_{i=0}^{n-1}(n-i)}_{\Theta(n^2)} \\
+&= (1\pm o(1))\;n^{1/2+1/(2n)}\sum_{i=1}^{n-1} i\,y^{i}
+   \;+\;\Theta(n^2).
+\end{align*}
+By the standard identity $\sum_{i=1}^{\infty} i\,y^i = y/(1-y)^2$
+and Lemma~\ref{lem:expo} (with $\epsilon=1/2$),
+\[
+1-y \;=\; 1 - n^{-1/(2n)}
+    \;=\; \frac{\ln n}{2n}\bigl(1+o(1)\bigr),
+\]
+so
+\[
+\frac{y}{(1-y)^2}
+\;=\; \frac{1+o(1)}{\bigl(\frac{\ln n}{2n}\bigr)^2}
+\;=\; \frac{4n^2(1+o(1))}{\ln^2 n}.
+\]
+The tail of the infinite series from $i=n$ onwards:
+since $y^n = (n^{-1/(2n)})^n = n^{-1/2}$,
+\begin{align*}
+\sum_{i=n}^{\infty} i\,y^i
+\;&=\; y^n\!\left(\frac{n}{1-y}+\frac{y}{(1-y)^2}\right)
+\;=\; n^{-1/2}\cdot O\!\left(\frac{n^2}{\ln n}\right)
+\\\;&=\; O\!\left(\frac{n^{3/2}}{\ln n}\right)
+\;=\; o\!\left(\frac{n^2}{\ln^2 n}\right).
+\end{align*}
+Therefore $\sum_{i=1}^{n-1} i\,y^{i} = \Theta(n^2/\ln^2 n)$.
+Since $n^{1/2+1/(2n)} = n^{1/2}\cdot n^{1/(2n)} = n^{1/2}(1+o(1))$,
+\begin{equation}\label{eq:S-expoHD}
+S \;=\; \Theta\!\left(\frac{n^{5/2}}{\log^2 n}\right).
+\end{equation}
+
+Finally, we follow the same arguments in Theorem~\ref{expohdOnLO} to establish the upper and the lower bound using $S$.
+%
+%\textbf{Upper bound.}
+%Each improvement advances the \textsc{LeadingOnes} value by at least one,
+%so the total expected number of evaluations satisfies
+%$\mathbb{E}[T] \le \sum_{i=0}^{n-1} E(f_i) = S = O(n^{5/2}/\log^2 n)$.
+%
+%\textbf{Lower bound.}
+%With probability $\Pr[x_1=0]=1/2$ the initial solution has
+%$\textsc{LeadingOnes}$ value~$0$, so every level $i\in\{0,\dots,n-1\}$
+%must be traversed.  Following the proof of Theorem~\ref{th:linHD-LO},
+%the expected number of free-riders per improvement is at most~$2$,
+%so each level~$i$ is visited with probability $p_i^*=\Omega(1)$.
+%For the lower bound on~$E(f_i)$, we use the concentration
+%$M \ge (1-o(1))\,n^{h_i}$ (w.o.p.), giving
+%$E(f_i) \ge (1-o(1))\,i\cdot n^{1/2-(i-1)/(2n)} + n - i$.
+%Hence
+%\[
+%\mathbb{E}[T]
+%\;\ge\;
+%\tfrac{1}{2}\sum_{i=0}^{n-1} p_i^*\cdot E(f_i)
+%\;=\;
+%\Omega(1)\cdot S
+%\;=\;
+%\Omega\!\left(\frac{n^{5/2}}{\log^2 n}\right).
+%\]
+\end{proof}
+
+
+% ============================================================
+%  DOWNSTREAM EDIT 1 — Speed-up commentary
+%
+%  The paragraph between \input{thm4Replacement} and the paragraph
+%  introducing the expoHD theorem currently contains the sentence:
+%
+%    "An advantage of Hamming distance-based exponential decays ..."
+%
+%  This paragraph is fine as-is.  However, the sentence AFTER
+%  \end{proof} of Theorem \ref{thm:expohdLO} that currently reads:
+%
+%    "We conclude that {\expoHD} provides larger hill-climbing
+%     speed-ups compared to the other mutation potentials and is
+%     stable to the scaling of fitness functions."
+%
+%  is still correct and needs no change.
+%
+%  IF there is a sentence earlier in the section reading something
+%  like "at least a logarithmic and at most a $\sqrt{n}$ factor
+%  speed-up", it should be updated to:
+%
+%    "Theorem~\ref{thm:expohdLO} shows that the Hamming-distance-based
+%     exponential mutation potential provides a
+%     $\Theta(\sqrt{n}\log^2 n)$ factor speed-up compared to
+%     static mutation potentials."
+%
+%  (Since static = $\Theta(n^3)$ and expoHD = $\Theta(n^{5/2}/\log^2 n)$,
+%   the speedup is $n^3/(n^{5/2}/\log^2 n) = \sqrt{n}\log^2 n$.)
+% ============================================================
+
+
+% ============================================================
+%  DOWNSTREAM EDIT 2 — TABLE 2 CHANGES
+%
+%  In the table environment (label: table:afl), update:
+%
+%  OLD (expoHD row, LeadingOnes column):
+%    $O(\frac{n^{5/2+\epsilon}}{\ln n})$, $\Omega(n^{9/4-\epsilon})$
+%
+%  NEW:
+%    $\Theta(n^{5/2}/\log^2 n)$
+% ============================================================

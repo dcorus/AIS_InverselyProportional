@@ -1,0 +1,37 @@
+
+\begin{restatable}{theorem}{expohdLO}\label{thm:expohdLO}
+	The {\oneoneIA } using \IPHfcm{} with {\expoHD } optimises \textsc{LeadingOnes} in 
+	$O(\frac{n^{5/2+\epsilon}}{\ln n})$ and $\Omega(n^{9/4-\epsilon})$ expected 
+	fitness function evaluations for any arbitrarily small constant $\epsilon>0$. 
+\end{restatable}
+
+\begin{proof}
+	
+	$$ n^{-1/(2n)} \ge \bigl(1-\tfrac{\ln n}{2n}\bigr)\bigl(1-o(1)\bigr), $$ 
+	
+	The proof for the upper bound is similar to the proof of Theorem~\ref{th:linHD-LO}, however, each 
+	failure in improvement yields $n^{H(x, \text{opt})/n}$ wasted fitness function evaluations. 
+	Since the bits after the leading ones are uniformly distributed, by Chernoff bounds the number 
+	of 0-bits (Hamming distance to the optimum) is smaller than  $1+(n-i-1)/2+\epsilon n$ 
+	w.o.p. {\color{black}Considering that the runtime will be polynomial even when the number of $0$-bits is larger than $1+(n-i-1)/2+\epsilon n$}, the expected time to optimise \textsc{LeadingOnes} is ${\color{black}o(1)}+\sum_{i=1}^{n} n \cdot 
+	n^{\frac{1+(n-i-1)/2+\epsilon n}{n}}= {\color{black}o(1)}+n \sum_{i=1}^{n} 
+	n^{\frac{1}{2}-\frac{i}{2n}+\epsilon+\frac{1}{2n}}={\color{black}o(1)}+n \cdot n^{\frac{1}{2}+\epsilon+\frac{1}{2n}} \sum_{i=1}^{n} 
+	n^{-\frac{i}{2n}}$. Knowing that 
+	$\sum_{i=0}^{\infty}n^{-\frac{i}{2n}}=\frac{1}{1-n^{\frac{-1}{2n}}}=${$\color{black} \frac{n^{\frac{1}{2n}}}{n^{\frac{1}{2n}} - 1} = \frac{1 + o(1)}{\frac{\ln{n}}{2n} + o\left(\frac{\ln{n}}{2n}\right)} = O\left(\frac{n}{\log{n}}\right)$ where in the third equality we used Taylor expansion of the exponential function.}  Hence, the expected time is $E(T) 
+	< {\color{black}o(1)}+n^{\frac{3}{2}+\epsilon} \cdot n^{\frac{1}{2n}} \cdot O\left(\frac{n}{\log n}\right)=O\left(\frac{n^{\frac{5}{2}+\epsilon}}{\log n}\right)$.
+	
+	
+	
+	The proof of the lower bound is also similar to the proof of Theorem~\ref{th:linHD-LO}. 
+	By taking the same steps and solving the equation for $E(f_i)$, we get
+	$E(f_i){\color{black}\ge} i \cdot n^{\frac{1}{n}+\frac{n-i-1}{2n}-\epsilon}+n-i$. Then, by taking into account the probabilities of starting with fewer than $n/2$ leading 1-bits and skipping a level $i$, we get the expected runtime of 
+	\begin{align*}
+		&(1-2^{-n/2})\sum_{i=n/2}^{n} {\color{black}p_{i}^{*}} \cdot E(f_i)\\
+		&\geq \Omega(1) \sum_{i=n/2+\epsilon 
+			n/2}^{n/2+\epsilon n} 
+		\left( i n^{1/n+((n-i-1)/2n)-\epsilon}+n-i )\right)\\
+		&\geq \Omega(1) \sum_{i=n/2+\epsilon 
+			n/2}^{n/2+\epsilon n}  in^{1/2-\epsilon+(1/(2n))-(i/(2n))}= \Omega(n^{(9/4)-\epsilon}).
+	\end{align*} 
+\end{proof}
+

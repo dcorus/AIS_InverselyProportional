@@ -1,0 +1,32 @@
+% ============================================================
+%  PROOF SKETCH for Theorem \label{thm:expohdLO}
+%  (expoHD on LeadingOnes) — main body replacement
+%
+%  Use this IN PLACE OF the full \begin{proof}...\end{proof}
+%  block in the main paper.  The full proof (thm5Replacement.tex)
+%  goes in the appendix, restated via \expohdLO*.
+% ============================================================
+
+\begin{proof}[Proof sketch]
+The proof follows the same template as that of Theorem~\ref{expohdOnLO}
+({\expoF} on \textsc{LeadingOnes}), with one additional ingredient: the
+mutation potential $M = n^{H(x,\text{opt})/n}$ is now \emph{random}, since
+the Hamming distance $H(x,\text{opt}) = 1 + B$ with
+$B\sim\mathrm{Bin}(n{-}i{-}1,\,1/2)$ depends on the uniformly distributed
+tail bits.  A Chernoff bound shows that $|B - (n{-}i{-}1)/2| \le n^{2/3}$
+throughout the run w.o.p.; since $n^{\pm n^{-1/3}} = 1 \pm o(1)$, this
+gives $M = (1\pm o(1))\,n^{h_i}$ with
+$h_i := (n{-}i{+}1)/(2n) \approx 1/2 - i/(2n)$.
+The per-level recurrence then yields the same closed form
+$E(f_i) = i\cdot M + n - i$ as in Theorem~\ref{expohdOnLO}, and summing
+over all levels reduces to the series
+$\sum_{i=1}^{n-1} i\,y^i$ with $y := n^{-1/(2n)}$ (compare
+$x = n^{-1/n}$ in Theorem~\ref{expohdOnLO}).  Applying
+$1 - y = (\ln n)/(2n)\cdot(1{+}o(1))$ via Lemma~\ref{lem:expo} and the
+identity $\sum i\,y^i = y/(1{-}y)^2$ gives
+$\sum i\,y^i = \Theta(n^2/\ln^2 n)$.  The halved exponent in~$y$ produces
+a prefactor of~$n^{1/2}$ (versus~$n$ for {\expoF}), yielding
+$S = \Theta(n^{5/2}/\log^2 n)$.  The upper and lower bound arguments
+are identical to those of Theorem~\ref{expohdOnLO}.
+The complete proof is given in Appendix~\ref{app:thm5}.
+\end{proof}

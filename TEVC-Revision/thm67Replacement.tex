@@ -1,0 +1,212 @@
+% ============================================================
+%  DROP-IN REPLACEMENT for Theorems 6, 7, and 8
+%  (linHD on OneMax and LeadingOnes — both algorithm variants)
+%
+%  Replaces:  the comment "We start by showing that without knowing..."
+%             through the end of the second \label{thm:leadingonesexpo}
+%             proof (\end{proof} of FirstBest/LO).
+%
+%  More precisely, in TEVCNewFullPaper.tex, DELETE everything from:
+%
+%    We start by showing that without knowing the location of the
+%    optimum in advance, \new{both} algorithms become very efficient
+%    for hill-climbing on \textsc{OneMax}.
+%
+%  through (and including) the line:
+%
+%    \textcolor{black}{In this section, we have proven the results
+%    for \linHD. Naturally the same results follow for the \expoHD~
+%    operator which always has at most the same mutation rate or lower.}
+%
+%  and INSERT the contents of this file in its place.
+%
+%  ADDITIONALLY:
+%    1. Search the ENTIRE .tex file for every \ref{thm:leadingonesexpo}
+%       and replace with the correct new label:
+%         - References to LastBest/LO (Thm 7)  → \ref{thm:LBleadingones}
+%         - References to FirstBest/LO (Thm 8) → \ref{thm:FBleadingones}
+%       (There are no downstream references to the old Thm 7 label that
+%        aren't also references to the old Thm 8 label, since the label
+%        was duplicated.  Check each \ref in context to decide which
+%        theorem is intended.)
+%
+%    2. Table 2 (label: table:afl) requires NO changes for these
+%       theorems — the $\Theta(n\log n)$, $\Theta(n^2)$, $\Theta(n^3)$
+%       entries are already correct.
+%
+%    3. Summary Table (label: table:summary) — update the footnote or
+%       conditions column if it references $\tau=\Omega(n^{1+\varepsilon})$
+%       for the LastBest / FirstBest rows on OneMax and LastBest/LO.
+%       The new condition for Thms 6–7 is $\tau\geq Cn\ln n$ ($C>2$);
+%       Thm 8 (FirstBest/LO) still uses $\tau=\Omega(n^{1+\epsilon})$.
+% ============================================================
+
+
+% ── RLS Reduction Lemma ──────────────────────────────────────────────
+We start by showing that without knowing the location of the optimum in advance,
+\new{both} algorithms become very efficient for hill-climbing on \textsc{OneMax}.
+
+\begin{lemma}[RLS Reduction]\label{lem:RLS-reduction}
+Let $f:\{0,1\}^n\to\mathbb{R}$ and let $T_{\mathrm{RLS}}$ denote the expected
+runtime of RLS (1-bit flip, accept if $\geq$) on $f$.
+Suppose that the \lastBest{} \emph{(}resp.\ \firstBest{} on functions admitting
+no neutral moves\emph{)} with ageing parameter~$\tau$ satisfies:
+\emph{(i)}~the mutation potential $M=1$ throughout every run in which ageing is
+not triggered, and
+\emph{(ii)}~the probability $p:=\Pr[A]$ that ageing is triggered before the
+optimum is found satisfies $p=o(1)$ and $\tau\cdot p=o(1)$.
+Then the expected runtime $T'$ of the algorithm satisfies
+$\mathbf{E}[T'] = (1\pm o(1))\,T_{\mathrm{RLS}}$.
+\end{lemma}
+
+\begin{proof}
+By~(i), conditional on $\lnot A$ the algorithm runs identically to RLS.
+
+\textit{Upper bound.}
+When ageing triggers, the algorithm restarts; the expected additional time is
+at most $\mathbf{E}[T']$.  Hence
+\[
+  \mathbf{E}[T'] \;\leq\;
+    \bigl(\tau + \mathbf{E}[T']\bigr)p
+    + \mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A].
+\]
+Rearranging and using $\tau p=o(1)$ from~(ii):
+\[
+  \mathbf{E}[T'] \;\leq\;
+  \frac{\mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]+\tau p}{1-p}
+  \;\leq\;
+  \frac{T_{\mathrm{RLS}}+o(1)}{1-o(1)}
+  \;=\; (1+o(1))\,T_{\mathrm{RLS}}.
+\]
+
+\textit{Lower bound.}
+Before event $A$ occurs, at most $T_{\mathrm{RLS}}+\tau$ steps elapse;
+afterwards RLS needs at most $T_{\mathrm{RLS}}$ more steps.  So
+$\mathbf{E}[T_{\mathrm{RLS}}\mid A]\leq 2T_{\mathrm{RLS}}+\tau$, and
+\[
+  T_{\mathrm{RLS}} \;\leq\;
+    \mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]
+    + (2T_{\mathrm{RLS}}+\tau)\,p,
+\]
+giving $\mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]
+\geq T_{\mathrm{RLS}}(1-2p)-\tau p=(1-o(1))\,T_{\mathrm{RLS}}$.
+Since $\mathbf{E}[T']\geq\mathbf{E}[T'\mid\lnot A]\,\Pr[\lnot A]
+=\mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]$, the lower bound
+follows.
+\end{proof}
+
+% ── Theorem 6: OneMax, both variants ─────────────────────────────────
+\begin{theorem}\label{thm:onemaxexpo}
+The expected runtime of \firstBest{} and \lastBest{} using \IPHfcm{} with
+\linHD{} and any $c\leq 1$ for optimising \textsc{OneMax} is $\Theta(n\log n)$
+with $\tau\geq Cn\ln n$ for a sufficiently large constant~$C$.
+\end{theorem}
+\begin{proof}
+Immediately after initialisation $\mathit{best}=x$, so $H(x,\mathit{best})=0$
+and $M=c\cdot H=0$; since the potential is at least~$1$ by convention, $M=1$.
+On \textsc{OneMax}, every bit flip changes fitness by $\pm 1$, so no neutral
+moves exist; every accepted solution strictly improves fitness and triggers
+$\mathit{best}\leftarrow x$ in both variants, maintaining $H=0$ and $M=1$
+throughout.  Condition~(i) of Lemma~\ref{lem:RLS-reduction} holds.
+
+For~(ii), at any level $k\geq 1$ the improvement probability is $k/n\geq 1/n$,
+so the probability of $\tau$ consecutive non-improvements is at most
+$(1-1/n)^\tau\leq e^{-\tau/n}\leq e^{-C\ln n}=n^{-C}$.
+A union bound over~$n$ levels gives $p:=\Pr[A]\leq n^{1-C}=o(1)$ for $C>1$,
+and $\tau\cdot p\leq Cn\ln n\cdot n^{1-C}=Cn^{2-C}\ln n=o(1)$ for $C>2$.
+Thus both conditions of Lemma~\ref{lem:RLS-reduction} hold for $C>2$.
+
+By Lemma~\ref{lem:RLS-reduction},
+$\mathbf{E}[T']=(1\pm o(1))\,T_{\mathrm{RLS}}$.
+Since $T_{\mathrm{RLS}}=\sum_{k=1}^{n}n/k=\Theta(n\log n)$ (lower bound: at
+least $n/3$ zeros initially w.o.p.\ by Chernoff, giving
+$\sum_{k=1}^{n/3}n/k=\Omega(n\log n)$), the result follows.
+\end{proof}
+
+\new{In the following two theorems we show how \lastBest{} achieves a linear
+factor speed-up over \firstBest{} for \textsc{LeadingOnes}, because the latter
+increases its mutation rate on plateaus of equal fitness before finding each
+improvement.}
+
+% ── Theorem 7: LastBest / LeadingOnes ────────────────────────────────
+\begin{theorem}\label{thm:LBleadingones}
+The expected runtime of \lastBest{} using \IPHfcm{} with \linHD{} and any
+$c\leq 1$ for optimising \textsc{LeadingOnes} is $\Theta(n^2)$ with
+$\tau\geq Cn\ln n$ for a sufficiently large constant~$C$.
+\end{theorem}
+\begin{proof}
+Since \lastBest{} accepts equal-or-better solutions \emph{and} updates
+$\mathit{best}$ on any acceptance, every accepted move (whether improving or
+neutral) restores $H(x,\mathit{best})=0$, so $M=1$ throughout.
+Condition~(i) of Lemma~\ref{lem:RLS-reduction} holds.
+
+For~(ii), the improvement probability at every level is exactly $1/n$
+(flip the leftmost $0$-bit), so $(1-1/n)^\tau\leq n^{-C}$
+and a union bound over $n$ levels gives $p:=\Pr[A]\leq n^{1-C}=o(1)$.
+Moreover $\tau\cdot p\leq Cn^{2-C}\ln n=o(1)$ for $C>2$, verifying
+condition~(ii).
+
+By Lemma~\ref{lem:RLS-reduction},
+$\mathbf{E}[T']=(1\pm o(1))\,T_{\mathrm{RLS}}$.
+For RLS on \textsc{LeadingOnes}, the unique improving move at each of the $n$
+levels is the leftmost $0$-bit flip, with probability $1/n$; neutral tail
+flips are accepted but do not advance the level.  Hence the expected time per
+level is $n$ and $T_{\mathrm{RLS}}=n^2$, giving $\mathbf{E}[T']=\Theta(n^2)$.
+\end{proof}
+
+% ── Theorem 8: FirstBest / LeadingOnes ───────────────────────────────
+%
+%  NOTE: This theorem does NOT reduce to RLS.  FirstBest does not update
+%  best on neutral moves, so H grows, M grows, and the n^3 cost is real.
+%  The existing proof is retained with only a label change.
+%  The ageing threshold here remains tau = Omega(n^{1+epsilon}) because
+%  the argument structure is different (no RLS reduction).
+% ─────────────────────────────────────────────────────────────────────
+\begin{theorem}\label{thm:FBleadingones}
+The expected runtime of the \new{$(1+1)$~Opt-IA$_{\textsc{FirstBest}}$}  %with {\expoHD }
+with {\linHD } \new{and any $c\leq 1$} for optimising
+\textsc{LeadingOnes} is $\Theta(n^3)$ with $\tau=\Omega(n^{1+\epsilon})$ for any arbitrary
+constant $\epsilon>0$.
+\end{theorem}
+\begin{proof}
+
+Fix a level~$\ell$ with $n/3\le \ell\le 2n/3$. For the current individual $x$ with $\mathrm{LO}(x)=\ell$, we have $x_1=\cdots=x_{\ell}=1$ and $x_{\ell+1}=0$, and the remaining $m:=n-\ell-1$ positions form the tail. In each iteration, the first flipped bit is uniformly distributed over $\{1,\dots,n\}$; therefore the probability that the first flip hits the improving bit $\ell+1$ is $1/n$, the probability that it hits the prefix is $\ell/n$, and the probability that it hits the tail is $m/n$. Let $T$ be the iteration on which the improving bit is first hit. Then $T$ is geometrically distributed with parameter~$1/n$, so $\mathbb{E}[T]=n$. Before this improving iteration occurs, the expected number of tail-first iterations is $(m/n)(\mathbb{E}[T]-1)=m=\Theta(n)$. Each such iteration flips a uniformly random tail bit. By standard coupon--collector arguments, after $\Theta(n)$ such tail flips a constant fraction of the $m$ tail positions has been flipped at least once with constant probability. Thus, with constant probability, the Hamming distance between $x$ and the best is $\Theta(m)=\Theta(n)$, and therefore the IPH mutation potential satisfies $M=\Theta(n)$ at this level.
+
+Consider now a subsequent iteration at the same level while $M\ge \alpha n$ for some constant $\alpha>0$. If the first flip hits the prefix (an event of probability at least $\ell/n\ge 1/3$), then, because mutation proceeds without replacement, the lost prefix bit cannot be repaired within the same iteration. Consequently, no acceptance can occur in that iteration, and the algorithm executes the entire mutation budget $M$, rejecting at the end. Hence the expected number of fitness evaluations in such an iteration is at least $\alpha n$. Since this happens with probability at least $1/3$, the unconditional expected cost of one iteration while $M=\Theta(n)$ is $\Omega(n)$.
+
+The probability that an iteration yields an improvement is exactly $1/n$, because only a first flip that hits position $\ell+1$ increases the \textsc{LeadingOnes} value. Therefore the expected number of iterations required to advance from level $\ell$ to $\ell+1$ is $1/(1/n)=n$. Combining this with the previous observation, the expected number of fitness evaluations spent at level $\ell$ satisfies $\Omega(n)\cdot n=\Omega(n^2)$.
+There are $\Theta(n)$ levels $\ell$ in the interval $[n/3,2n/3]$, and each such level contributes $\Omega(n^2)$ expected evaluations. Thus the total expected optimisation time is $\Omega(n^3)$. Finally, stochastic ageing can only increase the number of evaluations and therefore cannot invalidate the lower bound. Since the function has $n$ levels, $1/n$ probability of improvement and $M\leq n$, the expected runtime is bounded from above by $O(n^3)$ as well.
+
+
+\end{proof}
+
+\textcolor{black}{In this section, we have proven the results for \linHD. Naturally the same results follow for the \expoHD~ operator as upper bounds which always has at most the same mutation rate or lower.}
+
+
+% ============================================================
+%  DOWNSTREAM LABEL FIXES
+%
+%  The old paper used \label{thm:leadingonesexpo} for BOTH
+%  Theorem 7 (LastBest/LO) and Theorem 8 (FirstBest/LO).
+%  This was a duplicate-label bug.
+%
+%  New labels:
+%    Theorem 7 (LastBest/LO):   \label{thm:LBleadingones}
+%    Theorem 8 (FirstBest/LO):  \label{thm:FBleadingones}
+%
+%  Search the entire .tex file for every occurrence of
+%  \ref{thm:leadingonesexpo} and replace with the correct
+%  new label based on context:
+%
+%    - If the surrounding text discusses LastBest or the
+%      $\Theta(n^2)$ result → use \ref{thm:LBleadingones}
+%    - If the surrounding text discusses FirstBest or the
+%      $\Theta(n^3)$ result → use \ref{thm:FBleadingones}
+%
+%  TABLE 2 CHANGES:
+%    None required for runtime entries. The $\Theta(n\log n)$,
+%    $\Theta(n^2)$, and $\Theta(n^3)$ entries are already correct.
+%    If the table or its caption mentions the ageing threshold,
+%    update it: Thms 6–7 now use $\tau\geq Cn\ln n$ ($C>2$);
+%    Thm 8 still uses $\tau=\Omega(n^{1+\epsilon})$.
+% ============================================================
