@@ -594,34 +594,22 @@ The other choice, that of only updating the {\it best} when a strictly better so
 
 %\textsc{TwoMax} is often considered in the literature to evaluate the global optimisation capabilities of evolutionary algorithms by verifying whether both optima may be identified by 
 %populations.
-We start by showing that without knowing the location of the optimum in advance, \new{both} algorithms become very efficient for hill-climbing on \textsc{OneMax}. % and \textsc{LeadingOnes}.
+%We start by showing that without knowing the location of the optimum in advance, \new{both} algorithms become very efficient for hill-climbing on \textsc{OneMax}. % and \textsc{LeadingOnes}.
 
-\input{oldThm6}
 
-\new{In the following two theorems we show how the $(1+1)$~Opt-IA$_{\textsc{LastBest}}$ achieves a linear factor speed-up over the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ for the \textsc{LeadingOnes} function because the latter algorithm increases its mutation rate on each plateau of solutions of equal fitness on each fitness level before it finds an improvement.}
+\input{thm67Replacement}
 
-\input{oldThm7}
-
-\begin{theorem} \label{thm:leadingonesexpo}
-The expected runtime of the \new{$(1+1)$~Opt-IA$_{\textsc{FirstBest}}$}  %with {\expoHD } 
-with {\linHD } \new{and any $c\leq 1$} for optimising
-\textsc{LeadingOnes} is $\Theta(n^3)$ with $\tau=\Omega(n^{1+\epsilon})$ for any arbitrary 
-constant $\epsilon>0$.
-\end{theorem}
-\begin{proof}
-	
-Fix a level~$\ell$ with $n/3\le \ell\le 2n/3$. For the current individual $x$ with $\mathrm{LO}(x)=\ell$, we have $x_1=\cdots=x_{\ell}=1$ and $x_{\ell+1}=0$, and the remaining $m:=n-\ell-1$ positions form the tail. In each iteration, the first flipped bit is uniformly distributed over $\{1,\dots,n\}$; therefore the probability that the first flip hits the improving bit $\ell+1$ is $1/n$, the probability that it hits the prefix is $\ell/n$, and the probability that it hits the tail is $m/n$. Let $T$ be the iteration on which the improving bit is first hit. Then $T$ is geometrically distributed with parameter~$1/n$, so $\mathbb{E}[T]=n$. Before this improving iteration occurs, the expected number of tail-first iterations is $(m/n)(\mathbb{E}[T]-1)=m=\Theta(n)$. Each such iteration flips a uniformly random tail bit. By standard coupon–collector arguments, after $\Theta(n)$ such tail flips a constant fraction of the $m$ tail positions has been flipped at least once with constant probability. Thus, with constant probability, the Hamming distance between $x$ and the best is $\Theta(m)=\Theta(n)$, and therefore the IPH mutation potential satisfies $M=\Theta(n)$ at this level.
-	
-	Consider now a subsequent iteration at the same level while $M\ge \alpha n$ for some constant $\alpha>0$. If the first flip hits the prefix (an event of probability at least $\ell/n\ge 1/3$), then, because mutation proceeds without replacement, the lost prefix bit cannot be repaired within the same iteration. Consequently, no acceptance can occur in that iteration, and the algorithm executes the entire mutation budget $M$, rejecting at the end. Hence the expected number of fitness evaluations in such an iteration is at least $\alpha n$. Since this happens with probability at least $1/3$, the unconditional expected cost of one iteration while $M=\Theta(n)$ is $\Omega(n)$.
-	
-	The probability that an iteration yields an improvement is exactly $1/n$, because only a first flip that hits position $\ell+1$ increases the \textsc{LeadingOnes} value. Therefore the expected number of iterations required to advance from level $\ell$ to $\ell+1$ is $1/(1/n)=n$. Combining this with the previous observation, the expected number of fitness evaluations spent at level $\ell$ satisfies $\Omega(n)\cdot n=\Omega(n^2)$.
-	There are $\Theta(n)$ levels $\ell$ in the interval $[n/3,2n/3]$, and each such level contributes $\Omega(n^2)$ expected evaluations. Thus the total expected optimisation time is $\Omega(n^3)$. Finally, stochastic ageing can only increase the number of evaluations and therefore cannot invalidate the lower bound. Since the function has $n$ levels, $1/n$ probability of improvement and $M\leq n$, the expected runtime is bounded from above by $O(n^3)$ as well.
-	
-	
-\end{proof}
-
-\textcolor{black}{In this section, we have proven the results for \linHD. Naturally the same results follow for the \expoHD~ operator which always has at most the same mutation rate or lower.}
-
+%
+%\input{oldThm6}
+%
+%\new{In the following two theorems we show how the $(1+1)$~Opt-IA$_{\textsc{LastBest}}$ achieves a linear factor speed-up over the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ for the \textsc{LeadingOnes} function because the latter algorithm increases its mutation rate on each plateau of solutions of equal fitness on each fitness level before it finds an improvement.}
+%
+%\input{oldThm7}
+%
+%\input{oldThm8}
+%
+%\textcolor{black}{In this section, we have proven the results for \linHD. Naturally the same results follow for the \expoHD~ operator which always has at most the same mutation rate or lower.}
+%
 
 %{\color{black} This also cannot optimise Jump. We can mention this here maybe? Even with ageing.}
 \section{When IPH Outperforms Too High Mutation Rates}

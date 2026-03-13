@@ -71,23 +71,23 @@ at most $\mathbf{E}[T']$.  Hence
     + \mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A].
 \]
 Rearranging and using $\tau p=o(1)$ from~(ii):
-\[
-  \mathbf{E}[T'] \;\leq\;
-  \frac{\mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]+\tau p}{1-p}
-  \;\leq\;
-  \frac{T_{\mathrm{RLS}}+o(1)}{1-o(1)}
-  \;=\; (1+o(1))\,T_{\mathrm{RLS}}.
-\]
+\begin{align*}
+  \mathbf{E}[T'] \;&\leq\;
+\frac{\mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]+\tau p}{1-p}
+\;\leq\;
+\frac{T_{\mathrm{RLS}}+o(1)}{1-o(1)}\\
+\;&=\; (1+o(1))\,T_{\mathrm{RLS}}.
+\end{align*}	
+
 
 \textit{Lower bound.}
 Before event $A$ occurs, at most $T_{\mathrm{RLS}}+\tau$ steps elapse;
 afterwards RLS needs at most $T_{\mathrm{RLS}}$ more steps.  So
-$\mathbf{E}[T_{\mathrm{RLS}}\mid A]\leq 2T_{\mathrm{RLS}}+\tau$, and
-\[
+$\mathbf{E}[T_{\mathrm{RLS}}\mid A]\leq 2T_{\mathrm{RLS}}+\tau$, and $
   T_{\mathrm{RLS}} \;\leq\;
     \mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]
     + (2T_{\mathrm{RLS}}+\tau)\,p,
-\]
+$
 giving $\mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]
 \geq T_{\mathrm{RLS}}(1-2p)-\tau p=(1-o(1))\,T_{\mathrm{RLS}}$.
 Since $\mathbf{E}[T']\geq\mathbf{E}[T'\mid\lnot A]\,\Pr[\lnot A]
