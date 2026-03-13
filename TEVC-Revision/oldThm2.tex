@@ -1,0 +1,23 @@
+\begin{restatable}{theorem}{expofx} \label{cor:omexpohd}
+	The {\oneoneIA } using IPH with either {\expoF } or {\expoHD } optimises \textsc{OneMax} in $O(n^{3/2} \log 
+	n)$ and $\Omega(n^{3/2-\epsilon})$ expected fitness function evaluations for 
+	any arbitrarily small constant $\epsilon>0$.
+\end{restatable}
+%\end{theorem}
+
+\begin{proof}
+	We prove the results for \expoF{} which applies to \expoHD{} as well. 
+	To prove the upper bound, we use that by Chernoff bounds the initialised solution has at most $n/2+ n^{2/3}$ 0-bits w.o.p. {\color{black} If this event fails, we will assume that the mutation potential is always $M=n$ which still yields polynomial expected runtime following the same arguments below and contributes a $o(1)$ to the total expected time}. The probability of improvement in the first mutation step is at least $i/n$ with $i$ being the number of 0-bits. As we need at most $n/2+n^{2/3}$ improvements and each time the mutation fails to make an improvement at most $n^{1-\frac{n-i}{n}}$ fitness function evaluations are wasted, the total expected time to find the optimum is $E(T) \leq o(1) + \sum_{i=1}^{n/2+n^{2/3}} \frac{n}{i} \cdot n^{\frac{i}{n}}= O (n^{3/2} \log n)$ by pessimistically assuming $i=n/2+n^{2/3}$ in $n^{i/n}$ {\color{black} which yields $n^{1/2+n^{-1/3}}=\sqrt{n} \cdot e^{\frac{\ln n}{n^{1/3}}}=\sqrt{n} \cdot e^{o(1)}=O(\sqrt{n})$}.
+	
+	To prove the lower bound, we again consider $i$ as the number of 0-bits. By Chernoff 
+	bounds, $i$ is at least $n/2-\epsilon n$  in the initialised bit string for some arbitrarily small constant $\epsilon>0$. 
+	The probability of improvement is at most $2i/n$ by the Ballot theorem, and the number of wasted fitness function evaluations at each failure is 
+	$n^{\frac{i}{n}}$. {\color{black} Since the operator cannot improve the \textsc{OneMax} function value by more than one in each application due to FCM,} when we consider the time spent between levels $n(1/2 + 
+	\epsilon/2)$ and $n(1/2+\epsilon)$, we get the expected time of 
+	{\color{black}$n^{\frac{n/2-\epsilon n}{n}} \cdot \sum_{k=n/2+n\epsilon/2 }^{n/2+\epsilon 
+			n} \frac{n}{2(n-k)}-1 \geq \sum_{k=n/2+n\epsilon/2 }^{n/2+\epsilon 
+			n} \frac{\epsilon}{1-\epsilon}=n^{1/2-\epsilon} \cdot \epsilon n/2 \cdot \frac{\epsilon}{1-\epsilon}= 
+		\Omega(n^{3/2-\epsilon})$.}
+\end{proof}
+
+{\color{black}Here, we note that even though we picked the $\epsilon$ to be a constant, the leading term in the lower bound depends on $\epsilon$ quadratically which might impact practical applications.}

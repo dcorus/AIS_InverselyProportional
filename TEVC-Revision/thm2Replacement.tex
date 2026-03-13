@@ -1,0 +1,133 @@
+% ============================================================
+% DROP-IN REPLACEMENT for Theorem 2 (expoF / expoHD on OneMax)
+% ============================================================
+%
+% This file contains:
+%   1. The new theorem statement  (Theta instead of O/Omega)
+%   2. The complete new proof      (three-range upper bound + geometric-series lower bound)
+%   3. The TABLE 2 rows that need updating
+%
+% WHAT TO DELETE from the current paper:
+%   - The old \begin{restatable}...\end{restatable} block for \label{cor:omexpohd}
+%   - The old \begin{proof}...\end{proof} block immediately after it
+%   - The paragraph: "Here, we note that even though we picked the $\epsilon$
+%     to be a constant, the leading term in the lower bound depends on
+%     $\epsilon$ quadratically which might impact practical applications."
+%
+% WHAT TO INSERT in its place (everything between the ===== markers below):
+% ============================================================
+
+
+\begin{restatable}{theorem}{expofx} \label{cor:omexpohd}
+The {\oneoneIA } using IPH with either {\expoF } or {\expoHD } optimises \textsc{OneMax} in $\Theta(n^{3/2}/\log n)$ expected fitness function evaluations.
+\end{restatable}
+
+\begin{proof}
+We prove the results for \expoF{} which applies to \expoHD{} as well, since for \textsc{OneMax} the Hamming distance to the optimum equals the number of 0-bits, giving $M_{\text{expoF(x)}}=M_{\text{expoHD}}$.
+
+\medskip
+\noindent\textbf{Upper bound.}
+By Chernoff bounds, the initialised solution has at most $n/2+n^{2/3}$ zero-bits with overwhelming probability (w.o.p.). If this event fails, we assume $M=n$ throughout, which still yields polynomial expected runtime and contributes $o(1)$ to the total expected time. Let $i$ denote the current number of 0-bits. The probability of improvement in the first bit-flip is at least $i/n$, at most $n/2+n^{2/3}$ improvements are needed, and each failed mutation wastes at most $n^{i/n}$ fitness evaluations. Hence,
+\[
+E(T) \;\leq\; o(1) \;+\; \sum_{i=1}^{n/2+n^{2/3}} \frac{n}{i}\cdot n^{i/n}
+\;=\; n\sum_{i=1}^{n/2+n^{2/3}} \frac{n^{i/n}}{i}.
+\]
+We split the sum into three ranges. Fix $\delta=1/4$.
+
+\emph{Range~1: $i\in[1,\,n/\ln n]$.}
+For $i\leq n/\ln n$ we have $n^{i/n}\leq n^{1/\ln n}=e$.
+Therefore,
+\begin{align*}
+n\sum_{i=1}^{\lfloor n/\ln n\rfloor}\frac{n^{i/n}}{i}
+\;&\leq\; n\cdot e\cdot H_{\lfloor n/\ln n\rfloor}
+\;=\; O(n\log\log n)
+%\; \\ &=\; o\!\left(\frac{n^{3/2}}{\log n}\right).
+\end{align*}
+
+
+\emph{Range~2: $i\in[n/\ln n,\,\delta n]$.}
+For $i\leq \delta n$ we have $n^{i/n}\leq n^{\delta}$.
+Therefore,
+\[
+n\sum_{i=\lceil n/\ln n\rceil}^{\lfloor\delta n\rfloor}\frac{n^{i/n}}{i}
+\;\leq\; n\cdot n^{\delta}\sum_{i=\lceil n/\ln n\rceil}^{\lfloor\delta n\rfloor}\frac{1}{i}
+\;\leq\; n^{1+\delta}\cdot O(\ln(\delta\ln n))
+%\;=\; o\!\left(\frac{n^{3/2}}{\log n}\right),
+\]
+since $\delta<1/2$.
+
+\emph{Range~3: $i\in[\delta n,\,n/2+n^{2/3}]$.}
+For $i\geq \delta n$ we have $1/i\leq 1/(\delta n)=O(1/n)$.
+Therefore,
+\[
+n\sum_{i=\lceil\delta n\rceil}^{n/2+n^{2/3}}\frac{n^{i/n}}{i}
+\;\leq\; \frac{1}{\delta}\sum_{i=\lceil\delta n\rceil}^{n/2+n^{2/3}} n^{i/n}.
+\]
+This is a partial geometric series with common ratio $r=n^{1/n}$:
+\[
+\sum_{i=\lceil\delta n\rceil}^{n/2+n^{2/3}} n^{i/n}
+\;=\; n^{\delta}\cdot\frac{n^{(1/2+n^{-1/3}-\delta)}-1}{n^{1/n}-1}.
+\]
+By Lemma~\ref{lem:expo}, $n^{1/n}-1=(\ln n)/n\cdot(1+o(1))$, and $n^{1/2+n^{-1/3}}=\sqrt{n}\cdot e^{(\ln n)/n^{1/3}}=\sqrt{n}\cdot e^{o(1)}=O(\sqrt{n})$, so
+\[
+\frac{n^{1/2+n^{-1/3}}}{\ln n/n}
+\;=\; O\!\left(\frac{n^{3/2}}{\ln n}\right).
+\]
+Hence the Range~3 contribution is $O(n^{3/2}/\log n)$.
+
+Combining all three ranges, the dominant term is Range~3, giving $E(T)=O(n^{3/2}/\log n)$.
+
+\medskip
+\noindent\textbf{Lower bound.}
+By symmetry of the uniform initialisation, with probability at least $1/2$ the initial number of 0-bits is $i\geq n/2$. We condition on this event.
+
+Since the operator cannot improve the \textsc{OneMax} value by more than one per application due to FCM, every level must be visited. At level $i$ (i.e., the current solution has $i$ zero-bits), by the Ballot theorem (Lemma~\ref{lem:ballot}) the probability of improvement is at most $2i/n$. The expected waiting time for an improvement is therefore at least $n/(2i)$, and each of the at least $n/(2i)-1$ failed attempts wastes $n^{i/n}$ fitness evaluations. For $i\leq n/2$ we have $n/(2i)\geq 1$, so the expected cost at level $i$ is at least
+\[
+\left(\frac{n}{2i}-1\right)\cdot n^{i/n}
+\;\geq\; \frac{1}{2}\cdot\frac{n}{2i}\cdot n^{i/n}
+\quad\text{for }i\leq n/4,
+\]
+and more simply, for all $i\in[n/4,\,n/2]$ we use $n/i\geq 2$ to write
+\[
+\frac{n}{2i}\cdot n^{i/n}\;\geq\; n^{i/n}.
+\]
+Therefore the total expected runtime is at least
+\[
+\frac{1}{2}\sum_{i=n/4}^{n/2}\frac{n}{2i}\cdot n^{i/n}
+\;\geq\; \frac{n}{4}\sum_{i=n/4}^{n/2}\frac{n^{i/n}}{i}.
+\]
+Using $n/i\geq 2$ for all $i\leq n/2$, this is at least
+\[
+\frac{n}{4}\cdot 2\cdot\frac{1}{n}\sum_{i=n/4}^{n/2} n^{i/n}
+\;=\;\frac{1}{2}\sum_{i=n/4}^{n/2} n^{i/n}.
+\]
+The geometric sum evaluates as
+\begin{align*}
+\sum_{i=n/4}^{n/2} n^{i/n}
+\;&=\; n^{1/4}\cdot\frac{n^{1/4}-1}{n^{1/n}-1}
+\;\geq\; \frac{n^{1/2}\cdot(1-n^{-1/4})}{\ln n/n\cdot(1+o(1))}\\
+\;&=\;\Omega\!\left(\frac{n^{3/2}}{\ln n}\right),
+\end{align*}
+using $n^{1/n}-1=(\ln n)/n\cdot(1+o(1))$ from Lemma~\ref{lem:expo}.
+Hence the expected runtime is $\Omega(n^{3/2}/\log n)$.
+\end{proof}
+
+
+% ============================================================
+% TABLE 2 CHANGES
+% ============================================================
+%
+% In the table environment (label: table:afl), replace the TWO rows:
+%
+% OLD (expoF row):
+%   FCM with \expoF & $O(n^{(3/2)}\log n)$, $\Omega(n^{3/2-2\epsilon})$ & ...
+% NEW:
+%   FCM with \expoF & $\Theta(n^{3/2}/\log n)$ & ...
+%
+% OLD (expoHD row):
+%   FCM with \expoHD & $O(n^{(3/2)}\log n)$, $\Omega(n^{3/2-2\epsilon})$ & ...
+% NEW:
+%   FCM with \expoHD & $\Theta(n^{3/2}/\log n)$ & ...
+%
+% The LeadingOnes column entries for these two rows are UNCHANGED.
+% ============================================================
