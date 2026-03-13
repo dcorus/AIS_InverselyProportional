@@ -267,13 +267,22 @@ The pseudo-code of a simple AIS,  the (1+1) Immune Algorithm (\oneoneIA{}), is g
 The results proven in this section and comparisons with static hypermutations and the IPH operators from the literature are summarised in Table~\ref{table:afl}.
 
 
-Before stating the main results, we first introduce the following lemma (the Ballot theorem) which is used throughout this paper to derive lower bounds on the expected runtime of the algorithms~\cite{feller1968,JansenZarges2011,CorusOlivetoYazdani2019TCS}.  This theorem is essentially used to show the probability of picking more 1-bits than 0-bits during one hypermutation operation given that there are more 1-bits in the initial bit-string (or vice-versa). 
+Before stating the main results, we first introduce two lemmata. The first is the Ballot theorem which is used throughout this paper to derive lower bounds on the expected runtime of the algorithms~\cite{feller1968,JansenZarges2011,CorusOlivetoYazdani2019TCS}.  This theorem is essentially used to show the probability of picking more 1-bits than 0-bits during one hypermutation operation given that there are more 1-bits in the initial bit-string (or vice-versa). 
 %
 \begin{lemma} [Ballot Theorem~\cite{feller1968}] \label{lem:ballot} 
 In a ballot, suppose that candidate P receives $p$ votes and candidate Q receives $q$ votes such that $p>q$. The probability that throughout the counting P is always ahead of Q is $(p-q)/(p+q)$. 
 \end{lemma}
 
 {\color{black}In the context of hypermutation operators, the vote counts are the initial number of $0$ and $1$-bits in the solutions, while counting the votes correspond to flipping them until the first constructive mutation. The probability that a constructive mutation is found is equivalent to the probability of the $Q$ candidate having as many votes counted as the other during any time in the counting process.}
+
+Our second lemma will be used to transform inverse polynomial exponents that arise from the exponential potential.
+\begin{lemma}\label{lem:expo}
+	For large enough $n$ and {\color{black}any arbitrary constant} $\epsilon$, 
+	$n^{1/n^{\epsilon}}= (1+\frac{\ln{n}}{n^{\epsilon}})(1 \pm o(1))$.
+\end{lemma}
+\begin{proof}
+	$n^{\frac{1}{n^\epsilon}} = e^{\frac{\ln(n)}{n^\epsilon}} = 1 + \frac{\ln(n)}{n^\epsilon} + o(\frac{\ln(n)}{n^\epsilon})$ by the Taylor's series of the exponent.
+\end{proof}
 
 
 
@@ -458,63 +467,21 @@ Now we prove the upper bound. The probability of improvement in each step is at 
 \end{proof}
 
 
-Theorem \ref{expohdOnLO} shows that the exponential based mutation 
-potential provides at least a logarithmic and at most a $\sqrt 
-n$ factor speed-up compared to static mutation potentials. Before proving the main results, we introduce the following  lemma that will be used in the proof of the upcoming theorems.
-\begin{lemma}\label{lem:expo}
-For large enough $n$ and {\color{black}any arbitrary constant} $\epsilon$, 
-$n^{1/n^{\epsilon}}= (1+\frac{\ln{n}}{n^{\epsilon}})(1 \pm o(1))$.
-\end{lemma}
-\begin{proof}
-	$n^{\frac{1}{n^\epsilon}} = e^{\frac{\ln(n)}{n^\epsilon}} = 1 + \frac{\ln(n)}{n^\epsilon} + o(\frac{\ln(n)}{n^\epsilon})$ by the Taylor's series of the exponent.
-	
-\end{proof}
+\rev{We can now proceed with the analysis of the exponential-based potential.}
+Theorem \ref{expohdOnLO} shows that the exponential-based
+     mutation potential provides a $\Theta(\log^2 n)$ factor
+     speed-up compared to static mutation potentials.. 
 
-\rev{We now proceed with the analysis of the exponential-based potential.}
+%\input{oldThm4}
+\input{thm4Replacement}
+%The proof of the following theorem is similar to that of the two previous theorems and is omitted due to lack of space.
+% the initial Hamming distance for the \textsc{LeadingOnes} is roughly $n/2$ the fitness difference with the optimum is $n$, leading to linear initial potential instead of $\Theta(n^{1/2})$.
 
-\begin{theorem} \label{expohdOnLO}
-The {\oneoneIA } using \IPHfcm{} with {\expoF } optimises \textsc{LeadingOnes} in $O(n^3/\log n)$ and 
-$\Omega(n^{(5/2)-\epsilon})$  expected fitness function evaluations for any 
-arbitrarily small constant $\epsilon>0$. 
-\end{theorem}
-
-\begin{proof}
-{\color{black} The expected number of leading 1-bits is smaller than 1 in the initialised bit 
-	string since each bit is 0 or 1 with $1/2$ probability and $\sum^{n}_{i=1}2^{-i}<1$ for finite $n$.} %The expected number of leading 1-bits is smaller than 1 in the initialised bit string. 
-The probability of improvement in the first step {\color{black} of the hypermutation} is $1/n$. In the case of 
-failure at improving in the first step, at most $n^{\frac{n-i}{n}}$ fitness 
-function evaluations are wasted where $i$ is the number of leading 
-1-bits. {\color{black}$\sum_{i = 0}^{n - 1} n \cdot n^{(n - i) / n} < n^2 \sum_{i = 0}^{+\infty}(n^{-1/n})^i = n^2 \cdot \frac{1}{1 - n^{-1/n}} = n^2 \cdot \frac{n^{1/n}}{n^{1/n} - 1} = n^2 \cdot \frac{1 + o(1)}{\frac{\ln{n}}{n} + o(\frac{\ln{n}}{n})} = O(\frac{n^3}{\log{n}})$. }
-
-Therefore, the total expected time to find the optimum is  $E(T) \leq 
-\sum_{{\color{black}i=0}}^{n-1} n \cdot n^{(n-i)/n}=O( n^3/\log n)$ considering that $ 
-\sum_{{\color{black}i=0}}^{n-1} n^{i/n}= \sum_{{\color{black}i=1}}^n (n^{1/n})^{i-1}=\frac{1-n}{1-n^{1/n}}$ (using the general partial power series sum: $\sum_{i=0}^{m}a^{i}=\frac{1-a^{m+1}}{1-a}$ for $a\neq 1$)  that gets in turn bounded from above by $n^2/(\log n)$ using Lemma~\ref{lem:expo}.
-
-
-The proof of the lower bound is similar to the proof of Theorem \ref{th:linHD-LO}, except for the calculation of $E(f_i)$ when we want to consider the amount of wasted fitness function evaluations in case of $E_1$ happening. Here we have $ E(f_i) = \frac{i}{n} \left( n^{(n-i)/n}+ E(f_i)\right) + \frac{1}{n} \cdot 1 +\frac{n-i-1}{n} \left( 1+ E(f_i)\right)$. Solving it for $E(f_i)$ gives us $E(f_i)=i\cdot n^{(n-i)/n}+n-i$. 
-{\color{black}Following the proof of Theorem~\ref{th:linHD-LO}}, the expected time to optimise \textsc{LeadingOnes} is 
-
-\begin{align*}
-&(1-2^{-n/2})\sum_{i=n/2}^{n} {\color{black}p_{i}^{*}} E(f_i)\\
-&=\Omega(1) \sum_{i=n/2}^{n} 
-\left(i\cdot n^{(n-i)/n}+n-i \right)\\
-&=\Omega(1)\left( \sum_{i=n/2}^{n} (n-i)+ 
-\sum_{i=n/2}^{n} \left(i\cdot n^{(n-i)/n}\right)\right). 
-\end{align*}
-
-Evaluating the second 
-sum in the interval $i\in [n/2+\frac{\epsilon n}{2}, n/2+\epsilon n]$, we get $\epsilon 
-n/2 \cdot (n/2 + \epsilon n)  \cdot 
-n^{1/2-\epsilon/2}=\Omega(n^{5/2-\epsilon})$.
-%{\color{black} For $i\in\{n(1-\epsilon),\ldots,n\}$, $i n^{i/n}=\Omega(n n^{1-\epsilon})$ for any arbitrarily small constant $\epsilon$. If sum over $\epsilon n$ levels we can get $\Omega(n^{3-\epsilon})$ }
-\end{proof}
 
 An advantage of Hamming distance-based exponential decays of the mutation potential
 compared to fitness-based ones is provided by the following theorem for \textsc{LeadingOnes}.
 The reason can be seen in Figure \ref{fig:leadingones}.  While the initial fitness is very low, the potential is very high, but the actual number of bits that have to be flipped to reach the optimum (i.e., the Hamming distance) is much smaller. More precisely, fitness-based potentials suggest to flip $n$ bits when only $n/2$ bits have to be flipped in expectation to reach the optimum in one step. 
 {\expoHD } exploits this property, thus wastes fewer fitness evaluations than \expoF. 
-%The proof of the following theorem is similar to that of the two previous theorems and is omitted due to lack of space.
-% the initial Hamming distance for the \textsc{LeadingOnes} is roughly $n/2$ the fitness difference with the optimum is $n$, leading to linear initial potential instead of $\Theta(n^{1/2})$.
 
 \begin{restatable}{theorem}{expohdLO}\label{thm:expohdLO}
 The {\oneoneIA } using \IPHfcm{} with {\expoHD } optimises \textsc{LeadingOnes} in 

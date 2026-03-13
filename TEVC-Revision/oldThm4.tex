@@ -1,0 +1,37 @@
+
+\begin{theorem} \label{expohdOnLO}
+	The {\oneoneIA } using \IPHfcm{} with {\expoF } optimises \textsc{LeadingOnes} in $O(n^3/\log n)$ and 
+	$\Omega(n^{(5/2)-\epsilon})$  expected fitness function evaluations for any 
+	arbitrarily small constant $\epsilon>0$. 
+\end{theorem}
+
+\begin{proof}
+	{\color{black} The expected number of leading 1-bits is smaller than 1 in the initialised bit 
+		string since each bit is 0 or 1 with $1/2$ probability and $\sum^{n}_{i=1}2^{-i}<1$ for finite $n$.} %The expected number of leading 1-bits is smaller than 1 in the initialised bit string. 
+	The probability of improvement in the first step {\color{black} of the hypermutation} is $1/n$. In the case of 
+	failure at improving in the first step, at most $n^{\frac{n-i}{n}}$ fitness 
+	function evaluations are wasted where $i$ is the number of leading 
+	1-bits. {\color{black}$\sum_{i = 0}^{n - 1} n \cdot n^{(n - i) / n} < n^2 \sum_{i = 0}^{+\infty}(n^{-1/n})^i = n^2 \cdot \frac{1}{1 - n^{-1/n}} = n^2 \cdot \frac{n^{1/n}}{n^{1/n} - 1} = n^2 \cdot \frac{1 + o(1)}{\frac{\ln{n}}{n} + o(\frac{\ln{n}}{n})} = O(\frac{n^3}{\log{n}})$. }
+	
+	Therefore, the total expected time to find the optimum is  $E(T) \leq 
+	\sum_{{\color{black}i=0}}^{n-1} n \cdot n^{(n-i)/n}=O( n^3/\log n)$ considering that $ 
+	\sum_{{\color{black}i=0}}^{n-1} n^{i/n}= \sum_{{\color{black}i=1}}^n (n^{1/n})^{i-1}=\frac{1-n}{1-n^{1/n}}$ (using the general partial power series sum: $\sum_{i=0}^{m}a^{i}=\frac{1-a^{m+1}}{1-a}$ for $a\neq 1$)  that gets in turn bounded from above by $n^2/(\log n)$ using Lemma~\ref{lem:expo}.
+	
+	
+	The proof of the lower bound is similar to the proof of Theorem \ref{th:linHD-LO}, except for the calculation of $E(f_i)$ when we want to consider the amount of wasted fitness function evaluations in case of $E_1$ happening. Here we have $ E(f_i) = \frac{i}{n} \left( n^{(n-i)/n}+ E(f_i)\right) + \frac{1}{n} \cdot 1 +\frac{n-i-1}{n} \left( 1+ E(f_i)\right)$. Solving it for $E(f_i)$ gives us $E(f_i)=i\cdot n^{(n-i)/n}+n-i$. 
+	{\color{black}Following the proof of Theorem~\ref{th:linHD-LO}}, the expected time to optimise \textsc{LeadingOnes} is 
+	
+	\begin{align*}
+		&(1-2^{-n/2})\sum_{i=n/2}^{n} {\color{black}p_{i}^{*}} E(f_i)\\
+		&=\Omega(1) \sum_{i=n/2}^{n} 
+		\left(i\cdot n^{(n-i)/n}+n-i \right)\\
+		&=\Omega(1)\left( \sum_{i=n/2}^{n} (n-i)+ 
+		\sum_{i=n/2}^{n} \left(i\cdot n^{(n-i)/n}\right)\right). 
+	\end{align*}
+	
+	Evaluating the second 
+	sum in the interval $i\in [n/2+\frac{\epsilon n}{2}, n/2+\epsilon n]$, we get $\epsilon 
+	n/2 \cdot (n/2 + \epsilon n)  \cdot 
+	n^{1/2-\epsilon/2}=\Omega(n^{5/2-\epsilon})$.
+	%{\color{black} For $i\in\{n(1-\epsilon),\ldots,n\}$, $i n^{i/n}=\Omega(n n^{1-\epsilon})$ for any arbitrarily small constant $\epsilon$. If sum over $\epsilon n$ levels we can get $\Omega(n^{3-\epsilon})$ }
+\end{proof}

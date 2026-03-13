@@ -1,0 +1,104 @@
+% ============================================================
+%  DROP-IN REPLACEMENT for Theorem \label{expohdOnLO}
+%  (expoF on LeadingOnes)
+%
+%  Replaces:  \begin{theorem} \label{expohdOnLO} ...
+%             through the matching \end{proof}
+%
+%  Also update the commentary sentence immediately after
+%  \end{proof} — see note at bottom of this file.
+% ============================================================
+
+\begin{theorem} \label{expohdOnLO}
+The {\oneoneIA } using \IPHfcm{} with {\expoF } optimises
+\textsc{LeadingOnes} in $\Theta(n^3/\log^2 n)$ expected fitness function
+evaluations.
+\end{theorem}
+
+\begin{proof}
+At level~$i$ (i.e., with $i$ leading $1$-bits), the first bit flipped by the
+hypermutation is chosen uniformly from $\{1,\dots,n\}$.  With probability
+$i/n$ it hits a leading $1$-bit, destroying the prefix and using the full
+potential of $n^{(n-i)/n}$ evaluations with no improvement; with probability
+$1/n$ it hits the leftmost $0$-bit, yielding an improvement at cost~$1$; with
+probability $(n-i-1)/n$ it hits a tail bit, costing $1$~evaluation with no
+improvement.  By the law of total expectation,
+\[
+E(f_i)
+= \frac{i}{n}\bigl(n^{(n-i)/n}+E(f_i)\bigr)
+  +\frac{1}{n}\cdot 1
+  +\frac{n-i-1}{n}\bigl(1+E(f_i)\bigr),
+\]
+and solving gives
+\begin{equation}\label{eq:Efi-expoF}
+E(f_i) \;=\; i\cdot n^{(n-i)/n} + n - i.
+\end{equation}
+
+We evaluate the sum
+$S := \sum_{i=0}^{n-1} E(f_i)$, which governs both bounds.
+Setting $x:=n^{-1/n}<1$,
+\begin{align*}
+S
+&= \sum_{i=0}^{n-1}\bigl(i\cdot n^{(n-i)/n}+n-i\bigr)
+ = n\sum_{i=1}^{n-1} i\,x^{i}
+   \;+\;\underbrace{\sum_{i=0}^{n-1}(n-i)}_{\Theta(n^2)}.
+\end{align*}
+By the standard identity $\sum_{i=1}^{\infty} i\,x^i = x/(1-x)^2$
+and Lemma~\ref{lem:expo} (with $\epsilon=1$),
+\[
+1-x \;=\; 1 - n^{-1/n}
+    \;=\; \frac{\ln n}{n}\bigl(1+o(1)\bigr),
+\]
+so
+\[
+\frac{x}{(1-x)^2}
+\;=\; \frac{1+o(1)}{\bigl(\frac{\ln n}{n}\bigr)^2}
+\;=\; \frac{n^2(1+o(1))}{\ln^2 n}.
+\]
+The tail of the infinite series from $i=n$ onwards contributes
+$O(n/\ln n)$ (since $x^n = n^{-1}$), which is $o(n^2/\ln^2 n)$.
+Therefore $\sum_{i=1}^{n-1} i\,x^{i} = \Theta(n^2/\ln^2 n)$, giving
+\begin{equation}\label{eq:S-expoF}
+S \;=\; \Theta\!\left(\frac{n^3}{\log^2 n}\right).
+\end{equation}
+
+\textbf{Upper bound.}
+Each improvement advances the \textsc{LeadingOnes} value by at least one,
+so the total expected number of evaluations satisfies
+$\mathbb{E}[T] \le \sum_{i=0}^{n-1} E(f_i) = S = O(n^3/\log^2 n)$.
+
+\textbf{Lower bound.}
+With probability $\Pr[x_1=0]=1/2$ the initial solution has
+$\textsc{LeadingOnes}$ value~$0$, so every level $i\in\{0,\dots,n-1\}$
+must be traversed.  Following the proof of Theorem~\ref{th:linHD-LO},
+the expected number of free-riders per improvement is at most~$2$,
+so each level~$i$ is visited with probability $p_i^*=\Omega(1)$.
+Hence
+\[
+\mathbb{E}[T]
+\;\ge\;
+\tfrac{1}{2}\sum_{i=0}^{n-1} p_i^*\cdot E(f_i)
+\;=\;
+\Omega(1)\cdot S
+\;=\;
+\Omega\!\left(\frac{n^3}{\log^2 n}\right).
+\]
+\end{proof}
+
+% ============================================================
+%  DOWNSTREAM EDIT
+%
+%  The sentence immediately following \end{proof} currently reads:
+%
+%    "Theorem \ref{expohdOnLO} shows that the exponential based
+%     mutation potential provides at least a logarithmic and at
+%     most a $\sqrt{n}$ factor speed-up compared to static
+%     mutation potentials."
+%
+%  Replace with:
+%
+%    "Theorem \ref{expohdOnLO} shows that the exponential-based
+%     mutation potential provides a $\Theta(\log^2 n)$ factor
+%     speed-up compared to static mutation potentials."
+%
+% ============================================================
