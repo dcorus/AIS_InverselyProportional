@@ -313,10 +313,10 @@ Our second lemma will be used to transform inverse polynomial exponents that ari
 		\T\B\\
 		
 		FCM with {\linHD } & $\Theta(n^2)$ & $\Theta(n^3)$
-		\T\B\\ 
-		FCM with \expoF & $O(n^{(3/2)}\log n)$, $\Omega(n^{3/2-2\epsilon})$ & $O(n^3/\log n)$, $\Omega(n^{5/2+\epsilon})$
+		\T\B\\
+		FCM with \expoF & \textcolor{blue}{$\Theta(n^{3/2}/\log n)$} & \textcolor{blue}{$\Theta(n^3/\log^2 n)$}
 		\T\B \\
-		FCM with \expoHD & $O(n^{(3/2)}\log n)$, $\Omega(n^{3/2-2\epsilon})$ & $O(n^{\frac{5/2+\epsilon}{\ln n}})$, $\Omega(n^{9/4-\epsilon})$
+		FCM with \expoHD & \textcolor{blue}{$\Theta(n^{3/2}/\log n)$} & \textcolor{blue}{$\Theta(n^{5/2}/\log^2 n)$}
 		\T\B \\
 		
 		% $(1+1)$~IA using \blin & $\Theta(n \log n)$ & $\Theta(n^2)$
@@ -628,12 +628,12 @@ The other choice, that of only updating the {\it best} when a strictly better so
 %{\color{black} This also cannot optimise Jump. We can mention this here maybe? Even with ageing.}
 \section{When IPH Outperforms Too High Mutation Rates}
 \begin{figure}
-
 \centering
-\includegraphics[width=0.5\textwidth]{2}
-\caption{The \textsc{Cliff} test function for $n=50$ and $d=10$}
+\includegraphics[width=0.5\textwidth]{cliff_updated}
+\caption{\textcolor{blue}{The \textsc{Cliff}$_d$ function for $n=50$, $d=10$.
+The local optimum (40 one-bits, fitness~40) and global optimum
+(50 one-bits, fitness~40.5) are labelled.}}
 \label{fig:cliff}
-
 \end{figure}
 
 \new{ In this section} we show that {\linHD } combined with ageing can efficiently escape from local optima. We will use the well known \cliff{} function %(shown in  (\ref{func:cliff})) 
