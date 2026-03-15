@@ -128,6 +128,12 @@ least $n/3$ zeros initially w.o.p.\ by Chernoff, giving
 $\sum_{k=1}^{n/3}n/k=\Omega(n\log n)$), the result follows.
 \end{proof}
 
+%%% FIX 13 — Remark on τ threshold (reviewer: "theorem should work even
+%%% for τ ≥ Cn ln n").  The theorem statement above already uses the
+%%% relaxed threshold τ ≥ Cn ln n; the following remark makes the
+%%% verification explicit for the reader.
+
+
 \new{In the following two theorems we show how \lastBest{} achieves a linear
 factor speed-up over \firstBest{} for \textsc{LeadingOnes}, because the latter
 increases its mutation rate on plateaus of equal fitness before finding each
@@ -175,7 +181,18 @@ constant $\epsilon>0$.
 \end{theorem}
 \begin{proof}
 
-Fix a level~$\ell$ with $n/3\le \ell\le 2n/3$. For the current individual $x$ with $\mathrm{LO}(x)=\ell$, we have $x_1=\cdots=x_{\ell}=1$ and $x_{\ell+1}=0$, and the remaining $m:=n-\ell-1$ positions form the tail. In each iteration, the first flipped bit is uniformly distributed over $\{1,\dots,n\}$; therefore the probability that the first flip hits the improving bit $\ell+1$ is $1/n$, the probability that it hits the prefix is $\ell/n$, and the probability that it hits the tail is $m/n$. Let $T$ be the iteration on which the improving bit is first hit. Then $T$ is geometrically distributed with parameter~$1/n$, so $\mathbb{E}[T]=n$. Before this improving iteration occurs, the expected number of tail-first iterations is $(m/n)(\mathbb{E}[T]-1)=m=\Theta(n)$. Each such iteration flips a uniformly random tail bit. By standard coupon--collector arguments, after $\Theta(n)$ such tail flips a constant fraction of the $m$ tail positions has been flipped at least once with constant probability. Thus, with constant probability, the Hamming distance between $x$ and the best is $\Theta(m)=\Theta(n)$, and therefore the IPH mutation potential satisfies $M=\Theta(n)$ at this level.
+%%% FIX 14 — strict inequality ℓ < 2n/3 (reviewer: "it should be ℓ < 2n/3
+%%% instead of ℓ ≤ 2n/3")
+Fix a level~$\ell$ with $n/3\le \ell \textcolor{blue}{<} 2n/3$. For the current individual $x$ with $\mathrm{LO}(x)=\ell$, we have $x_1=\cdots=x_{\ell}=1$ and $x_{\ell+1}=0$, and the remaining $m:=n-\ell-1$ positions form the tail. In each iteration, the first flipped bit is uniformly distributed over $\{1,\dots,n\}$; therefore the probability that the first flip hits the improving bit $\ell+1$ is $1/n$, the probability that it hits the prefix is $\ell/n$, and the probability that it hits the tail is $m/n$. Let $T$ be the iteration on which the improving bit is first hit. Then $T$ is geometrically distributed with parameter~$1/n$, so $\mathbb{E}[T]=n$. Before this improving iteration occurs, %%% FIX 15 — m/(n−1) not m/n (reviewer: "it should be m/(n−1) instead of m/n")
+\textcolor{blue}{the expected number of tail-first iterations is
+$\frac{m}{n-1}(\mathbb{E}[T]-1) = \frac{m(n-1)}{n-1} = m = \Theta(n)$
+(using that, conditional on not hitting the improving bit $\ell+1$, the
+first flip is uniform over the remaining $n-1$ positions, of which $m$
+are tail positions).} Each such iteration flips a uniformly random tail bit. By standard coupon--collector arguments, after $\Theta(n)$ such tail flips %%% FIX 16 — "exactly once" not "at least once" (reviewer: "not *at least* once, but *exactly* once")
+\textcolor{blue}{a constant fraction of the $m$ tail positions has been flipped exactly once
+with constant probability (since each hypermutation samples bits without
+replacement, each position is visited at most once per call).} %%% FIX 17 — remove "the" before best; use \mathit{best} (reviewer: "'best' is a name of a variable, so there should be no 'the' before it")
+Thus, with constant probability, the Hamming distance between $x$ and \textcolor{blue}{$\mathit{best}$} is $\Theta(m)=\Theta(n)$, and therefore the IPH mutation potential satisfies $M=\Theta(n)$ at this level.
 
 Consider now a subsequent iteration at the same level while $M\ge \alpha n$ for some constant $\alpha>0$. If the first flip hits the prefix (an event of probability at least $\ell/n\ge 1/3$), then, because mutation proceeds without replacement, the lost prefix bit cannot be repaired within the same iteration. Consequently, no acceptance can occur in that iteration, and the algorithm executes the entire mutation budget $M$, rejecting at the end. Hence the expected number of fitness evaluations in such an iteration is at least $\alpha n$. Since this happens with probability at least $1/3$, the unconditional expected cost of one iteration while $M=\Theta(n)$ is $\Omega(n)$.
 
