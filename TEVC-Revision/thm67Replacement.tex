@@ -43,24 +43,29 @@
 
 
 % ── RLS Reduction Lemma ──────────────────────────────────────────────
-We start by showing that without knowing the location of the optimum in advance,
-\new{both} algorithms become very efficient for hill-climbing on \textsc{OneMax}.
+We start with a general reduction.  When the mutation potential remains~$1$
+and ageing is unlikely to trigger, \new{both} algorithm variants execute
+single-bit flips with accept-if-$\geq$ and thus behave identically to RLS.
+Lemma~\ref{lem:RLS-reduction} below formalises this observation;
+we then apply it to show that \new{both} algorithms optimise
+\textsc{OneMax} in $\Theta(n\log n)$ and that \lastBest{} optimises
+\textsc{LeadingOnes} in $\Theta(n^2)$.
 
 \begin{lemma}[RLS Reduction]\label{lem:RLS-reduction}
-Let $f:\{0,1\}^n\to\mathbb{R}$ and let $T_{\mathrm{RLS}}$ denote the expected
-runtime of RLS (1-bit flip, accept if $\geq$) on $f$.
-Suppose that the \lastBest{} \emph{(}resp.\ \firstBest{} on functions admitting
-no neutral moves\emph{)} with ageing parameter~$\tau$ satisfies:
-\emph{(i)}~the mutation potential $M=1$ throughout every run in which ageing is
-not triggered, and
-\emph{(ii)}~the probability $p:=\Pr[A]$ that ageing is triggered before the
-optimum is found satisfies $p=o(1)$ and $\tau\cdot p=o(1)$.
-Then the expected runtime $T'$ of the algorithm satisfies
-$\mathbf{E}[T'] = (1\pm o(1))\,T_{\mathrm{RLS}}$.
+Let $A$ denote the event that ageing triggers before the optimum is found
+and set $p:=\Pr[A]$.
+If \emph{(i)}~$M=1$ throughout every run in which $A$ does not occur, and
+\emph{(ii)}~$p=o(1)$ and $\tau p=o(1)$,
+then $\mathbf{E}[T']=(1\pm o(1))\,T_{\mathrm{RLS}}$,
+where $T_{\mathrm{RLS}}$ is the expected runtime of RLS
+(1-bit flip, accept if $\geq$) on the same function.
 \end{lemma}
 
 \begin{proof}
-By~(i), conditional on $\lnot A$ the algorithm runs identically to RLS.
+Condition~(i) ensures that, conditional on $\lnot A$, the algorithm performs
+only single-bit flips with accept-if-$\geq$, i.e.\ it runs identically to RLS.
+This holds for \lastBest{} on any function and for \firstBest{} whenever
+no neutral moves exist (so that every acceptance updates $\mathit{best}$).
 
 \textit{Upper bound.}
 When ageing triggers, the algorithm restarts; the expected additional time is
@@ -71,23 +76,23 @@ at most $\mathbf{E}[T']$.  Hence
     + \mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A].
 \]
 Rearranging and using $\tau p=o(1)$ from~(ii):
-\begin{align*}
-  \mathbf{E}[T'] \;&\leq\;
-\frac{\mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]+\tau p}{1-p}
-\;\leq\;
-\frac{T_{\mathrm{RLS}}+o(1)}{1-o(1)}\\
-\;&=\; (1+o(1))\,T_{\mathrm{RLS}}.
-\end{align*}	
-
+\[
+  \mathbf{E}[T'] \;\leq\;
+  \frac{\mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]+\tau p}{1-p}
+  \;\leq\;
+  \frac{T_{\mathrm{RLS}}+o(1)}{1-o(1)}
+  \;=\; (1+o(1))\,T_{\mathrm{RLS}}.
+\]
 
 \textit{Lower bound.}
 Before event $A$ occurs, at most $T_{\mathrm{RLS}}+\tau$ steps elapse;
 afterwards RLS needs at most $T_{\mathrm{RLS}}$ more steps.  So
-$\mathbf{E}[T_{\mathrm{RLS}}\mid A]\leq 2T_{\mathrm{RLS}}+\tau$, and $
+$\mathbf{E}[T_{\mathrm{RLS}}\mid A]\leq 2T_{\mathrm{RLS}}+\tau$, and
+\[
   T_{\mathrm{RLS}} \;\leq\;
     \mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]
     + (2T_{\mathrm{RLS}}+\tau)\,p,
-$
+\]
 giving $\mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]
 \geq T_{\mathrm{RLS}}(1-2p)-\tau p=(1-o(1))\,T_{\mathrm{RLS}}$.
 Since $\mathbf{E}[T']\geq\mathbf{E}[T'\mid\lnot A]\,\Pr[\lnot A]
@@ -180,7 +185,7 @@ There are $\Theta(n)$ levels $\ell$ in the interval $[n/3,2n/3]$, and each such 
 
 \end{proof}
 
-\textcolor{black}{In this section, we have proven the results for \linHD. Naturally the same results follow for the \expoHD~ operator as upper bounds which always has at most the same mutation rate or lower.}
+\textcolor{black}{In this section, we have proven the results for \linHD. Naturally the same results follow for the \expoHD~ operator which always has at most the same mutation rate or lower.}
 
 
 % ============================================================
