@@ -128,10 +128,10 @@ makes the operator robust to fitness function scaling.
 
 
 
-
+%%% FIX 1 — Table * caption: clarify c in β
 \begin{table*}[t!]
 	\caption{Expected runtimes of the different mutation operators when embedded in a (1+1) algorithmic framework for the benchmark functions considered in this paper. For all results the optimum is unknown to the algorithms. %The $*$ indicates that we have not performed the analysis, yet although Static hypermutations may be faster, the upper bound is still correct. 
-	$\beta:= \log_2 \frac{20}{c}$
+	$\beta:= \log_2 \frac{20}{c}$\textcolor{blue}{, where $c\le 1$ is the constant factor in the \linHD\ potential $M = \lfloor c\cdot H(x,\mathit{best})\rfloor$}
 	}
 	%The same result as $(1+1)~IA^{hype}$ using static hypermutation ($M=n$) has been shown for the original IPM of Opt-IA \cite{JansenZarges2011}.}
 \begin{center}
@@ -205,8 +205,11 @@ A summary of the results obtained in the paper is provided in Table \ref{table:s
  \section{Inversely Proportional Mutation Potentials} % with FCM}
  Hypermutations with mutation potential using FCM flip at most a linear amount of bits (i.e., the mutation potential $M=cn$) chosen uniformly at random without replacement \new{from the interval $[1..n]$}. After each of the $M$ bit flips, the fitness of the produced solution is evaluated and if a {\it constructive mutation} is identified, then the operator is stopped and the solution returned. \new{A  constructive mutation is a solution that is at least as good as that of the original parent.}
  Otherwise the algorithm continues flipping the bits without setting them back until the potential $M$ of bit flips is reached. If no constructive \new{mutation} has been identified earlier, then the $M$th solution is returned.  
- The original inversely proportional hypermutation operator (\IPHfcm{}) proposed for Opt-IA uses mutation potential  $M=\lceil(1-f_{\text{OPT}}/v)\rceil cn$ for minimisation problems, where $f_{\text{OPT}}$ is the best known fitness, $v$ is the fitness of the individual, 
+%%% FIX 2 — clarify f_OPT non-negativity and meaning
+ The original inversely proportional hypermutation operator (\IPHfcm{}) proposed for Opt-IA uses mutation potential  $M=\lceil(1-f_{\text{OPT}}/v)\rceil cn$ for minimisation problems, where \textcolor{blue}{$f_{\text{OPT}}\ge 0$ is the optimal fitness value and $v>0$ is the fitness of the current individual,} 
  \new{and $0<c\leq 1$ is some constant}~\cite{CutelloNicosiaPavoneTimmis2007,JansenZarges2011}. 
+%%% FIX 3 — OneMax potential clarification (maximisation vs minimisation)
+ \textcolor{blue}{Note that when \textsc{OneMax} is treated as a maximisation problem (as we do throughout this paper), $f_{\text{OPT}}=n>0$ and the potential decreases as fitness improves.  In contrast, under minimisation ($f_{\text{OPT}}=0$), the formula gives $M=cn$ always, recovering the static potential --- the original motivation for the modifications we study here.}
  In an analysis for \textsc {OneMax}~\cite{JansenZarges2011}, such a mutation potential was shown not to decrease below $cn/2$, with $cn$ being the highest possible mutation potential.
  	As a result no speed-ups at hillclimbing are achieved compared to static hypermutations as the mutation potential is always at least linear.
  In this section, we introduce three different IPH operators  that will be analysed in this paper and that provably speed-up the hillclimbing  performance for \textsc{OneMax}. Two have been already considered in the literature %{\color{black} (should we say proposed? or maybe mentioning how their analysis is different than us?)} 
@@ -400,7 +403,8 @@ For the lower bound, we use the Ballot theorem (Lemma~\ref{lem:ballot}).
 
 By Chernoff bounds, the number of 0-bits in the initialised solution is at least $n/3$ w.o.p. Considering the number of 
 0-bits as $i=q$ and the number of 1-bits as $n-i=p$, the probability of 
-an improvement is at most $1-(p-q)/(p+q)=1-(n-2i)/n=\frac{2i}{n}$ by the Ballot theorem, where $i=H(x, opt)$. This means that we need to wait at least $\frac{n}{2i}$ iterations to see an improvement and each time the mutation operator fails to improve the fitness {(\color{black}$\frac{n}{2i} - 1$ times in expectation)}, $i$ fitness function evaluations will be wasted. Considering that at least $n/3$ improvements are needed, the expected time to optimise \textsc{OneMax} is larger than $\sum_{i=1}^{n/3} {\color{black}\left(\frac{n}{2i}-1\right)} \cdot i= \Omega(n^2)$ \rev{since the operator cannot improve the \textsc{OneMax} function value by more than one in each application due to FCM}.
+an improvement is at most $1-(p-q)/(p+q)=1-(n-2i)/n=\frac{2i}{n}$ by the Ballot theorem, where $i=H(x, opt)$. This means that we need to wait at least $\frac{n}{2i}$ iterations to see an improvement and each time the mutation operator fails to improve the fitness {(\color{black}$\frac{n}{2i} - 1$ times in expectation)}, $i$ fitness function evaluations will be wasted. Considering that at least $n/3$ improvements are needed, %%% FIX 5 — add (1−o(1)) factor to lower bound sum
+the expected time to optimise \textsc{OneMax} is larger than \textcolor{blue}{$(1-2^{-\Omega(n)})\sum_{i=1}^{n/3} {\color{black}\left(\frac{n}{2i}-1\right)} \cdot i = \Omega(n^2)$ (the factor $(1-2^{-\Omega(n)})$ accounts for the w.o.p.\ Chernoff event; since $2^{-\Omega(n)}=o(1)$, the bound holds unconditionally)} \rev{since the operator cannot improve the \textsc{OneMax} function value by more than one in each application due to FCM}.
 \end{proof}
 
 The following theorem shows that a greater speed up may be achieved if the potential decreases exponentially rather than linearly. Note that for \textsc{OneMax} the Hamming distance of a solution to the optimum and its difference in fitness are the same. %The proof is omitted due to lack of space.
@@ -456,7 +460,8 @@ Thus, we conclude $E(f_i) \geq \frac{(1-\epsilon)in-i^2+i}{2}\cdot {\color{black
 
 As we are computing the lower bound, we have to take into account the probability of skipping any level $i$. To do this, we need to calculate the expected number of consecutive 1-bits that follow the leftmost 0-bit (called free riders \cite{DrosteJansenWegener2002}). 
 
-The expected number of free riders is $\sum_{i=1}^{n-i-1} i \cdot 1/2^{i+1} < \frac{1}{2} \cdot \sum_{i=0}^{\infty} i \cdot (1/2)^i= \frac{1}{2} \cdot \frac{1/2}{(1-1/2)^2}=1$. This means that {\color{black}$p^{*}_{i}$}, the probability of not skipping a level $i$ is $\Omega(1)$.
+%%% FIX 7 — level-skip probability: expand argument + add reference
+The expected number of free riders is $\sum_{i=1}^{n-i-1} i \cdot 1/2^{i+1} < \frac{1}{2} \cdot \sum_{i=0}^{\infty} i \cdot (1/2)^i= \frac{1}{2} \cdot \frac{1/2}{(1-1/2)^2}=1$. This means that ${\color{black}p^{*}_{i}}$, \textcolor{blue}{the probability of not skipping level~$i$ (i.e., the probability that the number of leading $1$-bits increases by exactly one when the leftmost $0$-bit is flipped), is $\Omega(1)$. This holds because the expected number of free-riders (consecutive $1$-bits following the leftmost $0$-bit) is at most $\sum_{j\ge1}j\cdot 2^{-(j+1)}<1$, so the level advances by exactly $1$ with probability at least $1/2 = \Omega(1)$; see also~\cite{DrosteJansenWegener2002}.}
 %We know that the expected number of consecutive 1-bits that follow the leftmost 0-bit is less than two \cite{DrosteJansenWegener2002} which means the probability of not skipping a level $i$ is $\Omega(1)$.
 
 On the other hand, with probability at least $1- 2^{-n/3}$, the initial solution does not have more than $n/3$ leading 1-bits. Thus, we obtain a lower 
@@ -505,9 +510,10 @@ in realistic applications where the optimum is unknown.
  
  Ageing has been shown to enable algorithms to escape from local optima either by identifying a gradient leading away from it or by restarting the whole optimisation process. Our aim behind the algorithm design is that by escaping local optima via ageing, the number of local optima that are identified by the algorithm increases over time. Thus as time goes by the IPH should approximate its ideal behaviour better and better.
  
+%%% FIX 4+11 — linHD display: fix \textsc→\text in subscript + ensure floor + \mathit{best}
  \textcolor{black}{Concerning the IPH operator for practical applications we  reintroduce the parameter $c\leq 1$ for determining the mutation potential when it grows linearly with the Hamming distance as in the original Opt-IA~\cite{JansenZarges2011}:}  
- \textcolor{black}{
- $$\text{\linHD} = \max\left(\lfloor c \cdot H(x,\text{best}) \rfloor, 1 \right) $$
+ \textcolor{blue}{
+ $$M_{\text{linHD}} = \max\!\left(\left\lfloor c \cdot H(x,\mathit{best}) \right\rfloor,\, 1 \right)$$
  }
 \textcolor{black}{The parameter will be useful to avoid always ending up in the same basins of attraction as we will see in the analyses of both multimodal function classes we consider in this paper.} %TO BE DISCUSSED: which will hinder exploration that is the main goal of the high mutation rates??.}
 
@@ -520,6 +526,7 @@ This design choice leads to considerably different algorithmic behaviours.}
 The other choice, that of only updating the {\it best} when a strictly better solution is encountered, allows individuals trapped on a large plateau of local optima to increase their \rev{Hamming} distance to the best solution, thus increases the chances of escaping via higher mutation rates. This version, which we call $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$, allows to use high mutation rates more often at the expense of being slower on some unimodal functions like \textsc{LeadingOnes} as we will see. With this operator we remember to update the {\it best} to the last seen \rev{(best)} individual of highest fitness (i.e. the current solution) when ageing is triggered because this limits the \rev{Hamming} distance between the new solution and the current best when a local optima is escaped by accepting solutions of lower fitness, thus decreases the chances of jumping back to the previous local optimum.}
  	
  	
+%%% FIX 12a — Algorithm 3 (LastBest): add best-check after reinitialisation
  	\begin{algorithm}[t] 
  	    \caption{$(1+1)$~Opt-IA$_{\textsc{LastBest}}$ }
      \begin{algorithmic}[1] % The number tells where the line numbering should start
@@ -544,7 +551,10 @@ The other choice, that of only updating the {\it best} when a strictly better so
  	            %\STATE{Add $y$ to $P$};
  	            \FOR{$w \in \{x,y\}$}
  				\IF{$\alpha(w) \geq \tau$}
- 				\STATE{with probability \rev{$p_{\text{die}}=1/2$}, reinitialise $w$ uniformly at random with $\alpha(w)=0$}; 
+ 				\STATE{with probability \rev{$p_{\text{die}}=1/2$}, reinitialise $w$ uniformly at random with $\alpha(w):=0$};
+				\textcolor{blue}{\IF{$f(w) \geq f(\text{best})$}
+				\STATE{$\text{best}:=w$};
+				\ENDIF} 
  				%\STATE {Select the best individual in $P$ and remove the other};
  				\ENDIF
  				\ENDFOR
@@ -553,6 +563,7 @@ The other choice, that of only updating the {\it best} when a strictly better so
  	            \ENDWHILE
  	   \end{algorithmic} \label{alg:alg1+ageing}
  	\end{algorithm}
+%%% FIX 12b — Algorithm 4 (FirstBest): add best-check after reinitialisation
  	\begin{algorithm}[t] 
  		\caption{$(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ }
  		\begin{algorithmic}[1] % The number tells where the line numbering should start
@@ -576,7 +587,10 @@ The other choice, that of only updating the {\it best} when a strictly better so
  			{\color{black}\hspace{0.3em} \IF{$f(w) = f(\text{best})$} 
  			\STATE \hspace{0.3em} $\text{best}:=w$
  			\ENDIF }
- 			\STATE \hspace{0.3em} reinitialise $w$ uniformly at random with $\alpha(w)=0$
+ 			\STATE \hspace{0.3em} reinitialise $w$ uniformly at random with $\alpha(w):=0$
+			\textcolor{blue}{\IF{$f(w) > f(\text{best})$}
+			\STATE $\text{best}:=w$
+			\ENDIF}
  			\ENDIF
  			\ENDFOR
  			\STATE Set $x=\arg\max\limits_{z\in\{x,y\}}f(z)$
@@ -728,5 +742,3 @@ Use $\backslash${\tt{begin\{IEEEbiographynophoto\}}} and the author name as the 
 
 
 \end{document}
-
-
