@@ -6,3 +6,9 @@ main.synctex.gz
 *.pdf
 *.log
 *.log
+TEVC-Revision/apply_edits_TEVCNewFullPaper.py
+TEVC-Revision/files.zip
+*.gz
+TEVC-Revision/gen_ltj.py
+TEVC-Revision/gen_cliff.py
+TEVC-Revision/TEVCNewFullPaper_edited.tex
