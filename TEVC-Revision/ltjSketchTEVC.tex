@@ -22,6 +22,19 @@ The function $\mathrm{LTJ}_{k,\rho} : \{0,1\}^n \to \mathbb{R}$ is
 \]
 \textcolor{blue}{Here $x_{i>r}$ denotes the suffix of $x$ at positions $i > r$, i.e.,
 $x_{i>r} := (x_{r+1}, x_{r+2}, \dots, x_n)$.}
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.48\textwidth]{ltj_diagram}
+\caption{\textcolor{blue}{The \textsc{LeadingTrapJump}$_{k,\rho}$ landscape (schematic,
+$n=30$, $k=1$, $\rho=0.85$).
+The x-axis is the \textsc{LeadingOnes} level of the current solution.
+From the junction~$J$ (end of the main slope), large mutations can reach
+either the block-jump slope~$\mathcal{B}_k$ (leading to the local optimum)
+or the deep-prefix plateau~$\mathcal{D}_\rho$ (global optimum).
+Both off-slope structures have $\mathrm{LO}(x)=0$; their positions on the
+y-axis reflect their fitness values, not their \textsc{LeadingOnes} level.}}
+\label{fig:ltj}
+\end{figure}
 The landscape consists of a long LeadingOnes slope rising from fitness 
 $\mathrm{LO}(x)$ up to level $0.9n-1$, followed by a large penalised region.  
 Two off-slope structures contain the \textcolor{black}{two sets of optima} but are inaccessible to 
@@ -34,8 +47,9 @@ $0^{r}1^{(0.9n-r)}$}.}
 In contrast, the set $\mathcal{D}_\rho$ consists of solutions with prefix 
 $0^{L} *$ \textcolor{black}{whose suffix has ones-density at least $\rho$} i.e., $\rho n$ ones, and forms a wide 
 plateau of globally optimal fitness, \new{which we call  deep-prefix plateau}.  
-Both structures are hidden behind the penalised barrier, and the only reliable 
-way to reach them is via large hypermutation events.  
+\textcolor{blue}{Both structures are hidden behind the penalised barrier (illustrated in
+Figure~\ref{fig:ltj}), and the only reliable way to reach them is via large
+hypermutation events.}  
 The junction $J := \{x : \mathrm{LO}(x)=0.9n-1\}$ acts as a central gateway: 
 each ageing epoch that restarts the search will, with high probability, ascend 
 the LeadingOnes slope back to $J$ before any off-slope structure is encountered.  

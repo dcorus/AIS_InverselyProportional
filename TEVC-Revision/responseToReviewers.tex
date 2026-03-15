@@ -1,0 +1,386 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+
+\definecolor{revcolor}{rgb}{0,0,0.7}
+\newcommand{\RC}[1]{\textcolor{revcolor}{\textit{#1}}}
+\newcommand{\resp}[1]{\smallskip\noindent #1\medskip}
+
+\title{Response to Reviewer Comments\\[4pt]
+	\large ``Effective Inversely Proportional Hypermutations\\for Unimodal and Multimodal Optimisation''}
+\author{}
+\date{}
+
+\begin{document}
+	\maketitle
+	
+	We thank the reviewer for a careful and constructive reading of the manuscript.
+	Below we address each comment point by point. All changes in the revised
+	manuscript are typeset in {\textcolor{blue}{blue}}.
+	
+	%% ======================================================================
+	\section*{Proof Tightening: Theorems 2, 4, 5, 6 \& 7}
+	%% ======================================================================
+	
+	\subsection*{Theorem 2 (OneMax, expoF/expoHD)}
+	
+	\RC{The upper bound can be reduced by a logarithmic factor by splitting the sum
+		into three ranges $[1,\, n/\!\ln n]$, $[n/\!\ln n,\, \delta n]$, and
+		$[\delta n,\, n/2 + n^{2/3}]$. For the lower bound, with probability at least
+		$1/2$ we start with $i \ge n/2$, and the sum over $[n/4,\, n/2]$ can be bounded
+		via a geometric progression, giving $\sqrt{n}/\!\log n$.}
+	
+	\resp{We have followed the reviewer's suggestion in full.
+		The proof of Theorem~2 has been completely rewritten.
+		The upper bound now splits the sum into the three indicated ranges, yielding
+		$O(n^{3/2}/\!\log n)$. The lower bound sums over $[n/4,\, n/2]$ using the
+		geometric-series evaluation as suggested, giving $\Omega(n^{3/2}/\!\log n)$.
+		The theorem statement has been updated to $\Theta(n^{3/2}/\!\log n)$.}
+	
+	\subsection*{Theorem 4 (LeadingOnes, expoF)}
+	
+	\RC{Why do you restrict yourself to the interval $[n/2+\varepsilon n/2,\;
+		n/2+\varepsilon n]$? With probability $1/2$ we start with $i=0$ and hence we
+		can sum over all $i\in[0..n-1]$. The sum $\sum n\,i\,n^{-i/n}$ can be estimated
+		via $\sum i\,x^i$ with $x=n^{-1/n}<1$, which gives $n^3/\!\log n$.}
+	
+	\resp{We have adopted the reviewer's approach: the lower bound now sums
+		$E(f_i)$ over the full range $i\in[0,\,n-1]$ and evaluates the resulting series
+		via the identity $\sum i\,x^i = x/(1-x)^2$ with $x = n^{-1/n}$.
+		The tightened result is $\Theta(n^3/\!\log^2 n)$ (matching upper and lower
+		bounds). The theorem statement and proof have been updated accordingly.}
+	
+	\subsection*{Theorem 5 (LeadingOnes, expoHD)}
+	
+	\RC{(Implicit from the tightening programme for Theorems~2 and~4.)}
+	
+	\resp{Following the same proof template as Theorem~4, we have tightened
+		Theorem~5 by replacing the $\varepsilon n$ Chernoff cutoff with $n^{2/3}$,
+		which removes $\varepsilon$ from the exponent. The lower bound now sums over
+		the full range using the series identity with $y = n^{-1/(2n)}$.
+		The result is tightened to $\Theta(n^{5/2}/\!\log^2 n)$.}
+	
+	\subsection*{Theorems 6 \& 7 (OneMax and LeadingOnes/LastBest, $M=1$)}
+	
+	\RC{These proofs can be significantly simplified by observing that before ageing
+		is triggered, the algorithm behaves exactly as RLS. Let $T'$ be the Opt-IA
+		runtime; we can write
+		$\mathbf{E}[T'] \le (\tau + \mathbf{E}[T'])\Pr[A] +
+		\mathbf{E}[T \mid \lnot A]\Pr[\lnot A]$,
+		from which $\mathbf{E}[T']$ is at most $(1+o(1))\mathbf{E}[T]$.
+		Probably it makes sense to unite these two theorems into one with a shorter proof.}
+	
+	\resp{We have unified Theorems~6 and~7 into a single theorem with a streamlined
+		proof that follows the reviewer's RLS-reduction argument.
+		The key observation---that $M=1$ is maintained throughout for both variants on
+		OneMax and for LastBest on LeadingOnes---is now stated explicitly, and the
+		decomposition via $\Pr[A]$ is used to derive the $(1+o(1))$ factor.
+		Theorem~8 (FirstBest on LeadingOnes, $\Theta(n^3)$) is kept separate, as the
+		RLS reduction does not apply when neutral moves cause $H(x,\mathit{best})$ to
+		grow.
+		We also fixed a duplicate label bug between the original Theorems~7 and~8.}
+	
+	
+	%% ======================================================================
+	\section*{Pages 11--13: Cliff and LeadingTrapJump Proofs}
+	%% ======================================================================
+	
+	%% --- CLIFF SECTION (Fixes 1-5) ---
+	
+	\subsection*{Cliff proof sketch (pp.\,11--12)}
+	
+	\begin{enumerate}[label=\textbf{C\arabic*.},leftmargin=*]
+		
+		%% FIX 1
+		\item \RC{(p.11, l56) $r_0$ and the state description of the form
+			$(r, \mathrm{HD}(r))$ have not been introduced.}
+		
+		\resp{We have added an explicit introduction of the indexing convention
+			$r = r_0, r_0+1, \dots$ for successful fitness improvements on the second
+			slope, together with the notation $\mathrm{HD}(r)$ for the Hamming distance
+			after $r$ such improvements. The paragraph preceding
+			Lemma~3 now defines this notation before using it.}
+		
+		%% FIX 2
+		\item \RC{(Lemma~4) Specify that you mean the return in one hypermutation.}
+		
+		\resp{The statement of Lemma~4 (Exponential Tail for Catch-Up Length) now
+			explicitly says ``Consider a single application of the hypermutation operator;
+			let $\xi_z$ be the number of $1\!\to\!0$ flips made \emph{within that one
+				hypermutation}\,\ldots''}
+		
+		%% FIX 3
+		\item \RC{(p.11, r59) I would swap the fraction and $K(\lambda)$ like this:
+			$\frac{1-\rho}{1-\rho e^{2\lambda}} \eqqcolon K(\lambda)$.}
+		
+		\resp{Done. All three definition sites of $K(\lambda)$ (Lemma~5, Lemma~7, and
+			the main proof of Theorem~3) now present the closed-form expression first,
+			followed by $\eqqcolon K(\lambda)$.}
+		
+		%% FIX 4
+		\item \RC{(p.12, l9) Specify that $c$ for $\Theta$ is from the potential.}
+		
+		\resp{The proof now states explicitly: ``Since the mutation potential satisfies
+			$M \le c\,n$ (where $c$ is the constant from the linear-HD potential), each
+			iteration evaluates at most $c\,n = \Theta(n)$ individuals.''}
+		
+		%% FIX 5
+		\item \RC{(p.12, l45) Not the buffer itself, but $e^{-\lambda B_t}$.}
+		
+		\resp{The proof of Corollary~2 (Buffer Barrier Bound) now begins with a
+			clarification: ``Ville's inequality applies to nonnegative supermartingales,
+			but the buffer $B_t$ is not one \ldots\ We therefore work instead with the
+			transformed process $M_t := \alpha^{-t}e^{-\lambda B_t}$, which \emph{is} a
+			nonnegative supermartingale.'' The remainder of the proof then proceeds via
+			$M_t$.}
+		
+	\end{enumerate}
+	
+	\subsection*{Typographical correction (Cliff, LastBest corollary)}
+	
+	\resp{While implementing the above revisions we noticed a typo in the
+		LastBest corollary for \textsc{Cliff}: the denominator read~$d^3$ instead
+		of~$d^2$.  The prose preceding the corollary correctly derives the
+		LastBest bound as a factor~$d/n$ better than the FirstBest
+		bound~$O(n^5 \log(n/d)/d^3)$, giving
+		$O(n^4 \log(n/d)/d^2 + n^2 \log d)$; the corollary now matches.
+		We also corrected a related typo in the supplementary material where $n^e$
+		appeared in place of~$n^4$.}
+	
+	
+	%% --- LTJ SECTION (Fixes 6-12) ---
+	
+	\subsection*{LeadingTrapJump proof sketch (p.\,13)}
+	
+	\begin{enumerate}[label=\textbf{L\arabic*.},leftmargin=*]
+		
+		%% FIX 6
+		\item \RC{(p.13, l11) Notation $x_{i>r}$ has not been introduced.}
+		
+		\resp{We have added the definition
+			``$x_{i>r} := (x_{r+1}, x_{r+2}, \dots, x_n)$''
+			immediately after the $\mathrm{LTJ}_{k,\rho}$ function definition.}
+		
+		%% FIX 7
+		\item \RC{(p.13, l21) Local optimum $\to$ local optimum $0^r 1^{n-r}$.}
+		
+		\resp{Both occurrences of ``local optimum'' in the relevant sentence now include
+			the explicit form $0^{r}1^{(0.9n-r)}$.}
+		
+		%% FIX 8
+		\item \RC{(Theorem~11) I do not understand why we should introduce $r$. Is it
+			not enough to replace it with $k$ everywhere? I do not see the reason for the
+			prefix of zeros in $\mathcal{B}_k$ to be of odd length.}
+		
+		\resp{We have added a parenthetical explanation at the point where $r := 2k+1$
+			is defined: $r$ is odd so that the block-jump prefix
+			$0^r 1^{(0.9n-r)}\!\ast$ forces an \emph{even} number of bit-flips to reach
+			$\mathcal{B}_k$, which is the key parameter controlling the per-iteration
+			success probability $\Theta(n^{-(r+1)}) = \Theta(n^{-(2k+2)})$.
+			The alias $r$ is introduced as shorthand to avoid writing $2k+1$ in every
+			exponent throughout the proof.}
+		
+		%% FIX 9
+		\item \RC{(p.13, l47) I am not sure I understand what you mean by ``epoch
+			starting at $J$''. Each epoch starts with a random individual, and only after
+			that the algorithm goes to $J$.}
+		
+		\resp{The reviewer is correct. We have replaced all instances of ``Let an ageing
+			epoch begin at the junction'' with ``Let an ageing epoch \emph{reach} the
+			junction $J$ (which occurs with high probability by
+			Lemma~[junction-first-density]; we condition on this event throughout).''
+			We have also added a clarifying sentence: ``Each ageing epoch begins with a
+			uniformly random reinitialisation and runs for $\tau$ iterations; by
+			Lemma~[junction-first-density] it ascends to the junction $J$ with high
+			probability before reaching any off-slope structure.''}
+		
+		%% FIX 10
+		\item \RC{(p.13, r3--r7) But initially there are $L/2$ one-bits, not $L$.}
+		
+		\resp{Tightened. The proof now states: ``since the $L$-bit prefix of the new
+			parent is a uniformly random string (from the reinitialisation), it contains
+			approximately $L/2$ one-bits in expectation; the total number of ones therefore
+			drops by at most $L/2 \le \tfrac12 \log_2 n$ when these are flipped.''}
+		
+		%% FIX 11
+		\item \RC{(p.13, r10) Why $q^\star < 1/4$?}
+		
+		\resp{We have expanded the justification. The text now shows the explicit
+			calculation: choosing $\xi$ close to $0$ gives
+			$q^\star \approx 2c(1-\rho)$; since $\rho > 4/5$ we have $1-\rho < 1/5$, so
+			$2c(1-\rho) < 2 \cdot \tfrac{5}{8} \cdot \tfrac{1}{5} = \tfrac{1}{4}$ (using
+			$c < 5/8$). Any fixed $\xi$ small enough to keep $2c(1-\rho+\xi) < 1/4$ then
+			satisfies all requirements.}
+		
+		%% FIX 12
+		\item \RC{(p.13, r40) I am not sure I understood the coupon-collector effect
+			here and why we need both times.}
+		
+		\resp{We have expanded the explanation: ``Since $B$ (entering
+			$\mathcal{B}_k$) and $D$ (entering $\mathcal{D}_\rho$) are mutually exclusive
+			within a single epoch, the algorithm must discover them in \emph{different}
+			epochs. By a coupon-collector argument (we need to `collect' both coupons $B$
+			and $D$, which arrive independently across epochs with probabilities $p_B$ and
+			$p_D$ respectively), the expected number of epochs until both have been seen is
+			$O(1/p_B + 1/p_D)$.''}
+		
+	\end{enumerate}
+	
+	
+	%% ======================================================================
+	\section*{Pages 3--10: Local Fixes}
+	%% ======================================================================
+	
+	\begin{enumerate}[label=\textbf{P\arabic*.},leftmargin=*]
+		
+		%% FIX 1
+		\item \RC{(Table~2 caption, p.\,3) It is not clear what $c$ is (in the
+			definition of~$\beta$).}
+		
+		\resp{The caption of Table~2 now reads
+			``$\beta := \log_2 \tfrac{20}{c}$, where $c\le 1$ is the constant factor in
+			the $M_{\text{linHD}}$ potential
+			$M = \lfloor c\cdot H(x,\mathit{best})\rfloor$.''}
+		
+		%% FIX 2
+		\item \RC{(p.\,3, r54) Is it assumed that $f_{\mathrm{OPT}}$ is non-negative or
+			even positive? In this case, due to rounding up, is not it always just~$cn$?}
+		
+		\resp{The formula description now explicitly states
+			``$f_{\text{OPT}}\ge 0$ is the optimal fitness value and $v>0$ is the fitness
+			of the current individual.''  The previous phrasing ``best known fitness''
+			was misleading since $f_{\text{OPT}}$ denotes the true optimum, not an estimate.}
+		
+		%% FIX 3
+		\item \RC{(p.\,3, r56--60) For OneMax a different potential was used: if we
+			minimize OneMax, then $f_{\mathrm{OPT}}=0$ and the potential is always~$cn$.}
+		
+		\resp{We have added a clarifying paragraph immediately before the existing
+			analysis of the original IPH on \textsc{OneMax}: ``Note that when
+			\textsc{OneMax} is treated as a maximisation problem (as we do throughout this
+			paper), $f_{\text{OPT}}=n>0$ and the potential decreases as fitness improves.
+			In contrast, under minimisation ($f_{\text{OPT}}=0$), the formula gives
+			$M=cn$ always, recovering the static potential---the original motivation for
+			the modifications we study here.''}
+		
+		%% FIX 4 + FIX 11 (merged)
+		\item \RC{(p.\,4, l58) Floor command is missing.
+			\newline
+			(p.\,8, r15) Here you use smallcaps in the index (for `LIN'), but everywhere
+			else you do not do this.}
+		
+		\resp{Both issues concerned the same display equation defining the practical
+			$M_{\text{linHD}}$ potential.  We have corrected the subscript from
+			\texttt{\textbackslash textsc\{linHD\}} to
+			\texttt{\textbackslash text\{linHD\}} (matching the \texttt{\textbackslash linHD}
+			macro defined in the preamble), ensured that explicit
+			$\lfloor\cdot\rfloor$ floor brackets are present, and changed
+			\texttt{\textbackslash text\{best\}} to
+			\texttt{\textbackslash mathit\{best\}} for consistency with the algorithm
+			pseudocode.}
+		
+		%% FIX 5
+		\item \RC{(p.\,5, r55) Either add a factor $(1-o(1))$ in front of the sum, or
+			add a note: ``(w.o.p., thus it is also $\Omega(n^2)$ unconditionally).''}
+		
+		\resp{We have added the factor $(1-2^{-\Omega(n)})$ in front of the sum in
+			the lower bound of Theorem~1 and appended the parenthetical note: ``the factor
+			$(1-2^{-\Omega(n)})$ accounts for the w.o.p.\ Chernoff event; since
+			$2^{-\Omega(n)}=o(1)$, the bound holds unconditionally.''}
+		
+		%% FIX 7
+		\item \RC{(p.\,7, l9) It is not a trivial conclusion about the probability to
+			skip a level. Could you add more arguments here or add a reference? I assume
+			it should be in the first paper on LeadingOnes by Rudolph (1997).}
+		
+		\resp{We have expanded the argument in the proof of Theorem~3.  The text now
+			reads: ``the probability of not skipping level~$i$ (i.e., the probability that
+			the number of leading $1$-bits increases by exactly one when the leftmost
+			$0$-bit is flipped) is $\Omega(1)$.  This holds because the expected number of
+			free-riders (consecutive $1$-bits following the leftmost $0$-bit) is at most
+			$\sum_{j\ge1}j\cdot 2^{-(j+1)}<1$, so the level advances by exactly~$1$ with
+			probability at least $1/2 = \Omega(1)$; see also [DJW02].''
+			We cite [DJW02] (Droste, Jansen, and Wegener, 2002) where the free-rider
+			calculation is implicit; this reference is already in our bibliography.}
+		
+		%% FIX 12
+		\item \RC{(p.\,9, Algorithms~3 \& 4) I assume there should be a check if the
+			re-initialized individual is better than the best, even though it is not likely
+			to happen.}
+		
+		\resp{Both algorithms now include a best-update check immediately after
+			reinitialisation.  Algorithm~3 (LastBest) uses
+			$f(w) \geq f(\text{best})$ and Algorithm~4 (FirstBest) uses
+			$f(w) > f(\text{best})$, consistent with their respective update rules
+			($\geq$ for LastBest, $>$ for FirstBest).}
+		
+		%% FIX 13
+		\item \RC{(p.\,9, l30) Theorem should work even for
+			$\tau\ge Cn\ln n$ for some constant~$C$ that is large enough.}
+		
+		\resp{The rewritten Theorem~6 (which now covers both algorithm variants on
+			\textsc{OneMax} via the RLS-reduction lemma) already uses the relaxed
+			threshold $\tau \ge Cn\ln n$ with $C>2$.  We have added a remark after the
+			proof making the verification explicit: $(1-1/n)^\tau \le n^{-C}$, a union
+			bound over $n$ levels gives $\Pr[A]\le n^{1-C}=o(1)$ for $C>1$, and
+			$\tau\cdot\Pr[A]=o(1)$ for $C>2$.}
+		
+		%% FIX 14
+		\item \RC{(p.\,10, l38) It should be $\ell<2n/3$ (instead of $\ell\le 2n/3$).}
+		
+		\resp{Corrected: the proof of Theorem~8 (FirstBest on LeadingOnes) now reads
+			``Fix a level~$\ell$ with $n/3\le \ell < 2n/3$.''}
+		
+		%% FIX 15
+		\item \RC{(p.\,10, l48) It should be $m/(n-1)$ instead of $m/n$.}
+		
+		\resp{Corrected. The text now reads: ``the expected number of tail-first
+			iterations is $\frac{m}{n-1}(\mathbb{E}[T]-1) = m = \Theta(n)$ (using that,
+			conditional on not hitting the improving bit $\ell+1$, the first flip is
+			uniform over the remaining $n-1$ positions, of which $m$ are tail
+			positions).''}
+		
+		%% FIX 16
+		\item \RC{(p.\,10, l52) Actually, not \emph{at least} once, but
+			\emph{exactly} once.}
+		
+		\resp{Corrected: ``a constant fraction of the $m$ tail positions has been
+			flipped \emph{exactly} once with constant probability (since each
+			hypermutation samples bits without replacement, each position is visited at
+			most once per call).''}
+		
+		%% FIX 17
+		\item \RC{(p.\,10, l53) `best' is a name of a variable, so there should be no
+			`the' before it. I actually recommend to rename it to $x_{\mathit{best}}$.}
+		
+		\resp{We have removed the article ``the'' before \emph{best} and typeset the
+			variable in italic ($\mathit{best}$) throughout the affected proof.
+			We opted for the minimal fix rather than a global rename to
+			$x_{\mathit{best}}$, as the existing notation is already established in
+			Algorithms~3 and~4 and throughout the other proofs.}
+		
+	\end{enumerate}
+	
+	\medskip
+	\noindent\textbf{Note on fixes already addressed by proof replacements.}\quad
+	The following reviewer comments from pages~3--10 were automatically resolved
+	by the complete proof rewrites of Theorems~2, 4, and~5:
+	\begin{itemize}[nosep]
+		\item \emph{FIX~6} (p.\,6, $\varepsilon/2$ in Theorem~2 lower bound):
+		resolved by the new Theorem~2 proof (theorem2\_replacement.tex), which no
+		longer uses the $\varepsilon n$ Chernoff cutoff.
+		\item \emph{FIX~8} (p.\,7, repeated paragraph in Theorem~4 proof): the
+		duplicated computation has been removed in the rewritten proof
+		(theorem4\_replacement.tex).
+		\item \emph{FIX~9} (p.\,7, introduce $\varepsilon$ at start of Theorem~4
+		lower bound): the rewritten proof does not use $\varepsilon$ as a free
+		parameter, so the issue no longer applies.
+		\item \emph{FIX~10} (p.\,7, awkward proof opening for Theorem~5): the orphan
+		display equation has been replaced by a properly introduced Taylor expansion
+		in the rewritten proof (thm5Replacement.tex).
+	\end{itemize}
+	
+\end{document}

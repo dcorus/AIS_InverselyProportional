@@ -79,7 +79,7 @@ The ideal behaviour of the IPH operator is that the mutation rate is minimal in 
 and that of the candidate solution increases. However, achieving such behaviour in practice may be problematic because the fitness of the global optimum is usually unknown.
 As a result, in practical applications information about the problem is used to \new{find} bounds on (or estimates of)  the value of the global optimum\footnote{Alternatively, the fitness of the best candidate solution is sometimes used and 
 	the mutation rate of the rest of the population is inversely proportional to the best.}.
-Thus, the closer the \rev{is} estimate to the actual value of the global optimum, the closer should the behaviour of the IPH operator be to the desired one.
+Thus, the closer the estimate \rev{is} to the actual value of the global optimum, the closer should the behaviour of the IPH operator be to the desired one.
 On the other hand,  if the bound is much higher (e.g., for a maximisation problem)  than the true value, then there is a risk that the mutation rate is too high in proximity of the global optimum 
 i.e., the algorithm will struggle to identify the optimum. 
 
