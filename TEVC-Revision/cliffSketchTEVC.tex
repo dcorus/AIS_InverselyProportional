@@ -35,7 +35,7 @@ immediately after an ageing event at the cliff-top; and (ii) showing that from
 this configuration the algorithm reaches the optimum without dangerous increases in mutation potential.
 
 For stage (ii) we will use the generalization of Markov's Inequality by Ville~\cite{Doob1953}(Ch.~VII) which will allow us to show that the mutation potential stays bounded with constant probability.
-\begin{theorem}[Ville’s inequality for nonnegative supermartingales]\label{thm:ville}
+\begin{theorem}[Ville's inequality for nonnegative supermartingales]\label{thm:ville}
 	Let $(M_t)_{t\ge 0}$ be a nonnegative supermartingale adapted to $(\mathcal F_t)_{t\ge 0}$. 
 	Then for every $a>0$,
 	\[
@@ -51,7 +51,17 @@ structured ``canonical'' state shortly after ageing triggers at the cliff-top.
 At the cliff-top the algorithm cannot improve except by sampling the global 
 optimum, and so ageing will eventually be triggered.  The key insight is that 
 the iteration of ageing followed by two additional \textcolor{black}{fitness improvements} can place the 
-algorithm into a configuration with \textcolor{black}{$n-d+2$ 1-bits i.e., ($r_0=2$) and the minimal Hamming distance of $HD(r_0)=2$ to the $best$ solution which had $n+d$ 1-bits.}  The following lemma formalises this.
+algorithm into a
+\textcolor{blue}{canonical
+starting configuration on the second slope.
+Throughout the Cliff analysis we index the successful fitness improvements on
+the second slope by $r = r_0, r_0+1, \dots$, and write $\mathrm{HD}(r)$ for
+the Hamming distance between the current solution and \emph{best} after $r$
+such improvements.
+With this notation, the canonical start corresponds to
+$r_0 = 2$ (two improvements completed from the cliff bottom)
+and $\mathrm{HD}(r_0) = 2$ (the current solution differs from the locked
+\emph{best} in exactly two positions).}  The following lemma formalises this.
 
 \begin{lemma}%[Canonical Start After Cliff-Top Ageing]
 	\label{lem:can-start-omega-d3}
@@ -71,9 +81,9 @@ algorithm into a configuration with \textcolor{black}{$n-d+2$ 1-bits i.e., ($r_0
 	We exhibit a consecutive three-step event which happens with probability $\Omega((d/n)^3)$ and yields the stated starting 
 	position on the second slope.
 	
-	 In the ageing iteration we require that the first two flips are $1\!\to 0$ then $0\!\to 1$ without replacement. This has probability $\frac{n-d}{n}\cdot\frac{d}{n-1}$ and produces an \emph{equal-fitness} offspring accepted by FCM (first return to $\ge$ parent). The offspring inherits the parent’s age (no improvement), so both parent and offspring face the ageing coin and die independently with probability $1/2$. Requiring “parent dies, offspring survives’’ contributes a factor $1/4$, and by the update rule the reference locks to the last cliff-top (the parent that died). The surviving equal-fitness offspring differs from this locked reference in exactly two bits, hence $\HD=2$ and, since $c<1$, the next iteration has $M=1$.
+	 In the ageing iteration we require that the first two flips are $1\!\to 0$ then $0\!\to 1$ without replacement. This has probability $\frac{n-d}{n}\cdot\frac{d}{n-1}$ and produces an \emph{equal-fitness} offspring accepted by FCM (first return to $\ge$ parent). The offspring inherits the parent's age (no improvement), so both parent and offspring face the ageing coin and die independently with probability $1/2$. Requiring "parent dies, offspring survives'' contributes a factor $1/4$, and by the update rule the reference locks to the last cliff-top (the parent that died). The surviving equal-fitness offspring differs from this locked reference in exactly two bits, hence $\HD=2$ and, since $c<1$, the next iteration has $M=1$.
 		
- With $M=1$, exactly one flip is performed and FCM does not accept worse-than-parent, so the algorithm returns the single-flip string after the potential exhaustion. A $0\!\to 1$ flip occurs with probability at least $d/n$ and returns the \emph{cliff-bottom} ($n-d+1$ ones), at Hamming distance $1$ from the locked reference. Ageing does not reset (no improvement), so both the current parent (equal-fitness cliff-top) and the returned offspring face the coin; requiring “parent dies, offspring survives’’ contributes another factor $1/4$ and preserves the locked reference at the last cliff-top.
+ With $M=1$, exactly one flip is performed and FCM does not accept worse-than-parent, so the algorithm returns the single-flip string after the potential exhaustion. A $0\!\to 1$ flip occurs with probability at least $d/n$ and returns the \emph{cliff-bottom} ($n-d+1$ ones), at Hamming distance $1$ from the locked reference. Ageing does not reset (no improvement), so both the current parent (equal-fitness cliff-top) and the returned offspring face the coin; requiring "parent dies, offspring survives'' contributes another factor $1/4$ and preserves the locked reference at the last cliff-top.
 	
  In the following iteration with probability at least $(d-1)/n$ the first bit flip is a $0\!\to 1$ flip, and the offspring is \emph{accepted} by FCM (strict improvement from the cliff-bottom), producing a point with $n-d+2$ ones. Relative to the locked cliff-top reference, the Hamming distance is now $2$, and exactly two successful phases have completed: $r_0=2$, $\HD(r_0)=2$.
 	
@@ -124,10 +134,12 @@ the crucial starting point: an exponential tail bound for this damaging prefix.
 
 \begin{lemma}%[Exponential Tail for Catch-Up Length]
 	 \label{lem:xi-tail}
-	Let the current solution on the second slope have $z\le d$ zero-bits and 
-	define $p=z/n$.  
-	Let $\xi_z$ be the number of $1\to0$ flips before fitness first returns to 
-	$\ge$ the parent's.  
+	\textcolor{blue}{Let the current solution on the second slope have $z\le d$ zero-bits and
+	define $p=z/n$.
+	Consider a single application of the hypermutation operator; let $\xi_z$ be
+	the number of $1\to0$ flips made \emph{within that one hypermutation} before
+	the fitness first returns to $\ge$ the parent's fitness (i.e., before the
+	first catch-up).}
 	Then for all $k\ge1$,
 	\[
 	\Pr(\xi_z\ge k)\le (2p)^k.
@@ -139,7 +151,7 @@ the crucial starting point: an exponential tail bound for this damaging prefix.
 \begin{proof}
 	If the first flip is a $0\!\to 1$ move, the offspring is strictly better and the hypermutation stops immediately, yielding $\xi_z=0$. Hence the event $\{\xi_z\ge 1\}$ implies that the first flip was a $1\!\to 0$ move. From that point on the process carries a \emph{deficit} of one-bits $D_t:=\#(1\!\to 0)-\#(0\!\to 1)$ that starts at $D_1=1$ and decreases by $1$ on each $0\!\to 1$ flip and increases by $1$ on each $1\!\to 0$ flip. The hypermutation stops at the \emph{first} time $t$ with $D_t=0$ (a catch-up). Thus the event $\{\xi_z\ge k\}$ is exactly the event that the first return to $0$ happens no earlier than time $2k$.
 	
-	We bound this probability from above by a simple ``coarse blocking’’ argument that uses only that $z$ is small and that flips occur without replacement.
+	We bound this probability from above by a simple ``coarse blocking'' argument that uses only that $z$ is small and that flips occur without replacement.
 	
 	\smallskip
 	Condition on any history of length $t\le 2k-1$ that keeps $D_t\ge 1$ (so no catch-up yet) and in which at most $t$ distinct positions have been flipped. Among the $n-t$ remaining positions there are at most $z$ zeros. Hence the conditional probability that the \emph{next} flip is a $0\!\to 1$ move is at most
@@ -173,9 +185,8 @@ entire phases.
 	\[
 	\mathbb{E}[e^{\lambda Y_z}] 
 	\;\le\; 
-	K(\lambda)
-	:= 
-	\frac{1-\rho}{1-\rho e^{2\lambda}}.
+	\textcolor{blue}{\frac{1-\rho}{1-\rho e^{2\lambda}}
+	\;\eqqcolon\; K(\lambda).}
 	\]
 \end{lemma}
 
@@ -314,7 +325,7 @@ envelope suitable for applying \textcolor{black}{Ville's inequality for non-nega
 	Let $\rho=2d/n$.  
 	For any $0<\lambda<\tfrac12\ln\tfrac{1}{2\rho}$ define
 	\[
-	K(\lambda)=\frac{1-\rho}{1-\rho e^{2\lambda}}, 
+	\textcolor{blue}{\frac{1-\rho}{1-\rho e^{2\lambda}} \;\eqqcolon\; K(\lambda),}
 	\qquad 
 	\alpha=e^{-\lambda\theta}K(\lambda).
 	\]
@@ -357,11 +368,16 @@ envelope suitable for applying \textcolor{black}{Ville's inequality for non-nega
 \end{corollary}
 
 \begin{proof}
-	Define $M_t:=\alpha^{-t}e^{-\lambda B_t}$. The assumption implies
-	$\EE[M_{t+1}\mid\mathcal F_t]\le M_t$, so $(M_t)$ is a nonnegative supermartingale.
-	Applying Ville’s inequality (Theorem~\ref{thm:ville}) with $a=1$ gives
+	\textcolor{blue}{Ville's inequality (Theorem~\ref{thm:ville}) applies to nonneg\-ative
+	supermartingales, but the buffer $B_t$ is not one (it can drift and take
+	arbitrary values).  We therefore work instead with the transformed process
+	$M_t := \alpha^{-t}e^{-\lambda B_t}$, which \emph{is} a nonneg\-ative
+	supermartingale: the assumption $\EE[e^{-\lambda(B_{t+1}-B_t)}\mid\mathcal F_t]
+	\le \alpha$ gives $\EE[M_{t+1}\mid\mathcal F_t]\le M_t$.
+	Applying Theorem~\ref{thm:ville} to $M_t$ with $a=1$ yields
 	$\Pr(\sup_{t\ge 0} M_t\ge 1)\le \EE[M_0]=e^{-\lambda b}$.
-	Since $B_t\le 0$ for some $t$ implies $M_t\ge 1$, we obtain the claim.
+	Finally, $B_t\le 0$ implies $e^{-\lambda B_t}\ge 1$, hence $M_t\ge 1$,
+	giving the claim.}
 	
 \end{proof}
 
@@ -489,7 +505,7 @@ Summing the two contributions establishes the main runtime bound.
 	so $B_{r_0}=2\theta$ and $B_{t+1}-B_t=\theta-Y_{z_{t+1}}$ by Lemma~\ref{lem:buffer}.
 	By the refined phase MGF (Lemma~\ref{lem:phase-mgf}), for every $0<\lambda<\tfrac12\ln\!\tfrac{1}{2\rho}$ with $\rho:=2d/n$,
 	\[
-	\EE\!\big[e^{\lambda Y_z}\big]\ \le\ K(\lambda)\ :=\ \frac{1-\rho}{\,1-\rho e^{2\lambda}\,}.
+	\textcolor{blue}{\EE\!\big[e^{\lambda Y_z}\big]\ \le\ \frac{1-\rho}{\,1-\rho e^{2\lambda}\,} \;\eqqcolon\; K(\lambda).}
 	\]
 	Therefore, by Lemma~\ref{lem:drift-envelope-global},
 	\[
@@ -516,7 +532,10 @@ Summing the two contributions establishes the main runtime bound.
 	\[
 	\sum_{z=1}^{d}\frac{n}{z}\ =\ \Theta(n\log d)
 	\]
-	iterations, which is $o(\tau)$ since $\tau=\Omega(n^{1+\epsilon'})$. With a pessimistic $\Theta(n)$ evaluations per iteration, one second-slope attempt costs $\Theta(n^{2}\log d)$ evaluations, and the constant no-jump-back probability implies a constant expected number of such attempts.
+	iterations, which is $o(\tau)$ since $\tau=\Omega(n^{1+\epsilon'})$. \textcolor{blue}{Since the mutation potential satisfies $M \le c\,n$ (where $c$ is the constant
+	from the \linHD\ potential), each iteration evaluates at most $c\,n =\Theta(n)$
+	individuals; one second-slope attempt therefore costs $\Theta(n^{2}\log d)$
+	evaluations,} and the constant no-jump-back probability implies a constant expected number of such attempts.
 	
 	\smallskip
 
@@ -537,7 +556,7 @@ $O\!\Big(\frac{n^{4}\log(n/d)}{d^{2}} \;+\; n^{2}\log d\Big)$.}
 	\textcolor{black}{\lastBest~with} \linHD\ \new{(factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$)} and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
 	optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected
 	\[
-	O\!\Big(\frac{\rev{n^{4}}\log(n/d)}{d^{3}} \;+\; n^{2}\log d\Big)
+	O\!\Big(\frac{\rev{n^{4}}\log(n/d)}{d^{2}} \;+\; n^{2}\log d\Big)
 	\]
 	fitness function evaluations.
 \end{corollary}

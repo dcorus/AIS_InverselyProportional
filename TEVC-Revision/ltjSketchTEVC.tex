@@ -1,5 +1,10 @@
 
-Formally, for constants $k\ge1$ and $\rho\in(0.8,0.9)$, let $r := 2k+1$, 
+Formally, for constants $k\ge1$ and $\rho\in(0.8,0.9)$, let $r := 2k+1$\textcolor{blue}{
+(an odd number, as required for the block-jump prefix $0^r1^{(0.9n-r)}*$
+to force an even number of bit-flips to reach $\mathcal{B}_k$, which is
+the key parameter controlling the per-iteration success probability
+$\Theta(n^{-(r+1)}) = \Theta(n^{-(2k+2)})$; we introduce $r$ as shorthand
+to avoid writing $2k+1$ in every exponent throughout the proof)}, 
 $L := \lfloor\log_2 n\rfloor$, 
 $\mathcal{P} := \{\,x : \mathrm{LO}(x)\ge 0.9n\,\}$, 
 $\mathcal{B}_k := \{\,0^{r} 1^{(0.9n-r)} *\,\}$, 
@@ -15,16 +20,20 @@ The function $\mathrm{LTJ}_{k,\rho} : \{0,1\}^n \to \mathbb{R}$ is
 	\mathrm{LO}(x), & \text{otherwise.}
 \end{cases}
 \]
+\textcolor{blue}{Here $x_{i>r}$ denotes the suffix of $x$ at positions $i > r$, i.e.,
+$x_{i>r} := (x_{r+1}, x_{r+2}, \dots, x_n)$.}
 The landscape consists of a long LeadingOnes slope rising from fitness 
 $\mathrm{LO}(x)$ up to level $0.9n-1$, followed by a large penalised region.  
 Two off-slope structures contain the \textcolor{black}{two sets of optima} but are inaccessible to 
 standard hill-climbers.  
 The set $\mathcal{B}_k$ begins with the prefix $0^{r}1^{(0.9n-r)} *$ and forms a 
-short slope, \new{called \rev{\emph{block-jump}} slope,} that \textcolor{black}{deterministically increases toward its unique local optimum; reaching 
-this prefix is therefore equivalent to entering the leading ones path to the local optimum.}  
+short slope, \new{called block-jump slope,} that \textcolor{black}{deterministically increases toward its unique local optimum
+\textcolor{blue}{$0^{r}1^{(0.9n-r)}$}; reaching 
+this prefix is therefore equivalent to entering the leading ones path to the local optimum\textcolor{blue}{
+$0^{r}1^{(0.9n-r)}$}.}  
 In contrast, the set $\mathcal{D}_\rho$ consists of solutions with prefix 
 $0^{L} *$ \textcolor{black}{whose suffix has ones-density at least $\rho$} i.e., $\rho n$ ones, and forms a wide 
-plateau of globally optimal fitness, \new{which we call  \rev{\emph{deep-prefix plateau}}}.  
+plateau of globally optimal fitness, \new{which we call  deep-prefix plateau}.  
 Both structures are hidden behind the penalised barrier, and the only reliable 
 way to reach them is via large hypermutation events.  
 The junction $J := \{x : \mathrm{LO}(x)=0.9n-1\}$ acts as a central gateway: 
@@ -78,7 +87,12 @@ Thus the slope is climbed to $J$ with high probability.
 		Next, we will show that the probability of sampling a $\mathcal{B}_k$ or a $\mathcal{D}_\rho$ solution in $T$ iterations is $o(1)$, starting our argument with $\mathcal{D}_\rho$. 
 		}
 	
-	Let $\alpha:=|x|_1/n$ and $\alpha^\top:=|\text{best}|_1/n$. Since the probability of improvement is at least $1/n$ in the initial leading-ones slope the ageing does not trigger with overwhelming probability unless the current solution is in $J$, $\mathcal{D}_\rho$ or $\mathcal{B}_k$, all of which lead to $\alpha^\top\ge\rho$ after the restart. We make a case distinction according to $\alpha\ge \rho-\xi$ for some constant $\xi\in(0,\rho-\tfrac12]$  such that	$q^\star \;:=\; 2c\,\bigl(1-\rho+\xi\bigr) \;<\; 1/4$ which is always possible since $c<5/8$. 
+	Let $\alpha:=|x|_1/n$ and $\alpha^\top:=|\text{best}|_1/n$. Since the probability of improvement is at least $1/n$ in the initial leading-ones slope the ageing does not trigger with overwhelming probability unless the current solution is in $J$, $\mathcal{D}_\rho$ or $\mathcal{B}_k$, all of which lead to $\alpha^\top\ge\rho$ after the restart. We make a case distinction according to $\alpha\ge \rho-\xi$ for some constant $\xi\in(0,\rho-\tfrac12]$  such that	$q^\star \;:=\; 2c\,\bigl(1-\rho+\xi\bigr) \;<\; 1/4$.
+\textcolor{blue}{This is achievable: choosing $\xi$ sufficiently close to $0$ gives
+$q^\star \approx 2c(1-\rho)$; since $\rho > 4/5$ we have $1-\rho < 1/5$,
+so $2c(1-\rho) < 2 \cdot \tfrac{5}{8} \cdot \tfrac{1}{5} = \tfrac{1}{4}$
+(using $c < 5/8$).  Any fixed $\xi \in (0, \rho - 1/2]$ small enough to
+keep $2c(1-\rho+\xi) < 1/4$ then satisfies all requirements.}
 	
 	\emph{Case 1: $\alpha\ge \rho-\xi$.}
 	Using $|x\wedge best|_1\ge |x|_1+|best|_1-n$,
@@ -161,7 +175,9 @@ Thus the slope is climbed to $J$ with high probability.
 
 
 \begin{lemma} \label{lem:BJO-epoch}
-	Let an ageing epoch begin at the junction.
+	\textcolor{blue}{Let an ageing epoch reach the junction $J$ (which occurs with high probability
+	by Lemma~\ref{lem:junction-first-density-Bk}; we condition on this event
+	throughout).}
 	Then, with probability $\new{p_B}=\Omega(\min\{1,\,\tau\,n^{-(2k+2)}\})$, the epoch performs a jump placing the individual at the beginning of the block-jump slope.
 \end{lemma}
 
@@ -227,7 +243,9 @@ Evaluating this over $\tau$ iterations yields the stated bound.
 
 
 \begin{lemma} \label{lem:DPO-epoch}
-	Let an ageing epoch begin at the junction.
+	\textcolor{blue}{Let an ageing epoch reach the junction $J$ (which occurs with high probability
+	by Lemma~\ref{lem:junction-first-density-Bk}; we condition on this event
+	throughout).}
 	Then, with probability $\new{p_D}=\Omega(\min\{1,\,\tau\,n^{-\beta}\})$, the epoch performs a jump placing the individual onto the deep-prefix plateau.
 \end{lemma}
 
@@ -289,11 +307,14 @@ Evaluating over $\tau$ iterations gives the lemma.
 	where $\beta:=\log_{2}\frac{20}{c}$.
 	
 	%\textbf{Step 3 – Density constraint is automatic.}
-	When those $L$ flips occur, the total number of  ones in the string drops by at most
-	\( L\le\log_2 n\).
-	Thus using (1) and \(L=o(n)\) we get,
+	\textcolor{blue}{When those $L$ flips occur,
+	since the $L$-bit prefix of the new parent is a uniformly random string
+	(from the reinitialisation), it contains approximately $L/2$ one-bits in
+	expectation; the total number of ones in the string therefore drops by at
+	most $L/2 \le \tfrac12\log_2 n$ when these are flipped.
+	Thus using (1) and $L = o(n)$ we get,}
 	%\[
-	$|x|_1-L\;\ge\;0.94n-\log_2 n
+	$|x|_1-L/2\;\ge\;0.94n-\tfrac12\log_2 n
 	\;\ge\;\rho n$
 	%\quad\text{
 	for all sufficiently large $n$.
@@ -319,9 +340,19 @@ Evaluating over $\tau$ iterations gives the lemma.
 \end{proof}
 
 
+\textcolor{blue}{Each \emph{ageing epoch} begins with a uniformly random reinitialisation and
+runs for $\tau$ iterations; by Lemma~\ref{lem:junction-first-density-Bk} it
+ascends to the junction $J$ with high probability before reaching any
+off-slope structure.  We henceforth condition on epochs reaching $J$.}
 Each ageing epoch evaluates $\Theta(n\tau)$ individuals.
 By Lemma~\ref{lem:junction-first-density-Bk}, epochs reach $J$ with high probability, and by \textcolor{black}{lemmata~\ref{lem:BJO-epoch} and~\ref{lem:DPO-epoch}}, an epoch discovers each off-slope structure with probabilities $p_B$ and $p_D$, respectively.
-\textcolor{black}{A coupon-collector argument then implies} that the expected number of epochs needed to reach both the block-jump basin and the deep-prefix plateau is $O(1/p_B + 1/p_D)$.
+\textcolor{blue}{Since $B$ (entering $\mathcal{B}_k$) and $D$ (entering $\mathcal{D}_\rho$) are
+mutually exclusive within a single epoch, the algorithm must discover them in
+\emph{different} epochs.
+By a coupon-collector argument (we need to ``collect'' both coupons $B$ and
+$D$, which arrive independently across epochs with probabilities $p_B$ and
+$p_D$ respectively), the expected number of epochs until both have been seen
+is $O(1/p_B + 1/p_D)$.}
 Multiplying by the cost per epoch yields the bound stated in Theorem~\ref{thm:main-tau-final}.
 
 \begin{proof}[Proof [of Theorem~\ref{thm:main-tau-final}]]
