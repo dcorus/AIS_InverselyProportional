@@ -130,7 +130,7 @@ makes the operator robust to fitness function scaling.
 
 %%% FIX 1 — Table * caption: clarify c in β
 \begin{table*}[t!]
-	\caption{Expected runtimes of the different mutation operators when embedded in a (1+1) algorithmic framework for the benchmark functions considered in this paper. For all results the optimum is unknown to the algorithms. %The $*$ indicates that we have not performed the analysis, yet although Static hypermutations may be faster, the upper bound is still correct. 
+	\caption{Expected runtimes of the different mutation operators when embedded in a (1+1) algorithmic framework for the benchmark functions considered in this paper. For all results the optimum is unknown to the algorithms. \rev{The $*$ indicates that we have not performed a formal analysis, yet for reasons provided at the end of Section~\ref{sec:ltj}, the upper bound is correct.} 
 	$\beta:= \log_2 \frac{20}{c}$\textcolor{blue}{, where $c\le 1$ is the constant factor in the \linHD\ potential $M = \lfloor c\cdot H(x,\mathit{best})\rfloor$}
 	}
 	%The same result as $(1+1)~IA^{hype}$ using static hypermutation ($M=n$) has been shown for the original IPM of Opt-IA \cite{JansenZarges2011}.}
@@ -663,7 +663,7 @@ We believe that this assumption is realistic for practical applications.
  
  
  
-\section{When IPH Outperforms Too Low Mutation Rates}
+\section{When IPH Outperforms Too Low Mutation Rates}\label{sec:ltj}
 \new{In this section we introduce a function class where inversely proportional hypermutations outperform the lower mutation rates of SBM, and the higher mutation rate on local optima of the $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$ will be essential.}
 The function class is inspired \rev{by the} one previously used to show the advantages and disadvantages of using high mutation rates in the context of rank-based mutation in population-based algorithms~\cite{OlivetoLehreNeumann09}.
 In rank-based mutation algorithms~\cite{RankBasedMutation} each individual has a different mutation rate based on their rank in the population i.e., the best individual has the lowest mutation rate while the worst individual has a very high one.
