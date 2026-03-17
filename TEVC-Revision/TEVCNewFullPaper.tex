@@ -62,7 +62,7 @@ Artificial Immune Systems (AIS) are a class of bio-inspired algorithms which nat
 
 AIS for optimisation \cite{DeCastroTimmisBook,MO2020AAAI} are generally inspired by the clonal selection principle  \cite{Burnet1959}.
 For this reason they are also often referred  to as {\it clonal selection} algorithms \cite{DeCastroTimmisBook}. 
-Clonal selection algorithms are gaining increasing popularity also in evolutionary multi-objective optimisation~\cite{CoelloEMO2025,CoelloTEVC15,EMOReview}. 
+Clonal selection algorithms are also \rev{popular} in evolutionary multi-objective optimisation~\cite{CoelloEMO2025,Coello2022,COY25,HuangZhou2020,EMOReview}. 
 In the literature two key features of clonal selection algorithms have been identified \cite{Brownlee2007}: 
 \begin{enumerate}
 	\item  The proliferation rate of each immune cell is proportional to its affinity \new{(similarity)} with the selective antigen \new{(pathogen)}: the higher the affinity, 
@@ -123,7 +123,7 @@ A result of this first analysis is that a mutation potential that increases expo
 provides the larger speed-ups \new{for hillclimbing unimodal functions}. Furthermore, using the Hamming distance rather than the fitness as the measure to quantify proximity to the optimum
 makes the operator robust to fitness function scaling.
 %Hence we consider this operator, called  \expoHD, in the rest of the paper.
-\new{However, an exponential decay with the distance to the optimum also implies that high mutation rates would occur only when the current solution is prohibitively far away from the optimum. For instance, a randomly generated solution with expected Hamming distance $n/2$ from the optimum flips $\sqrt{n}$ bits and this mutation will decrease exponentially fast with further improvements. For this reason we find that a linear decrease of the mutation rate is a better compromise in \rev{practice} as it allows for longer phases where large mutations occur} \textcolor{black}{ and it flips the number of bits that increase the probability of hitting the optimum in the next step.}
+\new{However, an exponential decay with the distance to the optimum also implies that high mutation rates would occur only when the current solution is prohibitively far away from the optimum, \rev{thus, the algorithm would flip just one bit most of the time, i.e., very rare hyper-mutations}. For instance, a randomly generated solution with expected Hamming distance $n/2$ from the optimum flips $\sqrt{n}$ bits and this mutation will decrease exponentially fast with further improvements. For this reason we find that a linear decrease of the mutation rate is a better compromise in \rev{practice} as it allows for longer phases where large mutations occur} \textcolor{black}{ and it flips the number of bits that increase the probability of hitting the optimum in the next step.}
 
 
 
