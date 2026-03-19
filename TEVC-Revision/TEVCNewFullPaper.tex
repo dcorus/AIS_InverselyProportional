@@ -550,15 +550,20 @@ The other choice, that of only updating the {\it best} when a strictly better so
  	           \ENDIF
  	            %\STATE{Add $y$ to $P$};
  	            \FOR{$w \in \{x,y\}$}
- 				\IF{$\alpha(w) \geq \tau$}
- 				\STATE{with probability \rev{$p_{\text{die}}=1/2$}, reinitialise $w$ uniformly at random with $\alpha(w):=0$};
-				\textcolor{blue}{\IF{$f(w) \geq f(\text{best})$}
-				\STATE{$\text{best}:=w$};
-				\ENDIF} 
- 				%\STATE {Select the best individual in $P$ and remove the other};
- 				\ENDIF
- 				\ENDFOR
- 				\STATE{Set $x=\arg\max\limits_{z\in\{x,y\}}f(z)$; }
+ 	            \IF{$\alpha(w) \geq \tau$}
+ 	            \STATE with probability $p_{\text{die}}=1/2$:
+ 	            \STATE \hspace{\algorithmicindent}
+ 	            reinitialise $w$ uniformly at random,\ $\alpha(w):=0$
+ 	            \textcolor{blue}{%
+ 	            	\STATE \hspace{\algorithmicindent}
+ 	            	\textbf{if} $f(w) \geq f(\text{best})$ \textbf{then}
+ 	            	\STATE \hspace{2\algorithmicindent}
+ 	            	$\text{best}:=w$
+ 	            	\STATE \hspace{\algorithmicindent}
+ 	            	\textbf{end if}}
+ 	            \ENDIF
+ 	            \ENDFOR
+ 	            \STATE{Set $x=\arg\max\limits_{z\in\{x,y\}}f(z)$; }
  				%\STATE{If $|P|=0$, create $x \in\{0,1\}^n$  uniformly at random with $x.age=0$ and add $x$ to $P$;}
  	            \ENDWHILE
  	   \end{algorithmic} \label{alg:alg1+ageing}
@@ -583,14 +588,22 @@ The other choice, that of only updating the {\it best} when a strictly better so
  			\ENDIF
  			\FOR{$w \in \{x,y\}$}
  			\IF{$\alpha(w) \geq \tau$}
- 			\STATE with probability $p_{\text{die}}=1/2$
- 			{\color{black}\hspace{0.3em} \IF{$f(w) = f(\text{best})$} 
- 			\STATE \hspace{0.3em} $\text{best}:=w$
- 			\ENDIF }
- 			\STATE \hspace{0.3em} reinitialise $w$ uniformly at random with $\alpha(w):=0$
-			\textcolor{blue}{\IF{$f(w) > f(\text{best})$}
-			\STATE $\text{best}:=w$
-			\ENDIF}
+ 			\STATE with probability $p_{\text{die}}=1/2$:
+ 			\STATE \hspace{\algorithmicindent}
+ 			\textbf{if} $f(w) = f(\text{best})$ \textbf{then}
+ 			\STATE \hspace{2\algorithmicindent}
+ 			$\text{best}:=w$
+ 			\STATE \hspace{\algorithmicindent}
+ 			\textbf{end if}
+ 			\STATE \hspace{\algorithmicindent}
+ 			reinitialise $w$ uniformly at random,\ $\alpha(w):=0$
+ 			\textcolor{blue}{%
+ 				\STATE \hspace{\algorithmicindent}
+ 				\textbf{if} $f(w) > f(\text{best})$ \textbf{then}
+ 				\STATE \hspace{2\algorithmicindent}
+ 				$\text{best}:=w$
+ 				\STATE \hspace{\algorithmicindent}
+ 				\textbf{end if}}
  			\ENDIF
  			\ENDFOR
  			\STATE Set $x=\arg\max\limits_{z\in\{x,y\}}f(z)$
