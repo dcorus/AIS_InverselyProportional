@@ -204,7 +204,7 @@ A summary of the results obtained in the paper is provided in Table \ref{table:s
  
  \section{Inversely Proportional Mutation Potentials} % with FCM}
  Hypermutations with mutation potential using FCM flip at most a linear amount of bits (i.e., the mutation potential $M=cn$) chosen uniformly at random without replacement \new{from the interval $[1..n]$}. After each of the $M$ bit flips, the fitness of the produced solution is evaluated and if a {\it constructive mutation} is identified, then the operator is stopped and the solution returned. \new{A  constructive mutation is a solution that is at least as good as that of the original parent.}
- Otherwise the algorithm continues flipping the bits without setting them back until the potential $M$ of bit flips is reached. If no constructive \new{mutation} has been identified earlier, then the $M$th solution is returned.  
+ Otherwise the algorithm continues flipping the bits without setting them back until the potential $M$ of bit flips is reached. If no constructive \new{mutation} has been identified earlier, then the $M$-th solution is returned.  
 %%% FIX 2 — clarify f_OPT non-negativity and meaning
  The original inversely proportional hypermutation operator (\IPHfcm{}) proposed for Opt-IA uses mutation potential  $M=\lceil(1-f_{\text{OPT}}/v)\rceil cn$ for minimisation problems, where \textcolor{blue}{$f_{\text{OPT}}\ge 0$ is the optimal fitness value, $v>0$ is the fitness of the current individual,} 
  \new{and $0<c\leq 1$ is some constant}~\cite{CutelloNicosiaPavoneTimmis2007,JansenZarges2011}. 
