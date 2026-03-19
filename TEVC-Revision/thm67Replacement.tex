@@ -76,13 +76,13 @@ at most $\mathbf{E}[T']$.  Hence
     + \mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A].
 \]
 Rearranging and using $\tau p=o(1)$ from~(ii):
-\[
-  \mathbf{E}[T'] \;\leq\;
-  \frac{\mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]+\tau p}{1-p}
-  \;\leq\;
+\begin{align*}
+  \mathbf{E}[T'] &\;\leq\;
+  \frac{\mathbf{E}[T_{\mathrm{RLS}}\mid\lnot A]\,\Pr[\lnot A]+\tau p}{1-p}\\
+ & \;\leq\;
   \frac{T_{\mathrm{RLS}}+o(1)}{1-o(1)}
   \;=\; (1+o(1))\,T_{\mathrm{RLS}}.
-\]
+\end{align*}
 
 \textit{Lower bound.}
 Before event $A$ occurs, at most $T_{\mathrm{RLS}}+\tau$ steps elapse;
