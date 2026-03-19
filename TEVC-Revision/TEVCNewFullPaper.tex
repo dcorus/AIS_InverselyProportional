@@ -662,8 +662,11 @@ It was originally designed as a problem instance where non-elitist EAs outperfor
 and then hillclimb up to the global optimum \cite{LissovoiOlivetoWarwicker2019AAAI,CorusOlivetoYazdani2019TCS,CorusOlivetoYazdani2021TEVC,HeviaSudholtAlgo24,DoerrIJCAI-25}. 
 Due to the high mutation rates of static hypermutations, even if they were to escape the local optima of \cliff{} (which is \new{very unlikely} due to FCM and linear mutation potentials), they would still jump back with high probability.  
 
+\textcolor{purple}{Recently {\it fast} AISs have been introduced~\cite{CorusOlivetoYazdani2021TEVC} that simply flip the required number of bits independently according to the mutation potential (rather than sequentially and using FCM) in a similar fashion to power law mutation operators~\cite{DoerrGECCO2017FastGA}. These have been shown to optimise \cliff as long as the gap size is linear in expected time $O(n^{5/2} \log n$).
+}
+
 Now we show that differently from static hypermutations, {\linHD }
-combined with ageing can escape from the local optima of \cliff, 
+combined with ageing can escape from the local optima of \cliff \textcolor{purple}{also for small cliff gaps, and faster than the {\it fast} AISs for sublinear gaps}, 
 hence optimises the function efficiently. The condition that $d$ is not prohibitively large is necessary to avoid
 that the reinitialised solutions due to ageing have larger fitness than a solution with $n-d+1$ $1$-bits, {\color{black} which would cause the latter to be removed from the population}.
 We believe that this assumption is realistic for practical applications. 
