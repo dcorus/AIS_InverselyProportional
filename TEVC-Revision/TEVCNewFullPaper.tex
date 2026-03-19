@@ -563,7 +563,9 @@ The other choice, that of only updating the {\it best} when a strictly better so
  	            	\textbf{end if}}
  	            \ENDIF
  	            \ENDFOR
- 	            \STATE{Set $x=\arg\max\limits_{z\in\{x,y\}}f(z)$; }
+ 	            \IF{$f(y) \geq f(x)$}
+ 	            \STATE{$x := y$}
+ 	            \ENDIF
  				%\STATE{If $|P|=0$, create $x \in\{0,1\}^n$  uniformly at random with $x.age=0$ and add $x$ to $P$;}
  	            \ENDWHILE
  	   \end{algorithmic} \label{alg:alg1+ageing}
@@ -606,7 +608,9 @@ The other choice, that of only updating the {\it best} when a strictly better so
  				\textbf{end if}}
  			\ENDIF
  			\ENDFOR
- 			\STATE Set $x=\arg\max\limits_{z\in\{x,y\}}f(z)$
+\IF{$f(y) \geq f(x)$}
+\STATE{$x := y$}
+\ENDIF
  			\ENDWHILE
  		\end{algorithmic} 
  		\label{alg:alg2+ageing}
