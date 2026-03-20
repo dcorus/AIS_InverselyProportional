@@ -417,7 +417,7 @@ Figure \ref{fig:onemax} highlights the reason why these operators waste fewer fi
 The {\oneoneIA } using IPH with either {\expoF } or {\expoHD } optimises \textsc{OneMax} in $\Theta(n^{3/2}/\log n)$ expected fitness function evaluations.
 \end{restatable}
 
-\textcolor{blue}{The proof is deferred to the supplementary material.}
+
 
 
  
@@ -438,8 +438,6 @@ In the previous subsection, it was shown that decreasing the mutation rate linea
 The {\oneoneIA } using \IPHfcm{} with {\linHD } optimises \textsc{LeadingOnes} in $\Theta(n^3)$ expected fitness function evaluations.
 \end{theorem}
 
-\textcolor{blue}{The proof is deferred to the supplementary material.}
-
 
 \rev{We can now proceed with the analysis of the exponential-based potentials.}
 Theorem \ref{expohdOnLO} shows that the \rev{fitness difference based exponential}
@@ -453,8 +451,6 @@ The {\oneoneIA } using \IPHfcm{} with {\expoF } optimises
 \textsc{LeadingOnes} in $\Theta(n^3/\log^2 n)$ expected fitness function
 evaluations.
 \end{theorem}
-
-\textcolor{blue}{The proof is deferred to the supplementary material.}
 
  
 
@@ -471,10 +467,6 @@ The {\oneoneIA } using \IPHfcm{} with {\expoHD } optimises
 \textsc{LeadingOnes} in $\Theta(n^{5/2}/\log^2 n)$ expected fitness function
 evaluations.
 \end{restatable}
-
-\textcolor{blue}{The proof is deferred to the supplementary material.}
-
-
 
 
 
@@ -610,7 +602,7 @@ where $T_{\mathrm{RLS}}$ is the expected runtime of RLS
  on the same function.
 \end{lemma}
 
-\textcolor{blue}{The proof is deferred to the supplementary material.}
+
 
 \begin{theorem}\label{thm:onemaxexpo}
 The expected runtime of \firstBest{} and \lastBest{} using \IPHfcm{} with
@@ -992,6 +984,77 @@ $O(n^{2}\log d)$ evaluations.
 Since the success probability is constant, this remains the unconditional 
 expectation.  
 Summing the two contributions establishes the main runtime bound.
+
+\begin{proof}[Proof [of Theorem~\ref{th:expoHD-cliff}]]
+	
+	From a uniformly random start, the expected iterations to reach the cliff-top ($n-d$ ones) are
+	$\sum_{i=d}^{n}\frac{n}{i}=\Theta\!\big(n\log\tfrac{n}{d}\big)$, which at $\Theta(n)$ evaluations/iteration costs
+	$\Theta\!\big(n^{2}\log\tfrac{n}{d}\big)$ evaluations per ascent to the cliff-top. At the cliff-top, the only fitter point is $1^n$, so ageing triggers unless the optimum is found within $\tau$ iterations.
+	
+	By Lemma~\ref{lem:can-start-omega-d3}, within at most three iterations after an ageing kick the process reaches the canonical second-slope start
+	\[
+	r_0=2,\qquad \HD(r_0)=2
+	\]
+	with probability
+	\[
+	p_{\mathrm{can}}(n,d)\ \ge\ \frac{3}{256}\Big(\frac{d}{n}\Big)^{\!3}.
+	\]
+	Hence the number of ageing epochs needed to obtain this start is geometric with mean $1/p_{\mathrm{can}}$, and the expected evaluation cost up to the canonical start (including restarts) is
+	\[
+	\Theta\!\Big(\frac{1}{p_{\mathrm{can}}(n,d)}\cdot n^{2}\log\tfrac{n}{d}\Big)
+	\ =\ O\!\Big(\frac{n^{5}\log(n/d)}{d^{3}}\Big).
+	\]
+	
+	\smallskip
+	Under the reference-update rule the start on the second slope is $r_0=2$, $\HD(r_0)=2$, so $s_0=0$ and with $\theta=\tfrac1c-1$ define
+	\[
+	B_r\ :=\ \theta r - \sum_{j=r_0+1}^{r} Y_{z_j}\qquad(r\ge r_0),
+	\]
+	so $B_{r_0}=2\theta$ and $B_{t+1}-B_t=\theta-Y_{z_{t+1}}$ by Lemma~\ref{lem:buffer}.
+	By the refined phase MGF (Lemma~\ref{lem:phase-mgf}), for every $0<\lambda<\tfrac12\ln\!\tfrac{1}{2\rho}$ with $\rho:=2d/n$,
+	\[
+	\textcolor{blue}{\EE\!\big[e^{\lambda Y_z}\big]\ \le\ \frac{1-\rho}{\,1-\rho e^{2\lambda}\,} \;\eqqcolon\; K(\lambda).}
+	\]
+	Therefore, by Lemma~\ref{lem:drift-envelope-global},
+	\[
+	\EE\!\big[e^{-\lambda(B_{t+1}-B_t)}\mid\mathcal F_t\big]\ \le\ e^{-\lambda\theta}\,K(\lambda)\qquad\text{for all }t\ge 0.
+	\]
+	
+	Since $d\le(\tfrac14-\varepsilon)n$ and the theorem assumes
+	\[
+	c\ <\ \frac{1+4\varepsilon}{3-4\varepsilon}\ \le\ \frac{1-2d/n}{1+2d/n}\ =:\ c_\star(n,d),
+	\]
+	Lemma~\ref{lem:c-threshold-instance} guarantees an admissible $\lambda\in\big(0,\tfrac12\ln\tfrac{n}{4d}\big)$ with $e^{-\lambda\theta}K(\lambda)<1$.
+	With $B_{r_0}=2\theta$, Corollary~\ref{cor:ville-exponential} yields
+	\[
+	\Pr\!\Big(\inf_{t\ge 0} B_t\le 0\Big)\ \le\ e^{-\lambda\,2\theta}.
+	\]
+	Moreover, since $\tfrac12\ln\!\tfrac{n}{4d}\ge \tfrac12\ln\!\tfrac{1}{1-4\varepsilon}$ for all admissible $d$, we may fix a \emph{uniform} $\lambda_\varepsilon\in\big(0,\tfrac12\ln\tfrac{1}{1-4\varepsilon}\big)$ and conclude
+	\[
+	\Pr\!\Big(\inf_{t\ge 0} B_t\le 0\Big)\ \le\ e^{-\lambda_\varepsilon\,2\theta}.
+	\]
+	Because $\lambda_\varepsilon$ depends only on $\varepsilon$ and $\theta=\tfrac1c-1$ depends only on $c$, this right-hand side is a constant in $(0,1)$, independent of $n$ and $d$.
+	
+	\smallskip
+	On the event $\{\inf_{t\ge 0} B_t>0\}$ (no jump-back), the second-slope ascent is monotone and completes in expected
+	\[
+	\sum_{z=1}^{d}\frac{n}{z}\ =\ \Theta(n\log d)
+	\]
+	iterations, which is $o(\tau)$ since $\tau=\Omega(n^{1+\epsilon'})$. \textcolor{blue}{Since the mutation potential satisfies $M \le c\,n$ (where $c$ is the constant
+		from the \linHD\ potential), each iteration evaluates at most $c\,n =\Theta(n)$
+		individuals; one second-slope attempt therefore costs $\Theta(n^{2}\log d)$
+		evaluations,} and the constant no-jump-back probability implies a constant expected number of such attempts.
+	
+	\smallskip
+	
+	Summing the (restarted) approach to the canonical start and the second-slope cost gives
+	\[
+	\EE[\text{evaluations}]
+	\ =\ O\!\Big(\frac{n^{5}\log(n/d)}{d^{3}}\Big)\ +\ O\!\big(n^{2}\log d\big),
+	\]
+	as claimed.
+\end{proof}
+
 
 
 \textcolor{black}{The analysis for \lastBest~differs only in Lemma~\ref{lem:can-start-omega-d3} and actually yields a $d/n$ factor better probability bound since the mutation potential is $1$ at the cliff-top and thus, creating a solution at the bottom of the cliff is immediately possible when any cliff top individual dies, whereas for \firstBest~to work we have to first accept a neutral mutation to get the mutation potential to $1$, and then mutate into a cliff bottom solution in the next iteration. Consequently the runtime for \lastBest~is  
