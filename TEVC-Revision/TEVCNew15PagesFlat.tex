@@ -1156,6 +1156,57 @@ $p_D$ respectively), the expected number of epochs until both optima have been s
 is $O(1/p_B + 1/p_D)$.}
 Multiplying by the cost per epoch yields the bound stated in Theorem~\ref{thm:main-tau-final}.
 
+\begin{proof}[Proof [of Theorem~\ref{thm:main-tau-final}]]
+	%\textbf{1.  Evaluation cost of one epoch.}
+	%Each iteration evaluates at most \(M(x)\le c\,n\;(=n/3)\) offspring, so an
+	%epoch of length \(\tau\) uses
+	%\[
+	%\text{eval}_{\text{epoch}}\le c\,n\,\tau=\Theta(n\,\tau).
+	%\]
+	
+	%\textbf{2.  Per–epoch success probabilities.}
+	By Lemma~\ref{lem:junction-first-density-Bk} we reach the junction $J$ with probability \ \(1-o(1)\).
+	Starting an epoch in the junction, %\(J\) (prob.\ \(1-o(1)\)), 
+	the two lemmata give
+	%\[
+	$p_B=\Omega\!\bigl(\min\{1,\tau\,n^{-(2k+2)}\}\bigr)$ and
+	$p_D=\Omega\!\bigl(\min\{1,\tau\,n^{-\beta}\}\bigr)$,
+	%\]
+	and \(B\) and \(D\) are mutually exclusive within one epoch. Thus the expected number of epochs to sample from both sets of optima is:
+	
+	%\textbf{3.  Expected number of epochs to see both optima.}
+	%A coupon–collector bound yields
+	\[
+	%\mathbb{E}[T_{\mathrm{both}}]
+	%\;\le\;
+	%\frac1{p_B}+\frac1{p_D}
+	%\;=\;
+	O\!\Bigl(
+	\max\{1,n^{2k+2}/\tau\}
+	+\max\{1,n^{\beta}/\tau\}
+	\Bigr).
+	\]
+	
+	%\textbf{4.  Total expected evaluations.}
+	Multiplying by the cost of each epoch we get,
+	\begin{align*}
+		\mathbb{E}[\text{evals}]
+		&\le
+		\Theta(n\,\tau)\;
+		O\!\Bigl(
+		\max\{1,n^{2k+2}/\tau\}
+		+\max\{1,n^{\beta}/\tau\}
+		\Bigr)
+		\\&=
+		O\!\bigl(
+		n\,\tau
+		+n^{2k+3}
+		+n^{\beta+1}
+		\bigr).
+	\end{align*}
+\end{proof}
+
+
 
 \textcolor{black}{The static hypermutation would yield a same upper bound with a similar analysis except for the value of $\beta$ which would be smaller and for the range of $c$ which would be more restricted. Both modifications are necessary due to the larger mutation size of the static hypermutation compared to IPH for a given $c$ value. The \lastBest~IPH cannot make the jumps from the junction since any current junction solution would be the last best seen, yielding a mutation potential of one $1$. $\mathcal{B}_k$ and $\mathcal{D}_\rho$ sets cannot be accessed from the junction via mutation but can still be sampled at any reinitialization with $2^{-\Omega(n)}$ probability.}
 \textcolor{purple}{We conjecture that power-law mutation operators such as those employed by the Fast-IA~\cite{CorusOlivetoYazdani2021TEVC} and the Fast-EA~\cite{DoerrGECCO2017FastGA} would also succeed on $\mathrm{LTJ}_{k,\rho}$ if equipped with and ageing operator such as the algorithms introduced in~\cite{CorusOlivetoYazdani2021TEVC}, and the same should hold for the Rank-GA~\cite{RankBasedMutation}. However, we believe that the Rank-GA with ageing would fail on \textsc{Cliff}$_d$ because of its high mutation rate at the bottom of the second slope. On the other hand, the Fast-IA and the Fast-EA, which have been shown to be parameterisable such that they behave equivalently, can quite efficiently (a $\sqrt{n}$ factor slower than the \firstBest and the \lastBest IPH i.e., in expected time $O(n^{5/2} \log n$))  optimise \textsc{Cliff}$_d$ functions with gaps of linear size~\cite{CorusOlivetoYazdani2021TEVC} . However, they have not been shown to be efficient for \textsc{Cliff}$_d$  functions with sublinear gap sizes. 
