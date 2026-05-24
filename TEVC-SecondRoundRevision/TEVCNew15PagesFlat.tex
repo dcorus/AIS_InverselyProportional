@@ -193,13 +193,13 @@ makes the operator robust to fitness function scaling.
 			\T\B\\
 			
 			
-			Opt-IA$_{\textsc{static}}$ & $\Theta(n^2\log n)$ \cite{CorusOlivetoYazdani2019TCS} & $\Theta(n^3)$\cite{CorusOlivetoYazdani2019TCS} &$O(\frac{n^{d+1}\cdot e^d}{d^d})$ \cite{CorusOlivetoYazdani2019TCS} & \color{black}{$O(n\tau + n^{2k+3} + n^{\beta+1})^*$}
+			Opt-IA$_{\textsc{static}}$ & $\Theta(n^2\log n)$ \cite{CorusOlivetoYazdani2019TCS} & $\Theta(n^3)$\cite{CorusOlivetoYazdani2019TCS} &$O(\frac{n^{d+1}\cdot e^d}{d^d})$ \cite{CorusOlivetoYazdani2019TCS} & \rerev{\color{black}{$O(n\tau + n^{2k+3} + n^{\beta+1} + n^3 + n^{2k+5}/\tau + n^{\beta+3}/\tau)^*$}}
 			\T\B\\
 			
 			
 			
 			Opt-IA$_{\textsc{LastBest}}$ & $\Theta(n \log n) $ & $\Theta(n^2)$& \color{black}{$O\left(\frac{n^{4}\log(n/d)}{d^{2}} + n^{2}\log d\right)$} & \color{black}{$2^{\Omega(n)}$}			\T\B \\
-			Opt-IA$_{\textsc{FirstBest}}$ & $\Theta(n \log n)$ & $\Theta(n^3)$ &$O\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)$&    $O(n\tau + n^{2k+3} + n^{\beta+1})$
+			Opt-IA$_{\textsc{FirstBest}}$ & $\Theta(n \log n)$ & $\Theta(n^3)$ &$O\left(\frac{n^{5}\log(n/d)}{d^{3}} + n^{2}\log d\right)$&    \rerev{$O(n\tau + n^{2k+3} + n^{\beta+1} + n^3 + n^{2k+5}/\tau + n^{\beta+3}/\tau)$}
 			\T\B \\
 
 			\hline
@@ -403,11 +403,11 @@ The {\oneoneIA } using \IPHfcm{} with {\linHD } optimises \textsc{OneMax} in $\T
 Considering $i$ as the number of 0-bits in the candidate solution, the probability of improvement in the first \rerev{hypermutation} step is $i/n$. Knowing that at most $n$ improvements are needed to find the optimum and that in case of failure $H(x,\text{opt})=i$ fitness function evaluations would be wasted, the total expected time to optimise \textsc{OneMax} is at most $\sum_{i=1}^n \frac{n}{i} \cdot i =O(n^2)$.
 
 For the lower bound, we use the Ballot theorem (Lemma~\ref{lem:ballot}). 
-\new{We flip at most $M \le n$ bits, and the probability that an improvement happens is the probability that at some moment there will be at least as many flipped zeros as there are flipped ones. So pessimistically we can assume that  $M = n$ bits are always flipped, since it maximizes the chances of this unfortunate event.} 
+\new{We flip at most $M \le n$ bits, and the probability that an improvement happens is the probability that at some moment there will be at least as many flipped zeros as there are flipped ones. So pessimistically we can assume that  $M = n$ bits are always flipped, since it maximizes the chances of \rerev{an improvement occurring}.} 
 
 By Chernoff bounds, the number of 0-bits in the initialised solution is at least $n/3$ w.o.p. Considering the number of 
 0-bits as $i=q$ and the number of 1-bits as $n-i=p$, the probability of 
-an improvement is at most $1-(p-q)/(p+q)=1-(n-2i)/n=\frac{2i}{n}$ by the Ballot theorem, where $i=H(x, opt)$. This means that we need to wait at least $\frac{n}{2i}$ iterations to see an improvement and each time the mutation operator fails to improve the fitness {(\color{black}$\frac{n}{2i} - 1$ times in expectation)}, $i$ fitness function evaluations will be wasted. Considering that at least $n/3$ improvements are needed, the expected time to optimise \textsc{OneMax} is larger than \textcolor{black}{$(1-2^{-\Omega(n)})\sum_{i=1}^{n/3} {\color{black}\left(\frac{n}{2i}-1\right)} \cdot i = \Omega(n^2)$} \rev{since the operator cannot improve the \textsc{OneMax} function value by more than one in each application due to FCM. The factor $(1-2^{-\Omega(n)})$ accounts for the w.o.p.\ Chernoff event; since $2^{-\Omega(n)}=o(1)$, the bound holds unconditionally}.
+an improvement is at most $1-(p-q)/(p+q)=1-(n-2i)/n=\frac{2i}{n}$ by the Ballot theorem, where $i=H(x, opt)$. This means that we need to wait at least $\frac{n}{2i}$ iterations to see an improvement and each time the mutation operator fails to improve the fitness {(\color{black}$\frac{n}{2i} - 1$ times in expectation)}, $i$ fitness function evaluations will be wasted. Considering that at least $n/3$ improvements are needed, the expected time to optimise \textsc{OneMax} is larger than \textcolor{black}{$(1-2^{-\Omega(n)})\sum_{i=1}^{n/3} {\color{black}\left(\frac{n}{2i}-1\right)} \cdot i = \Omega(n^2)$} \rerev{where at least $n/3$ consecutive improvements are required since FCM allows the operator to improve the \textsc{OneMax} value by at most one per application. The factor $(1-2^{-\Omega(n)})$ accounts for the Chernoff bound on the initial number of $0$-bits, which holds w.o.p.}.
 \end{proof}
 
 The following theorem shows that a greater speed up may be achieved if the potential decreases exponentially rather than linearly. Note that for \textsc{OneMax} the Hamming distance of a solution to the optimum and its difference in fitness are the same. \new{Hence, there is no difference between the behaviours of the algorithm when using $M_{expoF(x)}$ and $M_{expoHD}$.} 
@@ -603,9 +603,9 @@ we then apply it to show that \new{both} algorithms optimise
 Let $A$ denote the event that ageing triggers before the optimum is found
 and set $p:=\Pr[A]$.
 If \emph{(i)}~$M=1$ throughout every run in which $A$ does not occur, and
-\emph{(ii)}~$p=o(1)$ and $\tau p=o(1)$,
+\emph{(ii)}~$\tau p=o(1)$,
 then $\mathbf{E}[T']=(1\pm o(1))\,T_{\mathrm{RLS}}$,
-where $T_{\mathrm{RLS}}$ is the expected runtime of RLS
+where \rerev{$T'$ is the expected runtime of the \oneoneOPTIA{} and} $T_{\mathrm{RLS}}$ is the expected runtime of RLS
  on the same function.
 \end{lemma}
 
@@ -618,7 +618,7 @@ with $\tau\geq Cn\ln n$ for a sufficiently large constant~$C$.
 \end{theorem}
 \begin{proof}
 Immediately after initialisation $\mathit{best}=x$, so $H(x,\mathit{best})=0$
-and $M=c\cdot H=0$; since the potential is at least~$1$ by convention, $M=1$.
+and \rerev{$cH=0$, so $M=\max(cH,1)=\max(0,1)=1$}.
 On \textsc{OneMax}, every bit flip changes fitness by $\pm 1$, so no neutral
 moves exist; every accepted solution strictly improves fitness and triggers
 $\mathit{best}\leftarrow x$ in both variants, maintaining $H=0$ and $M=1$
@@ -627,8 +627,8 @@ throughout.  Condition~(i) of Lemma~\ref{lem:RLS-reduction} holds.
 For~(ii), at any level $k\geq 1$ the improvement probability is $k/n\geq 1/n$,
 so the probability of $\tau$ consecutive non-improvements is at most
 $(1-1/n)^\tau\leq e^{-\tau/n}\leq e^{-C\ln n}=n^{-C}$.
-A union bound over~$n$ levels gives $p:=\Pr[A]\leq n^{1-C}=o(1)$ for $C>1$,
-and $\tau\cdot p\leq Cn\ln n\cdot n^{1-C}=Cn^{2-C}\ln n=o(1)$ for $C>2$.
+A union bound over~$n$ levels gives $p:=\Pr[A]\leq n^{1-C}$\rerev{, so}
+$\tau\cdot p\leq Cn\ln n\cdot n^{1-C}=Cn^{2-C}\ln n=o(1)$ for $C>2$.
 Thus both conditions of Lemma~\ref{lem:RLS-reduction} hold for $C>2$.
 
 By Lemma~\ref{lem:RLS-reduction},
@@ -658,8 +658,8 @@ Condition~(i) of Lemma~\ref{lem:RLS-reduction} holds.
 
 For~(ii), the improvement probability at every level is exactly $1/n$
 (flip the leftmost $0$-bit), so $(1-1/n)^\tau\leq n^{-C}$
-and a union bound over $n$ levels gives $p:=\Pr[A]\leq n^{1-C}=o(1)$.
-Moreover $\tau\cdot p\leq Cn^{2-C}\ln n=o(1)$ for $C>2$, verifying
+and a union bound over $n$ levels gives $p:=\Pr[A]\leq n^{1-C}$\rerev{, so}
+$\tau\cdot p\leq Cn^{2-C}\ln n=o(1)$ for $C>2$, verifying
 condition~(ii).
 
 By Lemma~\ref{lem:RLS-reduction},
@@ -732,8 +732,8 @@ We believe that this assumption is realistic for practical applications.
 {
 \rev{The following theorem is the main result of this section.}
 \begin{theorem}\label{th:expoHD-cliff}
-	The \textcolor{black}{\firstBest~with} \linHD\ (factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$) and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
-	optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected
+	The \textcolor{black}{\firstBest~with} \linHD\ (factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$) and ageing parameter $\tau=\Omega(n^{1+\rerev{\varepsilon'}})$
+	optimises \cliff{} with $d<n(\tfrac{1}{4}-\rerev{\varepsilon})$ \rerev{for any arbitrary small constants $\varepsilon,\varepsilon'>0$} in expected
 	\[
 	O\!\Big(\frac{n^{5}\log(n/d)}{d^{3}} \;+\; n^{2}\log d\Big)
 	\]
@@ -822,7 +822,7 @@ accumulate before recovering to parent-level fitness.  The next lemma provides
 the crucial starting point: an exponential tail bound for this damaging prefix.
 
 \begin{lemma}\label{lem:xi-tail}
-	\textcolor{black}{Let the current solution on the second slope have $z\le d$ zero-bits and
+	\textcolor{black}{Let the current solution on the second slope have \rerev{$z< d$} zero-bits and
 	define $p=z/n$.
 	Consider a single application of the hypermutation operator; let $\xi_z$ be
 	the number of $1\to0$ flips made \emph{within that one hypermutation} before
@@ -1032,7 +1032,7 @@ Summing the two contributions establishes the main runtime bound.
 	c\ <\ \frac{1+4\varepsilon}{3-4\varepsilon}\ \le\ \frac{1-2d/n}{1+2d/n}\ =:\ c_\star(n,d),
 	\]
 	Lemma~\ref{lem:c-threshold-instance} guarantees an admissible $\lambda\in\big(0,\tfrac12\ln\tfrac{n}{4d}\big)$ with $e^{-\lambda\theta}K(\lambda)<1$.
-	With $B_{r_0}=2\theta$, Corollary~\ref{cor:ville-exponential} yields
+	\rerev{Applying Corollary~\ref{cor:ville-exponential} to the re-indexed process $(B_{r_0+t})_{t\ge0}$ with $b=B_{r_0}=2\theta$} yields
 	\[
 	\Pr\!\Big(\inf_{t\ge 0} B_t\le 0\Big)\ \le\ e^{-\lambda\,2\theta}.
 	\]
@@ -1047,7 +1047,7 @@ Summing the two contributions establishes the main runtime bound.
 	\[
 	\sum_{z=1}^{d}\frac{n}{z}\ =\ \Theta(n\log d)
 	\]
-	iterations, which is $o(\tau)$ since $\tau=\Omega(n^{1+\epsilon'})$. \textcolor{black}{Since the mutation potential satisfies $M \le c\,n$ (where $c$ is the constant
+	iterations, which is $o(\tau)$ since $\tau=\Omega(n^{1+\rerev{\varepsilon'}})$. \textcolor{black}{Since the mutation potential satisfies $M \le c\,n$ (where $c$ is the constant
 		from the \linHD\ potential), each iteration evaluates at most $c\,n =\Theta(n)$
 		individuals; one second-slope attempt therefore costs $\Theta(n^{2}\log d)$
 		evaluations,} and the constant no-jump-back probability implies a constant expected number of such attempts.
@@ -1069,8 +1069,8 @@ $O\!\Big(\frac{n^{4}\log(n/d)}{d^{2}} \;+\; n^{2}\log d\Big)$.}
 
 \textcolor{black}{
 \begin{corollary}
-	The \textcolor{black}{\lastBest~with} \linHD\ \new{(factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$)} and ageing parameter $\tau=\Omega(n^{1+\epsilon'})$
-	optimises \cliff{} with $d<n(\tfrac{1}{4}-\epsilon)$ in expected
+	The \textcolor{black}{\lastBest~with} \linHD\ \new{(factor $c<\tfrac{1+4\varepsilon}{3-4\varepsilon}$)} and ageing parameter $\tau=\Omega(n^{1+\rerev{\varepsilon'}})$
+	optimises \cliff{} with $d<n(\tfrac{1}{4}-\rerev{\varepsilon})$ \rerev{for any arbitrary small constants $\varepsilon,\varepsilon'>0$} in expected
 	\[
 	O\!\Big(\frac{\rev{n^{4}}\log(n/d)}{d^{2}} \;+\; n^{2}\log d\Big)
 	\]
@@ -1154,13 +1154,13 @@ the plateau $\mathcal{D}_\rho$ \rev{i.e., via ageing restarts it will eventually
 
 \begin{theorem} \label{thm:main-tau-final}
 The  $(1+1)$~Opt-IA$_{\textsc{FirstBest}}$~with ageing threshold $\tau=\Omega(n^{1+\epsilon})$ using  \linHD~with $c<5/8$  identifies both local and global optima of  $\mathrm{LTJ}_{k,\rho}$ in
-	$O(n\tau + n^{2k+3} + n^{\beta+1})$ fitness function evaluations	where $\beta := \log_2 \frac{20}{c}$.
+	\rerev{$O(n\tau + n^{2k+3} + n^{\beta+1} + n^3 + n^{2k+5}/\tau + n^{\beta+3}/\tau)$} fitness function evaluations	where $\beta := \log_2 \frac{20}{c}$.
 \end{theorem}
 
 To establish Theorem~\ref{thm:main-tau-final} we rely on three ingredients.
 First, every ageing epoch returns to the junction $J$ with high probability.
-Second, an epoch beginning at $J$ performs sufficiently long jumps to reach the beginning of the block-jump slope with probability $\Theta(n^{-(2k+2)})$ per iteration.
-Third, an epoch beginning at $J$ performs a logarithmic jump onto the deep-prefix plateau with probability $\Theta(n^{-\beta})$ per iteration.
+Second, an epoch \rerev{that reaches} $J$ performs sufficiently long jumps to reach the beginning of the block-jump slope with probability $\Theta(n^{-(2k+2)})$ per iteration.
+Third, an epoch \rerev{that reaches} $J$ performs a logarithmic jump onto the deep-prefix plateau with probability $\Theta(n^{-\beta})$ per iteration.
 
 Since each event corresponds to reaching either the start of a short slope leading deterministically to its optimum (for $\mathcal{B}_k$) or directly a plateau of global optima (for $\mathcal{D}_\rho$), these per-epoch probabilities govern the entire runtime.
 
@@ -1178,6 +1178,18 @@ Since under \linHD\ the mutation potential satisfies $M(x) \le q^\star n$ for
 some constant $q^\star < 1$ (determined solely by $c$ and $\rho$), this becomes 
 $(q^\star)^L = n^{-\alpha^\star}$ for $\alpha^\star := \log_2(1/q^\star) > 2$, 
 yielding a total probability of $o(1)$ over $n^2$ iterations.
+\rerev{A similar argument shows that $\mathcal{B}_k$ is not entered before $J$.
+Recall $\mathcal{B}_k = \{0^r 1^{(0.9n-r)}*\}$ with $r = 2k+1$.
+If $\mathrm{LO}(x)$ is not yet close to $0.9n$, the suffix contains
+$\Omega(n)$ unbiased bits, so $\Omega(n)$ specified zero-bits must be
+flipped to ones simultaneously, an event with probability
+$e^{-\Theta(n)}$ per iteration.
+If instead $\mathrm{LO}(x) \geq (0.9-\delta)n$ for a constant $\delta > 0$,
+then $\Omega(n)$ leading-one positions must survive the hypermutation
+for FCM to accept; entering $\mathcal{B}_k$ requires the $r+1$ target
+positions to be flipped before any of these $\Omega(n)$ protected
+positions, which happens with probability $O(n^{-(r+1)}) = O(n^{-(2k+2)})$.
+A union bound over $n^2$ iterations gives $o(1)$ in both cases.}
 Thus the slope is climbed to $J$ with high probability.
 
 
@@ -1205,8 +1217,8 @@ Evaluating this over $\tau$ iterations yields the stated bound.
 \end{lemma}
 
 At $J$, the \textcolor{black}{ones-density} of the suffix already exceeds $\rho$ with high probability.
-Thus it suffices to flip the prefix to $0^L *$.
-Under the same high-Hamming-distance event ensuring $M(x)\ge cn/20$, the probability that the first $L$ flips hit positions $\{1,\dots,L\}$ is at least $(c/20)^L = n^{-\beta}$.
+Thus it suffices to flip the prefix to $0^L *$ \rerev{while retaining at least $\rho n$ ones}.
+Under the same high-Hamming-distance event ensuring $M(x)\ge cn/20$, \rerev{we condition on all $L$ prefix positions appearing among the first $\lfloor cn/20\rfloor$ flips; this happens with probability at least $(c/20)^L = n^{-\beta}$, and at most $cn/20 < n/32$ ones are lost in the process, preserving the density requirement.}
 Evaluating over $\tau$ iterations gives the lemma.
 
 
@@ -1214,7 +1226,7 @@ Evaluating over $\tau$ iterations gives the lemma.
 \textcolor{black}{Each \emph{ageing epoch} begins with a uniformly random reinitialisation and by Lemma~\ref{lem:junction-first-density-Bk} it
 ascends to the junction $J$ with high probability before reaching any
 off-slope structure.  We henceforth condition on epochs reaching $J$.}
-Each ageing epoch evaluates $\Theta(n\tau)$ individuals.
+\rerev{The ascent to $J$ takes $\Theta(n^2)$ iterations, each evaluating $\Theta(n)$ individuals (since the reference remains at $J$ from the previous epoch, giving $M=\Theta(n)$), contributing $\Theta(n^3)$ evaluations.  Once stuck at $J$, the epoch runs for $\tau$ iterations each evaluating $\Theta(n)$ individuals, contributing $\Theta(n\tau)$ evaluations.  The total cost per epoch is therefore $\Theta(n^3 + n\tau)$.}
 By Lemma~\ref{lem:junction-first-density-Bk}, epochs reach $J$ with high probability, and by \textcolor{black}{lemmata~\ref{lem:BJO-epoch} and~\ref{lem:DPO-epoch}}, an epoch discovers each off-slope structure with probabilities $p_B$ and $p_D$, respectively.
 \textcolor{black}{Since $B$ (entering $\mathcal{B}_k$) and $D$ (entering $\mathcal{D}_\rho$) are
 mutually exclusive within a single epoch, the algorithm must discover them in
@@ -1261,17 +1273,20 @@ Multiplying by the cost per epoch yields the bound stated in Theorem~\ref{thm:ma
 	\begin{align*}
 		\EE[\text{evals}]
 		&\le
-		\Theta(n\,\tau)\;
+		\rerev{\Theta(n^3+n\,\tau)}\;
 		O\!\Bigl(
 		\max\{1,n^{2k+2}/\tau\}
 		+\max\{1,n^{\beta}/\tau\}
 		\Bigr)
 		\\&=
-		O\!\bigl(
+		\rerev{O\!\bigl(
 		n\,\tau
 		+n^{2k+3}
 		+n^{\beta+1}
-		\bigr).
+		+n^3
+		+n^{2k+5}/\tau
+		+n^{\beta+3}/\tau
+		\bigr)}.
 	\end{align*}
 \end{proof}
 
