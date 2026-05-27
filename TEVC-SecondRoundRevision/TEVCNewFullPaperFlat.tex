@@ -1200,9 +1200,9 @@ the crucial starting point: an exponential tail bound for this damaging prefix.
 	
 	\smallskip
 	Condition on any history of length $t\le 2k-1$ that keeps $D_t\ge 1$ (so no catch-up yet) and in which at most $t$ distinct positions have been flipped. Among the $n-t$ remaining positions there are at most $z$ zeros. Hence the conditional probability that the \emph{next} flip is a $0\!\to 1$ move is at most
-	\rerev{\begin{equation}\label{eq:zero-flip-bound}}
+	\begin{equation}\label{eq:zero-flip-bound}
 	\frac{z}{\,n-t\,}\ \le\ \frac{z}{\,n-(2k-1)\,}\ \le\ \frac{z}{(1/2+2\varepsilon)n}\ \le\ 2p,
-	\rerev{\end{equation}}
+	\end{equation}
 	because $2k\le 2d<(\tfrac12-2\varepsilon)n$. In other words, throughout any hypermutation that lasts up to $2k$ flips, a zero-flip is never more likely than $2p$.
 	
 	\smallskip
