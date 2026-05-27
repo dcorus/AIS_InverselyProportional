@@ -14,7 +14,7 @@
 \newcommand{\new}[1]{\textcolor{black}{#1}}
 \newcommand{\rev}[1]{\textcolor{black}{#1}}
 \newcommand{\rerev}[1]{\textcolor{purple}{#1}}
-\newcommand{\EE}{\text{E}}
+\newcommand{\EE}{\mathbb{E}}
 \newcommand{\HD}{\text{HD}}
 
 
@@ -687,7 +687,7 @@ replacement, each position is visited at most once per call).} Thus, with consta
 
 Consider now a subsequent iteration at the same level while $M\ge \alpha n$ for some constant $\alpha>0$. If the first flip hits the prefix (an event of probability at least $\ell/n\ge 1/3$), then, because mutation proceeds without replacement, the lost prefix bit cannot be repaired within the same iteration. Consequently, no acceptance can occur in that iteration, and the algorithm executes the entire mutation budget $M$, rejecting at the end. Hence the expected number of fitness evaluations in such an iteration is at least $\alpha n$. Since this happens with probability at least $1/3$, the unconditional expected cost of one iteration while $M=\Theta(n)$ is $\Omega(n)$.
 
-The probability that an iteration yields an improvement is exactly $1/n$, because only a first flip that hits position $\ell+1$ increases the \textsc{LeadingOnes} value. Therefore the expected number of iterations required to advance from level $\ell$ to $\ell+1$ is $1/(1/n)=n$. Combining this with the previous observation, the expected number of fitness evaluations spent at level $\ell$ satisfies $\Omega(n)\cdot n=\Omega(n^2)$.
+The probability that an iteration yields an improvement is exactly $1/n$, because only a first flip that hits position $\ell+1$ increases the \textsc{LeadingOnes} value. \rerev{Note that when position $\ell+1$ is flipped, the \textsc{LeadingOnes} value may jump past $\ell+1$ if positions $\ell+2, \ell+3, \ldots$ are already~$1$ (so-called free riders~\cite{DrosteJansenWegener2002}). However, the tail bits are approximately unbiased, so position $\ell+2$ is~$0$ with probability $\Omega(1)$, and the probability of skipping $k$ levels decays as $2^{-k}$. Hence a constant fraction of levels in $[n/3, 2n/3]$ are visited, and each visited level still contributes $\Omega(n^2)$ evaluations.} Therefore the expected number of iterations required to advance from level $\ell$ to $\ell+1$ is $1/(1/n)=n$. Combining this with the previous observation, the expected number of fitness evaluations spent at level $\ell$ satisfies $\Omega(n)\cdot n=\Omega(n^2)$.
 There are $\Theta(n)$ levels $\ell$ in the interval $[n/3,2n/3]$, and each such level contributes $\Omega(n^2)$ expected evaluations. Thus the total expected optimisation time is $\Omega(n^3)$. Finally, stochastic ageing can only increase the number of evaluations and therefore cannot invalidate the lower bound. Since the function has $n$ levels, $1/n$ probability of improvement and $M\leq n$, the expected runtime is bounded from above by $O(n^3)$ as well.
 
 
@@ -765,9 +765,19 @@ optimum, and so ageing will eventually be triggered.  The key insight is that
 the iteration of ageing followed by two additional \textcolor{black}{fitness improvements} can place the 
 algorithm into a
 \textcolor{black}{canonical
-starting configuration on the second slope.
-Throughout the \cliff{} analysis we index the successful fitness improvements on
-the second slope by $r = r_0, r_0+1, \dots$, and write $\mathrm{HD}(r)$ for
+starting configuration on the second slope.}
+
+\rerev{We call each individual hypermutation application an \emph{attempt}.
+A \emph{phase} groups all consecutive attempts at a fixed zero-bit count~$z$;
+it begins when a successful improvement leaves $z$ zero-bits and ends when
+either the next improvement occurs (reducing to $z-1$ zeros) or a
+catastrophic return to the cliff-top.
+A phase ending with an improvement is called \emph{successful}.
+Since each successful phase reduces the zero-count by exactly one, we
+index them by $r = r_0, r_0+1, \dots, d$, where $r$ counts the total
+number of fitness improvements completed from the cliff bottom.}
+
+\textcolor{black}{Throughout the \cliff{} analysis we write $\mathrm{HD}(r)$ for
 the Hamming distance between the current solution and \emph{best} after $r$
 such improvements.
 With this notation, the canonical start corresponds to
@@ -784,7 +794,7 @@ and $\mathrm{HD}(r_0) = 2$ (the current solution differs from the locked
 	\]
 	with probability at least 
 	\[
-	\frac{3}{256}\left(\frac{d}{n}\right)^3.
+	\rerev{\frac{3}{128}}\left(\frac{d}{n}\right)^3.
 	\]
 \end{lemma}
 
@@ -1004,7 +1014,7 @@ Summing the two contributions establishes the main runtime bound.
 	\]
 	with probability
 	\[
-	p_{\mathrm{can}}(n,d)\ \ge\ \frac{3}{256}\Big(\frac{d}{n}\Big)^{\!3}.
+	p_{\mathrm{can}}(n,d)\ \ge\ \rerev{\frac{3}{128}}\Big(\frac{d}{n}\Big)^{\!3}.
 	\]
 	Hence the number of ageing epochs needed to obtain this start is geometric with mean $1/p_{\mathrm{can}}$, and the expected evaluation cost up to the canonical start (including restarts) is
 	\[

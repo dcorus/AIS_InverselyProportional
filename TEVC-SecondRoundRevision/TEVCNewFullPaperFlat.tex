@@ -14,7 +14,7 @@
 \newcommand{\new}[1]{\textcolor{black}{#1}}
 \newcommand{\rerev}[1]{\textcolor{purple}{#1}}
 \newcommand{\rev}[1]{\textcolor{black}{#1}}
-\newcommand{\EE}{\text{E}}
+\newcommand{\EE}{\mathbb{E}}
 \newcommand{\HD}{\text{HD}}
 
 
@@ -496,7 +496,7 @@ Using $n/i\geq 2$ for all $i\leq n/2$, this is at least
 The geometric sum evaluates as
 \begin{align*}
 \sum_{i=n/4}^{n/2} n^{i/n}
-\;&=\; n^{1/4}\cdot\frac{n^{1/4}-1}{n^{1/n}-1}
+\;&\rerev{\geq}\; n^{1/4}\cdot\frac{n^{1/4}-1}{n^{1/n}-1}
 \;\geq\; \frac{n^{1/2}\cdot(1-n^{-1/4})}{\ln n/n\cdot(1+o(1))}\\
 \;&=\;\Omega\!\left(\frac{n^{3/2}}{\ln n}\right),
 \end{align*}
@@ -592,7 +592,7 @@ and solving gives
 
 We evaluate the sum
 $S := \sum_{i=0}^{n-1} \EE(f_i)$, which governs both bounds.
-Setting $x:=n^{-1/n}<1$,
+Setting $x:=n^{-1/n}<1$ \rerev{(note $x=1-o(1)$)},
 \begin{align*}
 S
 &= \sum_{i=0}^{n-1}\bigl(i\cdot n^{(n-i)/n}+n-i\bigr)
@@ -1012,7 +1012,7 @@ replacement, each position is visited at most once per call).} Thus, with consta
 
 Consider now a subsequent iteration at the same level while $M\ge \alpha n$ for some constant $\alpha>0$. If the first flip hits the prefix (an event of probability at least $\ell/n\ge 1/3$), then, because mutation proceeds without replacement, the lost prefix bit cannot be repaired within the same iteration. Consequently, no acceptance can occur in that iteration, and the algorithm executes the entire mutation budget $M$, rejecting at the end. Hence the expected number of fitness evaluations in such an iteration is at least $\alpha n$. Since this happens with probability at least $1/3$, the unconditional expected cost of one iteration while $M=\Theta(n)$ is $\Omega(n)$.
 
-The probability that an iteration yields an improvement is exactly $1/n$, because only a first flip that hits position $\ell+1$ increases the \textsc{LeadingOnes} value. Therefore the expected number of iterations required to advance from level $\ell$ to $\ell+1$ is $1/(1/n)=n$. Combining this with the previous observation, the expected number of fitness evaluations spent at level $\ell$ satisfies $\Omega(n)\cdot n=\Omega(n^2)$.
+The probability that an iteration yields an improvement is exactly $1/n$, because only a first flip that hits position $\ell+1$ increases the \textsc{LeadingOnes} value. \rerev{Note that when position $\ell+1$ is flipped, the \textsc{LeadingOnes} value may jump past $\ell+1$ if positions $\ell+2, \ell+3, \ldots$ are already~$1$ (so-called free riders~\cite{DrosteJansenWegener2002}). However, the tail bits are approximately unbiased, so position $\ell+2$ is~$0$ with probability $\Omega(1)$, and the probability of skipping $k$ levels decays as $2^{-k}$. Hence a constant fraction of levels in $[n/3, 2n/3]$ are visited, and each visited level still contributes $\Omega(n^2)$ evaluations.} Therefore the expected number of iterations required to advance from level $\ell$ to $\ell+1$ is $1/(1/n)=n$. Combining this with the previous observation, the expected number of fitness evaluations spent at level $\ell$ satisfies $\Omega(n)\cdot n=\Omega(n^2)$.
 There are $\Theta(n)$ levels $\ell$ in the interval $[n/3,2n/3]$, and each such level contributes $\Omega(n^2)$ expected evaluations. Thus the total expected optimisation time is $\Omega(n^3)$. Finally, stochastic ageing can only increase the number of evaluations and therefore cannot invalidate the lower bound. Since the function has $n$ levels, $1/n$ probability of improvement and $M\leq n$, the expected runtime is bounded from above by $O(n^3)$ as well.
 
 
@@ -1090,9 +1090,19 @@ optimum, and so ageing will eventually be triggered.  The key insight is that
 the iteration of ageing followed by two additional \textcolor{black}{fitness improvements} can place the 
 algorithm into a
 \textcolor{black}{canonical
-starting configuration on the second slope.
-Throughout the \cliff{} analysis we index the successful fitness improvements on
-the second slope by $r = r_0, r_0+1, \dots$, and write $\mathrm{HD}(r)$ for
+starting configuration on the second slope.}
+
+\rerev{We call each individual hypermutation application an \emph{attempt}.
+A \emph{phase} groups all consecutive attempts at a fixed zero-bit count~$z$;
+it begins when a successful improvement leaves $z$ zero-bits and ends when
+either the next improvement occurs (reducing to $z-1$ zeros) or a
+catastrophic return to the cliff-top.
+A phase ending with an improvement is called \emph{successful}.
+Since each successful phase reduces the zero-count by exactly one, we
+index them by $r = r_0, r_0+1, \dots, d$, where $r$ counts the total
+number of fitness improvements completed from the cliff bottom.}
+
+\textcolor{black}{Throughout the \cliff{} analysis we write $\mathrm{HD}(r)$ for
 the Hamming distance between the current solution and \emph{best} after $r$
 such improvements.
 With this notation, the canonical start corresponds to
@@ -1109,7 +1119,7 @@ and $\mathrm{HD}(r_0) = 2$ (the current solution differs from the locked
 	\]
 	with probability at least 
 	\[
-	\frac{3}{256}\left(\frac{d}{n}\right)^3.
+	\rerev{\frac{3}{128}}\left(\frac{d}{n}\right)^3.
 	\]
 \end{lemma}
 
@@ -1131,7 +1141,7 @@ and $\mathrm{HD}(r_0) = 2$ (the current solution differs from the locked
 	\]
 	For $d\le(\tfrac14-\varepsilon)n$ we have $(n-d)/n\ge 3/4$, and for $d\ge 2$ we have $\tfrac{d}{n-1}\ge\tfrac{d}{n}$ and $\tfrac{d-1}{n}\ge \tfrac12\cdot\tfrac{d}{n}$. Hence the product is at least
 	\[
-	\frac{3}{256}\,\Big(\frac{d}{n}\Big)^{\!3},
+	\rerev{\frac{3}{128}}\,\Big(\frac{d}{n}\Big)^{\!3},
 	\]
 	which proves the claim.
 \end{proof}
@@ -1190,13 +1200,13 @@ the crucial starting point: an exponential tail bound for this damaging prefix.
 	
 	\smallskip
 	Condition on any history of length $t\le 2k-1$ that keeps $D_t\ge 1$ (so no catch-up yet) and in which at most $t$ distinct positions have been flipped. Among the $n-t$ remaining positions there are at most $z$ zeros. Hence the conditional probability that the \emph{next} flip is a $0\!\to 1$ move is at most
-	\[
+	\rerev{\begin{equation}\label{eq:zero-flip-bound}}
 	\frac{z}{\,n-t\,}\ \le\ \frac{z}{\,n-(2k-1)\,}\ \le\ \frac{z}{(1/2+2\varepsilon)n}\ \le\ 2p,
-	\]
+	\rerev{\end{equation}}
 	because $2k\le 2d<(\tfrac12-2\varepsilon)n$. In other words, throughout any hypermutation that lasts up to $2k$ flips, a zero-flip is never more likely than $2p$.
 	
 	\smallskip
-	If the first catch-up occurs at some time $\ge 2k$, then along the way the trajectory must realize \emph{at least $k$} distinct $0\!\to 1$ flips while $D>0$ (each such flip reduces the deficit by $1$ but, by assumption, does not yet hit $0$ before the $k$-th such zero\new{-flip}). Expose these $k$ zero-flips in order and ignore everything else (the interspersed $1\!\to 0$ flips only make catch-up \emph{harder} and so can be dropped for an upper bound). By Step~1, each of these $k$ zero\new{-flips} occurs with conditional probability at most $2p$, uniformly over the entire run while $D>0$. Therefore, by the chain rule,
+	If the first catch-up occurs at some time $\ge 2k$, then along the way the trajectory must realize \emph{at least $k$} distinct $0\!\to 1$ flips while $D>0$ (each such flip reduces the deficit by $1$ but, by assumption, does not yet hit $0$ before the $k$-th such zero\new{-flip}). Expose these $k$ zero-flips in order and ignore everything else (the interspersed $1\!\to 0$ flips only make catch-up \emph{harder} and so can be dropped for an upper bound). By \rerev{\eqref{eq:zero-flip-bound}}, each of these $k$ zero\new{-flips} occurs with conditional probability at most $2p$, uniformly over the entire run while $D>0$. Therefore, by the chain rule,
 	\[
 	\Pr(\text{first catch-up occurs at time }\ge 2k)\ \le\ (2p)^k.
 	\]
@@ -1225,8 +1235,8 @@ entire phases.
 \end{lemma}
 
 \begin{proof}
-	For a single \emph{failed} attempt starting the hypermutation with $z$ zeroes, let $\xi$ count the number of $1\!\to 0$ flips while below the parent's fitness before the first catch-up.
-	By Lemma~\ref{lem:xi-tail} and the change in Hamming distance $\Delta_{\mathrm{fail}}\le 2\xi$ with $\xi\ge 1$,
+	For a single \emph{failed} attempt starting the hypermutation with $z$ zeroes, let $\xi$ count the number of $1\!\to 0$ flips while below the parent's fitness before the first catch-up\rerev{, and let $\Delta_{\mathrm{fail}}$ denote the resulting change in Hamming distance}.
+	By Lemma~\ref{lem:xi-tail}\rerev{,} $\Delta_{\mathrm{fail}}\le 2\xi$ with $\xi\ge 1$,
 	\begin{align*}
 		\EE\!\left[e^{\lambda \Delta_{\mathrm{fail}}}\right]
 		&\le \sum_{k\ge 1}^{\infty} e^{2\lambda k}\,\Pr(\xi=k)
@@ -1273,7 +1283,7 @@ entire phases.
 		D(0)&=1-\tfrac{3}{2}\rho\ \ge\ \tfrac14,\qquad
 		D\!\Big(\tfrac12\Big)=\tfrac{\rho}{8}\bigl(1-2\rho\bigr)\ \ge\ 0
 		\quad\Rightarrow\quad \\
-		D(u)&\ge 0\ \text{ for }u\in[0,\tfrac12],
+		D(u)&\ge 0\ \text{ for }u\in[0,\tfrac12]\rerev{,\text{ using }1-2\rho\ge 0\text{, i.e., }d\le n/4},
 	\end{align*}
 	
 	
@@ -1288,7 +1298,7 @@ linear \emph{buffer} \new{$B_r = \theta r - s_0 - E_r$} capturing the invariant 
 	\[
 	s_0=\mathrm{HD}(r_0)-r_0, \qquad 
 	\theta=\frac{1}{c}-1, \qquad
-	E_r=\sum_{j=r_0+1}^{r} Y_{z_j},
+	E_r=\sum_{j=r_0+1}^{r} Y_{z_j}\rerev{\quad\text{($Y_{z_j}$ as in Lemma~\ref{lem:phase-mgf} at zero-bit count $z_j$)}},
 	\]
 	and $B_r = \theta r - s_0 - E_r$.
 	Then for all $r\ge r_0$:
@@ -1309,7 +1319,7 @@ linear \emph{buffer} \new{$B_r = \theta r - s_0 - E_r$} capturing the invariant 
 		\ \\&=\ r+s_0+E_r,		
 	\end{align*}
 	
-	since each strict improvement increases the HD by exactly $1$ and $E_r=\sum_{j=r_0+1}^r Y_{z_j}$ collects the extra HD from failed attempts (the successful attempt contributes $0$ because $\Delta_z^{\mathrm{succ}}=1$).
+	since each strict improvement increases the HD by exactly $1$ and $E_r=\sum_{j=r_0+1}^r Y_{z_j}$ collects the extra HD from failed attempts (\rerev{denoting by $\Delta_z^{\mathrm{succ}}$ the HD change from a successful attempt,} the successful attempt contributes $0$ because $\Delta_z^{\mathrm{succ}}=1$).
 	
 	\smallskip
 	\emph{(i) Safety invariant.}
@@ -1513,7 +1523,7 @@ Summing the two contributions establishes the main runtime bound.
 	\]
 	with probability
 	\[
-	p_{\mathrm{can}}(n,d)\ \ge\ \frac{3}{256}\Big(\frac{d}{n}\Big)^{\!3}.
+	p_{\mathrm{can}}(n,d)\ \ge\ \rerev{\frac{3}{128}}\Big(\frac{d}{n}\Big)^{\!3}.
 	\]
 	Hence the number of ageing epochs needed to obtain this start is geometric with mean $1/p_{\mathrm{can}}$, and the expected evaluation cost up to the canonical start (including restarts) is
 	\[
@@ -1691,13 +1701,11 @@ Thus the slope is climbed to $J$ with high probability.
 \begin{proof}
 	Let $T:=n^2$. \textcolor{black}{We will show that in $T$ iterations with high probability we sample a solution from  $J$ before we sample one from $\mathcal{B}_k$ or $\mathcal{D}_\rho$.}
 
-	Before $J$, $\mathcal{B}_k$ or $\mathcal{D}_\rho$ is sampled from, we flip the leftmost zero-bit with probability $1/n$ and accept
-	immediately by FCM($\ge$).  If $X\sim\mathrm{Bin}(T,1/n)$ counts such improvements then
-	$\EE[X]=n$ and a Chernoff bound gives
+	\rerev{Before $J$, $\mathcal{B}_k$ or $\mathcal{D}_\rho$ is sampled from, each iteration flips the leftmost zero-bit with probability at least $1/n$ (since this is one specific position out of~$n$), yielding a \textsc{LeadingOnes} improvement accepted immediately by FCM($\ge$).  Let $X$ count the number of such improvements in $T$ iterations; since each iteration independently succeeds with probability at least $1/n$, $X$ stochastically dominates $\mathrm{Bin}(T,1/n)$.  Hence $\EE[X]\ge n$ and a Chernoff bound gives}
 	$
 	\Pr\bigl(X<(9/10)n\bigr)\ \le\ e^{-a n}
 	$
-	for some constant $a>0$. Hence $J$ is reached within $T$ iterations with probability $1-e^{-a n}$ if we condition on that neither $\mathcal{B}_k$ nor $\mathcal{D}_\rho$ is sampled first.
+	for some constant $a>0$. Hence $J$ is reached within $T$ iterations with probability $1-e^{-a n}$ \rerev{conditioned on the event that} neither $\mathcal{B}_k$ nor $\mathcal{D}_\rho$ is sampled first.
 	
 	\textcolor{black}{
 		Next, we will show that the probability of sampling a $\mathcal{B}_k$ or a $\mathcal{D}_\rho$ solution in $T$ iterations is $o(1)$, starting our argument with $\mathcal{D}_\rho$. 
@@ -1713,7 +1721,7 @@ keep $2c(1-\rho+\xi) < 1/4$ then satisfies all requirements.}
 	\emph{Case 1: $\alpha\ge \rho-\xi$.}
 	Using $|x\wedge best|_1\ge |x|_1+|best|_1-n$,
 	\[
-	\mathrm{HD}(x,best)\ \le\ (2-\alpha-\alpha^\top)\,n\ \le\ 2(1-\rho+\xi)\,n,
+	\rerev{H}(x,best)\ \le\ (2-\alpha-\alpha^\top)\,n\ \le\ 2(1-\rho+\xi)\,n,
 	\]
 	\[
 	M(x)\ \le\ q^\star n\ <n/4
@@ -1732,8 +1740,8 @@ keep $2c(1-\rho+\xi) < 1/4$ then satisfies all requirements.}
 	Because $q^\star<1/4$, we have $\log_{2}(1/q^\star)>2$, so $T\cdot n^{-\log_{2}(1/q^\star)}=o(1)$.
 	
 	\emph{Case 2 : $\alpha\le \rho-\xi$.}
-	Since all $\mathcal{D}_\rho$ solutions have $|x|_1\ge \rho n$, at least $\xi n$ net $0\!\to\!1$ flips ($Z-O$) are required within at most
-	$cn$ bit-flips. With initial zero/one ratio giving negative drift,
+	Since all $\mathcal{D}_\rho$ solutions have $|x|_1\ge \rho n$, at least $\xi n$ net $0\!\to\!1$ flips are required within at most
+	$cn$ bit-flips. \rerev{Let $Z$ and $O$ denote the number of $0\!\to\!1$ and $1\!\to\!0$ flips, respectively, within the hypermutation. Since bit positions are sampled without replacement, the flips are negatively correlated; we therefore apply Serfling's inequality~\cite{Serfling1974} (a concentration bound for sampling without replacement).} With initial zero/one ratio giving negative drift,
 	a Serfling (hypergeometric) tail bound yields
 	\[
 	\Pr\bigl(Z-O\ge \xi n\bigr)\ \le\ e^{-\gamma n}
@@ -1805,7 +1813,7 @@ Evaluating this over $\tau$ iterations yields the stated bound.
 	At the beginning of the epoch the length-\(0.1n+1\) suffix of the new parent \(x\) is still uniformly random,
 	so with probability at least \(\tfrac12\)
 	\[
-	\mathrm{HD}(x,best)\;\ge\;\frac{n}{20}.
+	\rerev{H}(x,best)\;\ge\;\frac{n}{20}.
 	\]
 	Conditioning on this event we lose only a factor \(2\).
 	Then the mutation potential in every subsequent
@@ -1883,7 +1891,7 @@ Evaluating over $\tau$ iterations gives the lemma.
 	
 As in the block-jump argument we have
 	\(
-	\Pr\!\bigl(\mathrm{HD}(x,best)\ge n/20\bigr)\ge\tfrac12
+	\Pr\!\bigl(\rerev{H}(x,best)\ge n/20\bigr)\ge\tfrac12
 	\)
 	(owing to the uniform suffix). We condition on this event, so we have
 	 \(M\ge cn/20\) throughout the epoch.

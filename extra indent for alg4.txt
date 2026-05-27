@@ -1,0 +1,4 @@
+extra indent for alg4
+both local and global optimum in thm 11 statement
+
+Move lemma 2 before thm
