@@ -407,7 +407,7 @@ For the lower bound, we use the Ballot theorem (Lemma~\ref{lem:ballot}).
 
 By Chernoff bounds, the number of 0-bits in the initialised solution is at least $n/3$ w.o.p. Considering the number of 
 0-bits as $i=q$ and the number of 1-bits as $n-i=p$, the probability of 
-an improvement is at most $1-(p-q)/(p+q)=1-(n-2i)/n=\frac{2i}{n}$ by the Ballot theorem, where $i=H(x, opt)$. This means that we need to wait at least $\frac{n}{2i}$ iterations to see an improvement and each time the mutation operator fails to improve the fitness {(\color{black}$\frac{n}{2i} - 1$ times in expectation)}, $i$ fitness function evaluations will be wasted. Considering that at least $n/3$ improvements are needed, the expected time to optimise \textsc{OneMax} is larger than \textcolor{black}{$(1-2^{-\Omega(n)})\sum_{i=1}^{n/3} {\color{black}\left(\frac{n}{2i}-1\right)} \cdot i = \Omega(n^2)$} \rerev{where at least $n/3$ consecutive improvements are required since FCM allows the operator to improve the \textsc{OneMax} value by at most one per application. The factor $(1-2^{-\Omega(n)})$ accounts for the Chernoff bound on the initial number of $0$-bits, which holds w.o.p.}.
+an improvement is at most $1-(p-q)/(p+q)=1-(n-2i)/n=\frac{2i}{n}$ by the Ballot theorem, where $i=H(x, opt)$. This means that we need to wait at least $\frac{n}{2i}$ iterations to see an improvement and each time the mutation operator fails to improve the fitness {(\color{black}$\frac{n}{2i} - 1$ times in expectation)}, $i$ fitness function evaluations will be wasted. The expected time to optimise \textsc{OneMax} is larger than \textcolor{black}{$(1-2^{-\Omega(n)})\sum_{i=1}^{n/3} {\color{black}\left(\frac{n}{2i}-1\right)} \cdot i = \Omega(n^2)$} \rerev{where at least $n/3$ improvements are required since FCM allows the operator to improve the \textsc{OneMax} value by at most one per application. The factor $(1-2^{-\Omega(n)})$ accounts for the Chernoff bound on the initial number of $0$-bits, which holds w.o.p.}.
 \end{proof}
 
 The following theorem shows that a greater speed up may be achieved if the potential decreases exponentially rather than linearly. Note that for \textsc{OneMax} the Hamming distance of a solution to the optimum and its difference in fitness are the same. \new{Hence, there is no difference between the behaviours of the algorithm when using $M_{expoF(x)}$ and $M_{expoHD}$.} 
@@ -1257,7 +1257,7 @@ Multiplying by the cost per epoch yields the bound stated in Theorem~\ref{thm:ma
 	
 	%\textbf{2.  Per–epoch success probabilities.}
 	By Lemma~\ref{lem:junction-first-density-Bk} we reach the junction $J$ with probability \ \(1-o(1)\).
-	Starting an epoch in the junction, %\(J\) (prob.\ \(1-o(1)\)), 
+	\rerev{Given that an epoch reaches the junction}, %\(J\) (prob.\ \(1-o(1)\)), 
 	\rerev{Lemma \ref{lem:BJO-epoch}  and Lemma \ref{lem:DPO-epoch} respectively} give
 	%\[
 	$p_B=\Omega\!\bigl(\min\{1,\tau\,n^{-(2k+2)}\}\bigr)$ and
