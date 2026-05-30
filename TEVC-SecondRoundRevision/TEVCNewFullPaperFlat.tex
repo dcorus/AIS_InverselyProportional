@@ -115,7 +115,7 @@ Artificial immune systems, heavy-tailed mutations, inversely proportional hyperm
 \end{IEEEkeywords}
 
 \section{Introduction}
-Three recent hot topics in the theory of randomised search heuristics for optimisation in general and in artificial intelligence in particular have been the benefits of mutation operators with higher mutation rates than traditionally employed\cite{FQWGECCO18,FGQWPPSN18,CorusOlivetoYazdani2021TEVC,DoerrGECCO2017FastGA} (or standard operators using higher parameter values than those previously recommended\cite{CorusOlivetoTEVCsteadyGA2017,JumpTEVC2017,CorusOlivetoGecco2019,OlivetoSudholtWitt2020,DoerrDoerrEbel2015,LenglerTEVC2019}), the automatic adaptation of the mutation rate \cite{DoerrDoerrBookChapter,DLOW2018,DoerrEtAl2016B,LissovoiEtAl2020ECJ,LOWAAAI2020} and the analysis of when non-elitist search heuristics are beneficial compared to elitist ones \cite{OlivetoPaizJorgeSudholt2017Algorithmica,LOW2023,Lehr2021AAAI,DoerrComma2020,CaseLehreTEVC,DangJansenLehreGECCO2015,DangLehreFOGA2015,LenglerSchillerSieberling2024,HeviaSudholtAlgo24}. 
+Three recent hot topics in the theory of randomised search heuristics for optimisation in general and in artificial intelligence in particular have been the benefits of mutation operators with higher mutation rates than traditionally employed\cite{FQWGECCO18,FGQWPPSN18,CorusOlivetoYazdani2021TEVC,DoerrGECCO2017FastGA} (or standard operators using higher parameter values than those previously recommended\cite{CorusOlivetoTEVCsteadyGA2017,JumpTEVC2017,CorusOlivetoGecco2019,OlivetoSudholtWitt2020,DoerrDoerrEbel2015,LenglerTEVC2019}), the automatic adaptation of the mutation rate \cite{DoerrDoerrBookChapter,DLOW2018,DoerrEtAl2016B,LissovoiEtAl2020ECJ,LOWAAAI2020,DOW2026} and the analysis of when non-elitist search heuristics are beneficial compared to elitist ones \cite{OlivetoPaizJorgeSudholt2017Algorithmica,LOW2023,Lehr2021AAAI,DoerrComma2020,CaseLehreTEVC,DangJansenLehreGECCO2015,DangLehreFOGA2015,LenglerSchillerSieberling2024,HeviaSudholtAlgo24}. 
 
 Artificial Immune Systems (AIS) are a class of bio-inspired algorithms which naturally use both high mutation rates via so-called hypermutation operators, often automatically adapt the mutation rate,  and use non-elitism implicitly through the use of ageing operators, characteristics that are typical in the immune system of vertebrates from which AIS draw inspiration. In this paper, we analyse the performance of an adaptive mutation operator called Inversely Proportional Hypermutation (IPH) that aims to increase the mutation rate with (an estimate of) the distance from the optimum, and propose a considerably improved one for efficient unimodal and multimodal optimisation.
 
@@ -246,7 +246,7 @@ The original inversely proportional hypermutation operator (\IPHfcm{}) proposed 
 In an analysis for \rev{$\textsc{ZeroMin}:=n+1-\textsc {OneMax}$}~\cite{JansenZarges2011}, such a mutation potential was shown not to decrease below $cn/2$, with $cn$ being the highest possible mutation potential.
  	As a result no speed-ups at hillclimbing are achieved compared to static hypermutations as the mutation potential is always at least linear.
  In this section, we introduce three different IPH operators  that will be analysed in this paper and that provably speed-up the hillclimbing  performance for \textsc{OneMax}. Two have been already considered in the literature while the third one is newly proposed by us based on analysed drawbacks of the first two at speeding up hillclimbing.
- \rerev{In particular, it is well understood that fitness-proportional selection is sensitive to the difference between the fitness values of candidate solutions, i.e., it struggles to distinguish between solutions that have similar, yet different, fitness values~\cite{OlivetoWittTCS2014,OlivetoWitt2015,Whitley1989,NeumannOlivetoWitt2009}. For this reason, nowadays selection operators that rank individuals by fitness (e.g., tournament, linear ranking, comma selection) are generally preferred. We also consider a  third operator using a Hamming distance measure  that  avoids using the fitness values directly for the exponential decrease of the mutation rate because, apart from the above consideration, the ideal amount of bits to be flipped clearly depends on the genotypic distance of the candidate solution to the optimum rather than on their difference in fitness values.}
+ \rerev{In particular, it is well understood that fitness-proportional selection is sensitive to the difference between the fitness values of candidate solutions, i.e., it struggles to distinguish between solutions that have similar, yet different, fitness values~\cite{OlivetoWittTCS2014,OlivetoWitt2015,Whitley1989,NeumannOlivetoWitt2009}. For this reason, nowadays selection operators that rank individuals by fitness (e.g., tournament, linear ranking, comma selection) are generally preferred. We also consider a  third operator using a Hamming distance measure  that  avoids using the fitness values directly for the exponential decrease of the mutation rate because the ideal amount of bits to be flipped clearly depends on the genotypic distance of the candidate solution to the optimum rather than on their difference in fitness values.}
 
  	 
  \subsection*{Hamming Distance Based Linear Decrease}
@@ -1097,8 +1097,8 @@ starting configuration on the second slope.}
 \rerev{We call each individual hypermutation application an \emph{attempt}.
 A \emph{phase} groups all consecutive attempts at a fixed zero-bit count~$z$;
 it begins when a successful improvement leaves $z$ zero-bits and ends when
-either the next improvement occurs (reducing to $z-1$ zeros) or a
-catastrophic return to the cliff-top.
+either the next improvement (reducing to $z-1$ zeros) or a
+return to the cliff-top occur.
 A phase ending with an improvement is called \emph{successful}.
 Since each successful phase reduces the zero-count by exactly one, we
 index them by $r = r_0, r_0+1, \dots, d$, where $r$ counts the total
@@ -1697,13 +1697,25 @@ Since under \linHD\ the mutation potential satisfies $M(x) \le q^\star n$ for
 some constant $q^\star < 1$ (determined solely by $c$ and $\rho$), this becomes 
 $(q^\star)^L = n^{-\alpha^\star}$ for $\alpha^\star := \log_2(1/q^\star) > 2$, 
 yielding a total probability of $o(1)$ over $n^2$ iterations.
+\rerev{A similar argument shows that $\mathcal{B}_k$ is not entered before $J$.
+Recall that $\mathcal{B}_k = \{0^r 1^{(0.9n-r)}*\}$ with $r = 2k+1$.
+If $\mathrm{LO}(x)$ is not yet close to $0.9n$, the suffix contains
+$\Omega(n)$ unbiased bits, so $\Omega(n)$ specified zero-bits must be
+flipped to ones simultaneously, an event with probability
+$e^{-\Theta(n)}$ per iteration.
+If instead $\mathrm{LO}(x) \geq (0.9-\delta)n$ for a constant $\delta > 0$,
+then $\Omega(n)$ leading-one positions must survive the hypermutation
+for FCM to accept; entering $\mathcal{B}_k$ requires the $r+1$ target
+positions to be flipped before any of these $\Omega(n)$ protected
+positions, which happens with probability $O(n^{-(r+1)}) = O(n^{-(2k+2)})$.
+A union bound over $n^2$ iterations gives $o(1)$ in both cases.}
 Thus the slope is climbed to $J$ with high probability.
 
 
 \begin{proof}
 	Let $T:=n^2$. \textcolor{black}{We will show that in $T$ iterations with high probability we sample a solution from  $J$ before we sample one from $\mathcal{B}_k$ or $\mathcal{D}_\rho$.}
 
-	\rerev{Before $J$, $\mathcal{B}_k$ or $\mathcal{D}_\rho$ is sampled from, each iteration flips the leftmost zero-bit with probability at least $1/n$ (since this is one specific position out of~$n$), yielding a \textsc{LeadingOnes} improvement accepted immediately by FCM($\ge$).  Let $X$ count the number of such improvements in $T$ iterations; since each iteration independently succeeds with probability at least $1/n$, $X$ stochastically dominates $\mathrm{Bin}(T,1/n)$.  Hence $\EE[X]\ge n$ and a Chernoff bound gives}
+	\rerev{Before a point in either $J$, $\mathcal{B}_k$ or $\mathcal{D}_\rho$ is sampled, each iteration flips the leftmost zero-bit with probability at least $1/n$ (since this is one specific position out of~$n$), yielding a \textsc{LeadingOnes} improvement accepted immediately by FCM($\ge$).  Let $X$ count the number of such improvements in $T$ iterations; since each iteration independently succeeds with probability at least $1/n$, $X$ stochastically dominates $\mathrm{Bin}(T,1/n)$.  Hence $\EE[X]\ge n$ and a Chernoff bound gives}
 	$
 	\Pr\bigl(X<(9/10)n\bigr)\ \le\ e^{-a n}
 	$
@@ -1743,7 +1755,7 @@ keep $2c(1-\rho+\xi) < 1/4$ then satisfies all requirements.}
 	
 	\emph{Case 2 : $\alpha\le \rho-\xi$.}
 	Since all $\mathcal{D}_\rho$ solutions have $|x|_1\ge \rho n$, at least $\xi n$ net $0\!\to\!1$ flips are required within at most
-	$cn$ bit-flips. \rerev{Let $Z$ and $O$ denote the number of $0\!\to\!1$ and $1\!\to\!0$ flips, respectively, within the hypermutation. Since bit positions are sampled without replacement, the flips are negatively correlated; we therefore apply Serfling's inequality~\cite{Serfling1974} (a concentration bound for sampling without replacement).} With initial zero/one ratio giving negative drift,
+	$cn$ bit-flips. \rerev{Let $Z$ and $O$ denote the number of $0\!\to\!1$ and $1\!\to\!0$ flips, respectively, within the hypermutation. Since bit positions are sampled without replacement, the flips are negatively correlated; we therefore apply Serfling's inequality~\cite{serfling1974probability} (a concentration bound for sampling without replacement).} With initial zero/one ratio giving negative drift,
 	a Serfling (hypergeometric) tail bound yields
 	\[
 	\Pr\bigl(Z-O\ge \xi n\bigr)\ \le\ e^{-\gamma n}
@@ -1997,8 +2009,8 @@ Multiplying by the cost of each epoch, \rerev{which is $\Theta(n^3+n\,\tau)$ sin
 	\end{align*}
 \end{proof}
 
-\textcolor{black}{The static hypermutation would yield a same upper bound with a similar analysis except for the value of $\beta$ which would be smaller and for the range of $c$ which would be more restricted. Both modifications are necessary due to the larger mutation size of the static hypermutation compared to IPH for a given $c$ value. The \lastBest~IPH cannot make the jumps from the junction since any current junction solution would be the last best seen, yielding a mutation potential of one $1$. $\mathcal{B}_k$ and $\mathcal{D}_\rho$ sets cannot be accessed from the junction via mutation but can still be sampled at any reinitialization with $2^{-\Omega(n)}$ probability.}
-\textcolor{black}{We conjecture that power-law mutation operators such as those employed by the Fast-IA~\cite{CorusOlivetoYazdani2021TEVC} and the Fast-EA~\cite{DoerrGECCO2017FastGA} would also succeed on $\mathrm{LTJ}_{k,\rho}$ if equipped with and ageing operator such as the algorithms introduced in~\cite{CorusOlivetoYazdani2021TEVC}, and the same should hold for the Rank-GA~\cite{RankBasedMutation}. However, we believe that the Rank-GA with ageing would fail on \textsc{Cliff}$_d$ because of its high mutation rate at the bottom of the second slope. On the other hand, the Fast-IA and the Fast-EA, which have been shown to be parameterisable such that they behave equivalently, can quite efficiently (a $\sqrt{n}$ factor slower than the \firstBest and the \lastBest IPH i.e., in expected time $O(n^{5/2} \log n$))  optimise \textsc{Cliff}$_d$ functions with gaps of linear size~\cite{CorusOlivetoYazdani2021TEVC} . However, they have not been shown to be efficient for \textsc{Cliff}$_d$  functions with sublinear gap sizes. 
+\textcolor{black}{The static hypermutation would yield a same upper bound with a similar analysis except for the value of $\beta$ which would be smaller and for the range of $c$ which would be more restricted. Both modifications are necessary due to the larger mutation size of the static hypermutation compared to IPH for a given $c$ value. The \lastBest~IPH cannot make the jumps from the junction since any current junction solution would be the last best seen, yielding a mutation potential of one $1$. \rerev{The} $\mathcal{B}_k$ and $\mathcal{D}_\rho$ sets cannot be accessed from the junction via mutation but can still be sampled at any reinitialization with $2^{-\Omega(n)}$ probability.}
+\textcolor{black}{We conjecture that power-law mutation operators such as those employed by the Fast-IA~\cite{CorusOlivetoYazdani2021TEVC} and the Fast-EA~\cite{DoerrGECCO2017FastGA} would also succeed on $\mathrm{LTJ}_{k,\rho}$ if equipped with an ageing operator such as the algorithms introduced in~\cite{CorusOlivetoYazdani2021TEVC}, and the same should hold for the Rank-GA~\cite{RankBasedMutation}. However, we believe that the Rank-GA with ageing would fail on \textsc{Cliff}$_d$ because of its high mutation rate at the bottom of the second slope. On the other hand, the Fast-IA and the Fast-EA, which have been shown to be parameterisable such that they behave equivalently, can quite efficiently (a $\sqrt{n}$ factor slower than the \firstBest~and the \lastBest~IPH i.e., in expected time $O(n^{5/2} \log n$))  optimise \textsc{Cliff}$_d$ functions with gaps of linear size~\cite{CorusOlivetoYazdani2021TEVC} . However, they have not been shown to be efficient for \textsc{Cliff}$_d$  functions with sublinear gap sizes. 
 Stagnation detection algorithms~\cite{KW2024,RW2022,RW2023} may also be efficient for $\mathrm{LTJ}_{k,\rho}$ if equipped with the ageing operator. It is not obvious, though, how the operator would be incorporated in such an algorithm. Thus, to date the \firstBest{} IPH is the best known algorithm to optimise both \textsc{Cliff}-like functions while at the same time optimise functions where large mutations are necessary to escape from local optima. An open question is whether it may be possible to avoid the use of ageing altogether for $\mathrm{LTJ}_{k,\rho}$ by using the recently introduced population-based EAs with low selective pressure~\cite{CorusLissovoiOlivetoWittTELO2021,COZ25}. Low selective pressure may avoid the entire population converging on one of the two local optima shortly after it is identified.} 
  
 \section{Conclusion}

@@ -386,7 +386,8 @@ Our second lemma will be used to transform inverse polynomial exponents that ari
 \subsection{Performance for \textsc{OneMax} in Ideal Conditions}
 \begin{figure}[t!]
 \centering
-\includegraphics[width=\columnwidth]{a}
+\includegraphics[width=0.4\textwidth]{a}
+%\includegraphics[width=\columnwidth]{a}
 \caption{Static and inversely proportional mutation potentials for \textsc{OneMax}.}
 \label{fig:onemax}
 \end{figure}
@@ -432,7 +433,8 @@ The {\oneoneIA } using IPH with either {\expoF } or {\expoHD } optimises \textsc
 \subsection{Performance for \textsc{LeadingOnes} in Ideal Conditions}
 \begin{figure}[t!]
 \centering
-\includegraphics[width=\columnwidth]{b}
+\includegraphics[width=0.4\textwidth]{b}
+%\includegraphics[width=\columnwidth]{b}
 \caption{Static and inversely proportional  mutation potentials for \textsc{LeadingOnes}. Expected values are shown for those using Hamming distance.}
 \label{fig:leadingones}
 \end{figure}
@@ -678,23 +680,24 @@ The expected runtime of the \new{$(1+1)$~Opt-IA$_{\textsc{FirstBest}}$}  with {\
 \textsc{LeadingOnes} is $\Theta(n^3)$ with $\tau=\Omega(n^{1+\epsilon})$ for any arbitrary
 constant $\epsilon>0$.
 \end{theorem}
-\begin{proof}
 
-Fix a level~$\ell$ with \rerev{$n/3\le \ell < 2n/3$}. For the current individual $x$ with $\mathrm{LO}(x)=\ell$, we have $x_1=\cdots=x_{\ell}=1$ and $x_{\ell+1}=0$, and the remaining $m:=n-\ell-1$ positions form the tail. In each iteration, the first flipped bit is uniformly distributed over $\{1,\dots,n\}$; therefore the probability that the first flip hits the improving bit $\ell+1$ is $1/n$, the probability that it hits the prefix is $\ell/n$, and the probability that it hits the tail is $m/n$. Let $T$ be the iteration on which the improving bit is first hit. Then $T$ is geometrically distributed with parameter~$1/n$, so $\EE[T]=n$. Before this improving iteration occurs, \textcolor{black}{the expected number of tail-first iterations is
-$\frac{m}{n-1}(\EE[T]-1) = \frac{m(n-1)}{n-1} = m = \Theta(n)$
-(using that, conditional on not hitting the improving bit $\ell+1$, the
-first flip is uniform over the remaining $n-1$ positions, of which $m$
-are tail positions).} Each such iteration flips a uniformly random tail bit. By standard coupon--collector arguments, after $\Theta(n)$ such tail flips \textcolor{black}{a constant fraction of the $m$ tail positions has been flipped exactly once
-with constant probability (since each hypermutation samples bits without
-replacement, each position is visited at most once per call).} Thus, with constant probability, the Hamming distance between $x$ and \textcolor{black}{$\mathit{best}$} is $\Theta(m)=\Theta(n)$, and therefore the IPH mutation potential satisfies $M=\Theta(n)$ at this level.
-
-Consider now a subsequent iteration at the same level while $M\ge \alpha n$ for some constant $\alpha>0$. If the first flip hits the prefix (an event of probability at least $\ell/n\ge 1/3$), then, because mutation proceeds without replacement, the lost prefix bit cannot be repaired within the same iteration. Consequently, no acceptance can occur in that iteration, and the algorithm executes the entire mutation budget $M$, rejecting at the end. Hence the expected number of fitness evaluations in such an iteration is at least $\alpha n$. Since this happens with probability at least $1/3$, the unconditional expected cost of one iteration while $M=\Theta(n)$ is $\Omega(n)$.
-
-The probability that an iteration yields an improvement is exactly $1/n$, because only a first flip that hits position $\ell+1$ increases the \textsc{LeadingOnes} value. \rerev{Note that when position $\ell+1$ is flipped, the \textsc{LeadingOnes} value may jump past $\ell+1$ if positions $\ell+2, \ell+3, \ldots$ are already~$1$ (so-called free riders~\cite{DrosteJansenWegener2002}). However, the tail bits are approximately unbiased, so position $\ell+2$ is~$0$ with probability $\Omega(1)$, and the probability of skipping $k$ levels decays as $2^{-k}$. Hence a constant fraction of levels in $[n/3, 2n/3]$ are visited, and each visited level still contributes $\Omega(n^2)$ evaluations.} Therefore the expected number of iterations required to advance from level $\ell$ to $\ell+1$ is $1/(1/n)=n$. Combining this with the previous observation, the expected number of fitness evaluations spent at level $\ell$ satisfies $\Omega(n)\cdot n=\Omega(n^2)$.
-There are $\Theta(n)$ levels $\ell$ in the interval $[n/3,2n/3]$, and each such level contributes $\Omega(n^2)$ expected evaluations. Thus the total expected optimisation time is $\Omega(n^3)$. Finally, stochastic ageing can only increase the number of evaluations and therefore cannot invalidate the lower bound. Since the function has $n$ levels, $1/n$ probability of improvement and $M\leq n$, the expected runtime is bounded from above by $O(n^3)$ as well.
-
-
-\end{proof}
+%\begin{proof}
+%
+%Fix a level~$\ell$ with \rerev{$n/3\le \ell < 2n/3$}. For the current individual $x$ with $\mathrm{LO}(x)=\ell$, we have $x_1=\cdots=x_{\ell}=1$ and $x_{\ell+1}=0$, and the remaining $m:=n-\ell-1$ positions form the tail. In each iteration, the first flipped bit is uniformly distributed over $\{1,\dots,n\}$; therefore the probability that the first flip hits the improving bit $\ell+1$ is $1/n$, the probability that it hits the prefix is $\ell/n$, and the probability that it hits the tail is $m/n$. Let $T$ be the iteration on which the improving bit is first hit. Then $T$ is geometrically distributed with parameter~$1/n$, so $\EE[T]=n$. Before this improving iteration occurs, \textcolor{black}{the expected number of tail-first iterations is
+%$\frac{m}{n-1}(\EE[T]-1) = \frac{m(n-1)}{n-1} = m = \Theta(n)$
+%(using that, conditional on not hitting the improving bit $\ell+1$, the
+%first flip is uniform over the remaining $n-1$ positions, of which $m$
+%are tail positions).} Each such iteration flips a uniformly random tail bit. By standard coupon--collector arguments, after $\Theta(n)$ such tail flips \textcolor{black}{a constant fraction of the $m$ tail positions has been flipped exactly once
+%with constant probability (since each hypermutation samples bits without
+%replacement, each position is visited at most once per call).} Thus, with constant probability, the Hamming distance between $x$ and \textcolor{black}{$\mathit{best}$} is $\Theta(m)=\Theta(n)$, and therefore the IPH mutation potential satisfies $M=\Theta(n)$ at this level.
+%
+%Consider now a subsequent iteration at the same level while $M\ge \alpha n$ for some constant $\alpha>0$. If the first flip hits the prefix (an event of probability at least $\ell/n\ge 1/3$), then, because mutation proceeds without replacement, the lost prefix bit cannot be repaired within the same iteration. Consequently, no acceptance can occur in that iteration, and the algorithm executes the entire mutation budget $M$, rejecting at the end. Hence the expected number of fitness evaluations in such an iteration is at least $\alpha n$. Since this happens with probability at least $1/3$, the unconditional expected cost of one iteration while $M=\Theta(n)$ is $\Omega(n)$.
+%
+%The probability that an iteration yields an improvement is exactly $1/n$, because only a first flip that hits position $\ell+1$ increases the \textsc{LeadingOnes} value. \rerev{Note that when position $\ell+1$ is flipped, the \textsc{LeadingOnes} value may jump past $\ell+1$ if positions $\ell+2, \ell+3, \ldots$ are already~$1$ (so-called free riders~\cite{DrosteJansenWegener2002}). However, the tail bits are approximately unbiased, so position $\ell+2$ is~$0$ with probability $\Omega(1)$, and the probability of skipping $k$ levels decays as $2^{-k}$. Hence a constant fraction of levels in $[n/3, 2n/3]$ are visited, and each visited level still contributes $\Omega(n^2)$ evaluations.} Therefore the expected number of iterations required to advance from level $\ell$ to $\ell+1$ is $1/(1/n)=n$. Combining this with the previous observation, the expected number of fitness evaluations spent at level $\ell$ satisfies $\Omega(n)\cdot n=\Omega(n^2)$.
+%There are $\Theta(n)$ levels $\ell$ in the interval $[n/3,2n/3]$, and each such level contributes $\Omega(n^2)$ expected evaluations. Thus the total expected optimisation time is $\Omega(n^3)$. Finally, stochastic ageing can only increase the number of evaluations and therefore cannot invalidate the lower bound. Since the function has $n$ levels, $1/n$ probability of improvement and $M\leq n$, the expected runtime is bounded from above by $O(n^3)$ as well.
+%
+%
+%\end{proof}
 
 \textcolor{black}{In this section, we have proven the results for \linHD. Naturally the same \rev{positive} results follow for the \expoHD~ operator which always has at most the same mutation rate or lower.}
 
@@ -704,7 +707,7 @@ There are $\Theta(n)$ levels $\ell$ in the interval $[n/3,2n/3]$, and each such 
 \section{When IPH Outperforms Too High Mutation Rates}
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{cliff_updated}
+\includegraphics[width=0.4\textwidth]{cliff_updated}
 \caption{\textcolor{black}{The \textsc{Cliff}$_d$ function for $n=50$, $d=10$.
 The local optimum (40 one-bits, fitness~40) and global optimum
 (50 one-bits, fitness~40.5) are labelled.}}
