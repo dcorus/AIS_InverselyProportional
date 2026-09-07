@@ -14,6 +14,7 @@
 \newcommand{\new}[1]{\textcolor{black}{#1}}
 \newcommand{\rerev}[1]{\textcolor{purple}{#1}}
 \newcommand{\rev}[1]{\textcolor{black}{#1}}
+\newcommand{\peter}[1]{\textcolor{blue}{#1}}
 \newcommand{\EE}{\mathbb{E}}
 \newcommand{\HD}{\text{HD}}
 
@@ -115,7 +116,7 @@ Artificial immune systems, heavy-tailed mutations, inversely proportional hyperm
 \end{IEEEkeywords}
 
 \section{Introduction}
-Three recent hot topics in the theory of randomised search heuristics for optimisation in general and in artificial intelligence in particular have been the benefits of mutation operators with higher mutation rates than traditionally employed\cite{FQWGECCO18,FGQWPPSN18,CorusOlivetoYazdani2021TEVC,DoerrGECCO2017FastGA} (or standard operators using higher parameter values than those previously recommended\cite{CorusOlivetoTEVCsteadyGA2017,JumpTEVC2017,CorusOlivetoGecco2019,OlivetoSudholtWitt2020,DoerrDoerrEbel2015,LenglerTEVC2019}), the automatic adaptation of the mutation rate \cite{DoerrDoerrBookChapter,DLOW2018,DoerrEtAl2016B,LissovoiEtAl2020ECJ,LOWAAAI2020,DOW2026} and the analysis of when non-elitist search heuristics are beneficial compared to elitist ones \cite{OlivetoPaizJorgeSudholt2017Algorithmica,LOW2023,Lehr2021AAAI,DoerrComma2020,CaseLehreTEVC,DangJansenLehreGECCO2015,DangLehreFOGA2015,LenglerSchillerSieberling2024,HeviaSudholtAlgo24}. 
+Three recent hot topics in the theory of randomised search heuristics for optimisation in general and in artificial intelligence in particular have been the benefits of mutation operators with higher mutation rates than traditionally employed \peter{\cite{FQWGECCO18,FGQWPPSN18,CorusOlivetoYazdani2021TEVC,DoerrGECCO2017FastGA,OX2026}} (or standard operators using higher parameter values than those previously recommended \peter{\cite{CorusOlivetoTEVCsteadyGA2017,JumpTEVC2017,CorusOlivetoGecco2019,OlivetoSudholtWitt2020,DoerrDoerrEbel2015,LenglerTEVC2019}}), the automatic adaptation of the mutation rate \peter{ \cite{DoerrDoerrBookChapter,DoerrEtAl2016B,LissovoiEtAl2020ECJ,LOWAAAI2020,DOW2026,OWWXPPSN26,OWPPSN26,DOW2026,MaEtAl2025}}  and the analysis of when non-elitist search heuristics are beneficial compared to elitist ones \cite{OlivetoPaizJorgeSudholt2017Algorithmica,LOW2023,Lehr2021AAAI,DoerrComma2020,CaseLehreTEVC,DangJansenLehreGECCO2015,DangLehreFOGA2015,LenglerSchillerSieberling2024,HeviaSudholtAlgo24}. 
 
 Artificial Immune Systems (AIS) are a class of bio-inspired algorithms which naturally use both high mutation rates via so-called hypermutation operators, often automatically adapt the mutation rate,  and use non-elitism implicitly through the use of ageing operators, characteristics that are typical in the immune system of vertebrates from which AIS draw inspiration. In this paper, we analyse the performance of an adaptive mutation operator called Inversely Proportional Hypermutation (IPH) that aims to increase the mutation rate with (an estimate of) the distance from the optimum, and propose a considerably improved one for efficient unimodal and multimodal optimisation.
 
@@ -286,7 +287,7 @@ The pseudo-code of a simple AIS,  the (1+1) Immune Algorithm (\oneoneIA{}), is g
 The results proven in this section and comparisons with static hypermutations and the IPH operators from the literature are summarised in Table~\ref{table:afl}.
 
 
-Before stating the main results, we first introduce two lemmata. The first is the Ballot theorem which is used throughout this paper to derive lower bounds on the expected runtime of the algorithms~\cite{feller1968,JansenZarges2011,CorusOlivetoYazdani2019TCS}.  This theorem is essentially used to show the probability of picking more 1-bits than 0-bits during one hypermutation operation given that there are more 1-bits in the initial bit-string (or vice-versa). 
+Before stating the main results, we first introduce two lemmata. The first is the Ballot theorem which is used throughout this paper to derive lower bounds on the expected runtime of the algorithms~\cite{feller1968,JansenZarges2011,CorusOlivetoYazdani2019TCS}.  This theorem is essentially used to show the probability of picking more 1-bits than 0-bits during one hypermutation operation given that there are more 1-bits in the initial bit-string (or \peter{vice versa}). 
 \begin{lemma} [Ballot Theorem~\cite{feller1968}] \label{lem:ballot} 
 In a ballot, suppose that candidate P receives $p$ votes and candidate Q receives $q$ votes such that $p>q$. The probability that throughout the counting P is always ahead of Q is $(p-q)/(p+q)$. 
 \end{lemma}
@@ -388,7 +389,7 @@ Our second lemma will be used to transform inverse polynomial exponents that ari
 
 The following theorems derive the expected runtimes using each of the three IPH operators for the function $\textsc{OneMax}(x):=\sum_{i=1}^{n}x_i$. 
 Figure \ref{fig:onemax} shows how the studied mutation potentials ideally decrease during the run of the algorithm when optimising the function. 
-Notice that for \textsc{OneMax} the behaviours of   {\expoF } and {\expoHD }  are the same. 
+Notice that for \textsc{OneMax} the behaviours of   {\expoF } and {\expoHD }  are the same\peter{, while the static hypermutation uses potential $n$ (i.e., $c=1$).}  
 By decreasing the potential linearly with the decrease of the Hamming distance, a logarithmic factor may be shaved off from the expected runtime of the {\oneoneIA } compared to the expected runtime achieved by the same algorithm using static hypermutation potentials.
 
 
