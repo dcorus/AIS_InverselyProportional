@@ -12,7 +12,7 @@
 \usepackage{cite}
 
 \newcommand{\new}[1]{\textcolor{black}{#1}}
-\newcommand{\rerev}[1]{\textcolor{purple}{#1}}
+\newcommand{\rerev}[1]{\textcolor{black}{#1}}
 \newcommand{\rev}[1]{\textcolor{black}{#1}}
 \newcommand{\peter}[1]{\textcolor{blue}{#1}}
 \newcommand{\EE}{\mathbb{E}}
@@ -90,12 +90,28 @@
 
 \title{Effective Inversely Proportional Hypermutations for Unimodal and Multimodal Optimisation\\ - Supplementary Material: Self Contained Paper -}
 
-\author{IEEE Publication Technology,~\IEEEmembership{Staff,~IEEE,}	
+%\author{IEEE Publication Technology,~\IEEEmembership{Staff,~IEEE,}	
+%
+%}
+%\author{Anonymous authors	
+%
+%}
+
+\author{Dogan Corus	 and Pietro S. Oliveto,~\IEEEmembership{Senior member,~IEEE,}
+%	% <-this % stops a space
+	%\author{Anonymous authors	
+	% <-this % stops a space
+
+\thanks{
+Dogan Corus is with the \peter{Department of...}, Istanbul Bilgi University, Istanbul, Turkey. 
+Pietro S. Oliveto is with the Department of Computer Science and Engineering, Southern University of Science and Technology (SUSTech), Shenzhen, China
+(emails: dogan.corus@bilgi.edu.tr, olivetop@sustech.edu.cn). 
+
+The 15-page version of this article is available at:yyy.
+}
 
 }
-\author{Anonymous authors	
 
-}
 
 \markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2021}{Shell \MakeLowercase{\textit{et al.}}: A Sample Article Using IEEEtran.cls for IEEE Journals}
 
@@ -2046,21 +2062,41 @@ If you have an EPS/PDF photo (graphicx package needed), extra braces are
  your own custom macro containing the $\backslash${\tt{includegraphics}} command to make things
  simpler here.)
  
-\vspace{11pt}
+%\vspace{11pt}
+%
+%\bf{If you include a photo:}\vspace{-33pt}
+%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{fig1}}]{Michael Shell}
+%Use $\backslash${\tt{begin\{IEEEbiography\}}} and then for the 1st argument use $\backslash${\tt{includegraphics}} to declare and link the author photo.
+%Use the author name as the 3rd argument followed by the biography text.
+%\end{IEEEbiography}
+%
+%\vspace{11pt}
+%
+%\bf{If you will not include a photo:}\vspace{-33pt}
+%\begin{IEEEbiographynophoto}{John Doe}
+%Use $\backslash${\tt{begin\{IEEEbiographynophoto\}}} and the author name as the argument followed by the biography text.
+%\end{IEEEbiographynophoto}
 
-\bf{If you include a photo:}\vspace{-33pt}
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{fig1}}]{Michael Shell}
-Use $\backslash${\tt{begin\{IEEEbiography\}}} and then for the 1st argument use $\backslash${\tt{includegraphics}} to declare and link the author photo.
-Use the author name as the 3rd argument followed by the biography text.
+%\vspace{-33pt}
+
+\begin{IEEEbiography}%[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{Xu1}}]
+{Dogan Corus}
+blah blah blah
 \end{IEEEbiography}
 
-\vspace{11pt}
-
-\bf{If you will not include a photo:}\vspace{-33pt}
-\begin{IEEEbiographynophoto}{John Doe}
-Use $\backslash${\tt{begin\{IEEEbiographynophoto\}}} and the author name as the argument followed by the biography text.
-\end{IEEEbiographynophoto}
-
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{Oliveto2}}]
+{Pietro S. Oliveto}
+ received the Laurea degree in computer science from the University of Catania,
+Catania, Italy, in 2005, and the Ph.D. degree from the University of Birmingham, Birmingham, U.K. in 2009.
+He is Professor of computer science and Head of the Theory of AI Lab at the Southern University of Science and Technology (SUSTech),
+Shenzhen, China. His current research interests include the
+performance analysis of bio-inspired computation techniques, covering evolutionary algorithms,
+genetic programming, artificial immune systems, algorithm configuration and hyper-heuristics.
+Prof. Oliveto has been an EPSRC Ph.D.$^+$ Fellow and an EPSRC
+Post-Doctoral Fellow at Birmingham and Vice-Chancellor's Fellow and EPSRC Early Career Fellow at Sheffield.
+%Use $\backslash${\tt{begin\{IEEEbiography\}}} and then for the 1st argument use $\backslash${\tt{includegraphics}} to declare and link the author photo.
+%Use the author name as the 3rd argument followed by the biography text.
+\end{IEEEbiography}
 
 
 
