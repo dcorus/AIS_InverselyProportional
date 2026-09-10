@@ -1232,28 +1232,47 @@ Since each iteration satisfies \(p_{\text{iter}}\ge n^{-\beta}\).
 
 %\newpage
 
-\section{Biography Section}
-If you have an EPS/PDF photo (graphicx package needed), extra braces are
- needed around the contents of the optional argument to biography to prevent
- the LaTeX parser from getting confused when it sees the complicated
- $\backslash${\tt{includegraphics}} command within an optional argument. (You can create
- your own custom macro containing the $\backslash${\tt{includegraphics}} command to make things
- simpler here.)
- 
-\vspace{11pt}
+%\section{Biography Section}
+%If you have an EPS/PDF photo (graphicx package needed), extra braces are
+% needed around the contents of the optional argument to biography to prevent
+% the LaTeX parser from getting confused when it sees the complicated
+% $\backslash${\tt{includegraphics}} command within an optional argument. (You can create
+% your own custom macro containing the $\backslash${\tt{includegraphics}} command to make things
+% simpler here.)
+% 
+%\vspace{11pt}
+%
+%\bf{If you include a photo:}\vspace{-33pt}
+%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{fig1}}]{Michael Shell}
+%Use $\backslash${\tt{begin\{IEEEbiography\}}} and then for the 1st argument use $\backslash${\tt{includegraphics}} to declare and link the author photo.
+%Use the author name as the 3rd argument followed by the biography text.
+%\end{IEEEbiography}
+%
+%\vspace{11pt}
+%
+%\bf{If you will not include a photo:}\vspace{-33pt}
+%\begin{IEEEbiographynophoto}{John Doe}
+%Use $\backslash${\tt{begin\{IEEEbiographynophoto\}}} and the author name as the argument followed by the biography text.
+%\end{IEEEbiographynophoto}
 
-\bf{If you include a photo:}\vspace{-33pt}
-\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{fig1}}]{Michael Shell}
-Use $\backslash${\tt{begin\{IEEEbiography\}}} and then for the 1st argument use $\backslash${\tt{includegraphics}} to declare and link the author photo.
-Use the author name as the 3rd argument followed by the biography text.
+\begin{IEEEbiography}%[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{Xu1}}]
+{Dogan Corus}
+blah blah blah
 \end{IEEEbiography}
 
-\vspace{11pt}
-
-\bf{If you will not include a photo:}\vspace{-33pt}
-\begin{IEEEbiographynophoto}{John Doe}
-Use $\backslash${\tt{begin\{IEEEbiographynophoto\}}} and the author name as the argument followed by the biography text.
-\end{IEEEbiographynophoto}
+\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{Oliveto2}}]
+{Pietro S. Oliveto}
+ received the Laurea degree in computer science from the University of Catania,
+Catania, Italy, in 2005, and the Ph.D. degree from the University of Birmingham, Birmingham, U.K. in 2009.
+He is Professor of computer science and Head of the Theory of AI Lab at the Southern University of Science and Technology (SUSTech),
+Shenzhen, China. His current research interests include the
+performance analysis of bio-inspired computation techniques, covering evolutionary algorithms,
+genetic programming, artificial immune systems, algorithm configuration and hyper-heuristics.
+Prof. Oliveto has been an EPSRC Ph.D.$^+$ Fellow and an EPSRC
+Post-Doctoral Fellow at Birmingham and Vice-Chancellor's Fellow and EPSRC Early Career Fellow at Sheffield.
+%Use $\backslash${\tt{begin\{IEEEbiography\}}} and then for the 1st argument use $\backslash${\tt{includegraphics}} to declare and link the author photo.
+%Use the author name as the 3rd argument followed by the biography text.
+\end{IEEEbiography}
 
 
 
