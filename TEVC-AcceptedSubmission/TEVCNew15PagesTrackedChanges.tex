@@ -14,7 +14,7 @@
 \newcommand{\new}[1]{\textcolor{black}{#1}}
 \newcommand{\rev}[1]{\textcolor{black}{#1}}
 \newcommand{\rerev}[1]{\textcolor{black}{#1}}
-\newcommand{\peter}[1]{\textcolor{black}{#1}}
+\newcommand{\peter}[1]{\textcolor{blue}{#1}}
 \newcommand{\EE}{\mathbb{E}}
 \newcommand{\HD}{\text{HD}}
 
@@ -127,11 +127,9 @@ An appendix is available at: xxx. A self-contained version of this article is av
 
 \begin{abstract}
 
-%Artificial Immune Systems (AIS) employing hypermutations with linear static mutation potential have recently been shown to be very effective at escaping local optima of combinatorial optimisation problems at the expense of being slower during the exploitation phase compared to standard evolutionary algorithms.
-In this paper, we examine %the more commonly used dynamic 
-inversely proportional  hypermutations (IPH) with mutation potential for which previous theoretical analyses have shown disappointing performance. We first show that considerable speed-ups
-in hillclimbing phases may be achieved compared to static hypermutations in the ideal situation where the optimum is known. % if the mutation rates decrease appropriately with either the fitness or the distance to the optimum. 
-Afterwards, we define a simple (1+1)~Opt-IA that uses IPH and ageing for realistic applications where optimal solutions are unknown. The aim of this AIS is to approximate the ideal behaviour of the IPH better and better as the search space is explored and local optima of higher quality are identified.
+Artificial Immune Systems (AIS) employing hypermutations with linear static mutation potential have recently been shown to be very effective at escaping local optima of combinatorial optimisation problems at the expense of being slower during the exploitation phase compared to standard evolutionary algorithms.
+In this paper, we examine the more commonly used dynamic inversely proportional  hypermutations (IPH) with mutation potential for which previous theoretical analyses have shown disappointing performance. We first show that considerable speed-ups
+in hillclimbing phases may be achieved compared to static hypermutations in the ideal situation where the optimum is known if the mutation rates decrease appropriately with either the fitness or the distance to the optimum. Afterwards, we define a simple (1+1)~Opt-IA that uses IPH and ageing for realistic applications where optimal solutions are unknown. The aim of this AIS is to approximate the ideal behaviour of the IPH better and better as the search space is explored and local optima of higher quality are identified.
 We present two variants, one that decreases the mutation rate proportionally until the local (global) optimum is identified, and another where the mutation rate may increase again when detecting that the algorithm is stuck on a large plateau of local optima.
 We show that the latter variant outperforms standard bit mutations by escaping the local optima on a multimodal function from the literature and that both variants outperform static hypermutations by escaping the local optima of the standard \textsc{Cliff} benchmark function by accepting solutions of lower fitness.  
 \end{abstract}
